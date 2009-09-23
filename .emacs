@@ -1,6 +1,7 @@
 (setq inhibit-startup-message   t)
 (menu-bar-mode 0)
 (tool-bar-mode 0)
+(setq split-width-threshold most-positive-fixnum)
 
 (desktop-save-mode 1)
 
@@ -37,13 +38,13 @@
 
 ;;(global-set-key "\C-<TAB>" '\t)
 
+(require 'magit)
+
 
 ;(require 'lusty-explorer)
 ;(global-set-key (kbd "\C-x \C-f") 'lusty-file-explorer)
 ;(global-set-key (kbd "\C-x \C-b") 'lusty-buffer-explorer)
 
-
-(setq split-width-threshold most-positive-fixnum)
 
 ;;**Editing options**
 
