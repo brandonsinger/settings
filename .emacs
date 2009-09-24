@@ -1,7 +1,8 @@
 (setq inhibit-startup-message   t)
 (menu-bar-mode 0)
 (tool-bar-mode 0)
-(setq split-width-threshold most-positive-fixnum)
+(setq split-width-threshold most-positive-fixnum
+(show-paren-mode 1)
 
 (desktop-save-mode 1)
 
@@ -38,8 +39,8 @@
 
 ;;(global-set-key "\C-<TAB>" '\t)
 
-(require 'magit)
 
+(require 'egg)
 
 ;(require 'lusty-explorer)
 ;(global-set-key (kbd "\C-x \C-f") 'lusty-file-explorer)
