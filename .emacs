@@ -25,6 +25,8 @@
 
 (load "php-mode")
 
+(add-to-list 'auto-mode-alist '("\\.js\\'" . espresso-mode))
+(autoload 'espresso-mode "espresso" nil t)
 
 
 (setq c-default-style "python")
@@ -41,10 +43,11 @@
 
 
 (require 'egg)
+;;C-x v i == egg-file-stage-current-file == git add
+;;C-x v l == egg-log == git log
+;;C-x v u == egg-file-cancel-modifications == unconditionally delete unstaged modifications in the current file. git checkout
+;;C-x v b == egg-start-new-branch == git checkout -b new_branch
 
-;(require 'lusty-explorer)
-;(global-set-key (kbd "\C-x \C-f") 'lusty-file-explorer)
-;(global-set-key (kbd "\C-x \C-b") 'lusty-buffer-explorer)
 
 
 ;;**Editing options**
@@ -70,6 +73,9 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "<C-f2>") 'bm-toggle)
 (global-set-key (kbd "<f2>")   'bm-next)
 (global-set-key (kbd "<S-f2>") 'bm-previous)
+
+
+(global-set-key (kbd "C-`") 'egg-status)
 
 
 ;(require 'tramp)
