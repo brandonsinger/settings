@@ -43,6 +43,7 @@
 
 
 (require 'egg)
+;(setq egg-buffer-hide-section-type-on-start true)
 ;;C-x v i == egg-file-stage-current-file == git add
 ;;C-x v l == egg-log == git log
 ;;C-x v u == egg-file-cancel-modifications == unconditionally delete unstaged modifications in the current file. git checkout
@@ -102,3 +103,15 @@ If point was already at that position, move point to beginning of line."
 
 
 (require 'icicles)
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(egg-buffer-hide-section-type-on-start (quote ((egg-status-buffer-mode . :section)))))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ )
