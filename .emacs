@@ -69,6 +69,8 @@ If point was already at that position, move point to beginning of line."
 ; that you don't need to keep using TAB to align yourself when coding.
 (global-set-key "\C-m"        'newline-and-indent)
 
+(global-set-key (kbd "C-x C-b") 'bs-show)
+
 ;; For bookmarking
 (require 'bm)
 (global-set-key (kbd "<C-f2>") 'bm-toggle)
@@ -78,6 +80,7 @@ If point was already at that position, move point to beginning of line."
 
 (global-set-key (kbd "C-`") 'egg-status)
 
+(iswitchb-mode 1) ;Change what happens on C-x b
 
 ;(require 'tramp)
 ;(setq tramp-default-method "pscp")
@@ -102,7 +105,7 @@ If point was already at that position, move point to beginning of line."
   (color-theme-tango))
 
 
-(require 'icicles)
+;(require 'icicles)
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
