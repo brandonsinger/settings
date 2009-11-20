@@ -16,6 +16,9 @@
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")  ; Add this directory to Emacs' load path
 
+(load "~/.emacs.d/site-lisp/nxhtml/autostart.el")
+
+
 
 ;(if window-system
  ;(size-screen)
@@ -23,7 +26,7 @@
 
 
 
-(load "php-mode")
+;(load "php-mode")
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . espresso-mode))
 (autoload 'espresso-mode "espresso" nil t)
