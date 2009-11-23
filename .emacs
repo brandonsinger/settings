@@ -17,16 +17,13 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")  ; Add this directory to Emacs' load path
 
 (load "~/.emacs.d/site-lisp/nxhtml/autostart.el")
-
+(setq mumamo-chunk-coloring 2)
 
 
 ;(if window-system
  ;(size-screen)
 ;)
 
-
-
-;(load "php-mode")
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . espresso-mode))
 (autoload 'espresso-mode "espresso" nil t)
@@ -40,6 +37,16 @@
           (lambda()
             (setq sgml-basic-offset 4)
             (setq indent-tabs-mode t)))
+(add-hook 'nxhtml-mode-hook
+          (lambda()
+            (setq sgml-basic-offset 4)
+            (setq indent-tabs-mode t)))
+(add-hook 'nxml-mode-hook
+          (lambda()
+            (setq sgml-basic-offset 4)
+            (setq indent-tabs-mode t)))
+
+(setq nxml-child-indent 4)
 
 
 ;;(global-set-key "\C-<TAB>" '\t)
@@ -120,4 +127,4 @@ If point was already at that position, move point to beginning of line."
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- )
+ '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) nil))))
