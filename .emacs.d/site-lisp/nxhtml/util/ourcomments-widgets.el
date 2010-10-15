@@ -44,6 +44,8 @@
 ;;
 ;;; Code:
 
+(eval-when-compile (require 'mumamo nil t))
+
 ;;;###autoload (autoload 'command "ourcomments-widgets")
 (define-widget 'command 'restricted-sexp
   "A command function."
@@ -68,9 +70,11 @@
 ;;;###autoload
 (defun major-or-multi-majorp (value)
   "Return t if VALUE is a major or multi major mode function."
-  (or (mumamo-multi-major-modep value)
+  (or (and (fboundp 'mumamo-multi-major-modep)
+           (fboundp (mumamo-multi-major-modep value)))
       (major-modep value)))
 
+;; Fix-me: This might in the future be defined in Emacs.
 ;;;###autoload
 (defun major-modep (value)
   "Return t if VALUE is a major mode function."
@@ -105,7 +109,8 @@
                            php-mode
                            ))
                    (and (intern-soft (concat sym-name "-hook"))
-                        (boundp (intern-soft (concat sym-name "-hook"))))
+                        ;; This fits `define-derived-mode'
+                        (get (intern-soft (concat sym-name "-hook")) 'variable-documentation))
                    (progn (message "Not a major mode: %s" value)
                           ;;(sit-for 4)
                           nil)

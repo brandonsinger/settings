@@ -47,7 +47,7 @@
 ;;
 ;;; Code:
 
-(require 'w32-regdat nil t)
+(eval-and-compile (require 'w32-regdat nil t))
 
 ;; (message "%S" (gimpedit-get-remote-command))
 (defun gimpedit-get-remote-command ()
@@ -84,6 +84,7 @@
                 (throw 'found-prog prog)))))
       "gimp")))
 
+;;;###autoload
 (defgroup gimpedit nil
   "Customization group for GIMP."
   :group 'external

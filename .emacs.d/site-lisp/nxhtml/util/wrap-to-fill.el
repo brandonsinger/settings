@@ -44,9 +44,15 @@
 ;;
 ;;; Code:
 
+(eval-when-compile (require 'mumamo))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Wrapping
+
+;;;###autoload
+(defgroup wrap-to-fill nil
+  "Customizing of `wrap-to-fill-column-mode'."
+  :group 'convenience)
 
 ;;;###autoload
 (defcustom wrap-to-fill-left-marg nil
@@ -56,12 +62,12 @@ display columns. Otherwise it should be a number which will be
 the left margin."
   :type '(choice (const :tag "Center" nil)
                  (integer :tag "Left margin"))
-  :group 'convenience)
+  :group 'wrap-to-fill)
 (make-variable-buffer-local 'wrap-to-fill-left-marg)
 
-(defvar wrap-to-fill-old-margins 0)
-(make-variable-buffer-local 'wrap-to-fill-old-margins)
-(put 'wrap-to-fill-old-margins 'permanent-local t)
+(defvar wrap-to-fill--saved-state nil)
+;;(make-variable-buffer-local 'wrap-to-fill--saved-state)
+(put 'wrap-to-fill--saved-state 'permanent-local t)
 
 ;;;###autoload
 (defcustom wrap-to-fill-left-marg-modes
@@ -69,7 +75,7 @@ the left margin."
     fundamental-mode)
   "Major modes where `wrap-to-fill-left-margin' may be nil."
   :type '(repeat command)
-  :group 'convenience)
+  :group 'wrap-to-fill)
 
 
          ;;ThisisaVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongWord ThisisaVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongWord
@@ -86,14 +92,25 @@ the left margin."
   (setq fill-column (- fill-column 10))
   (wrap-to-fill-set-values-in-buffer-windows))
 
+(defun wrap-to-fill-normal ()
+  "Reset `fill-column' to global value."
+  (interactive)
+  ;;(setq fill-column (default-value 'fill-column))
+  (kill-local-variable 'fill-column)
+  (wrap-to-fill-set-values-in-buffer-windows))
+
 (defvar wrap-to-fill-column-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map [(control ?c) right] 'wrap-to-fill-wider)
-    (define-key map [(control ?c) left] 'wrap-to-fill-narrower)
+    (define-key map [(control ?c) ?+] 'wrap-to-fill-wider)
+    (define-key map [(control ?c) ?-] 'wrap-to-fill-narrower)
+    (define-key map [(control ?c) ?0] 'wrap-to-fill-normal)
     map))
 
-;; Fix-me: make the `wrap-prefix' behavior an option or separate minor
-;; mode.
+;; Fix-me: Maybe make the `wrap-prefix' behavior an option or separate
+;; minor mode.
+
+;; Fix-me: better handling of left-column in mumamo buffers (and other
+;; if possible).
 
 ;;;###autoload
 (define-minor-mode wrap-to-fill-column-mode
@@ -101,42 +118,51 @@ the left margin."
 By default the display columns are centered, but see the option
 `wrap-to-fill-left-marg'.
 
+Fix-me:
 Note 1: When turning this on `visual-line-mode' is also turned on. This
 is not reset when turning off this mode.
 
-Note 2: The text property `wrap-prefix' is set by this mode to
-indent continuation lines.
+Note 2: The text properties 'wrap-prefix and 'wrap-to-fill-prefix
+is set by this mode to indent continuation lines.
 
 Key bindings added by this minor mode:
 
 \\{wrap-to-fill-column-mode-map}"
   :lighter " WrapFill"
-  :group 'convenience
+  :group 'wrap-to-fill
   ;; (message "wrap-to-fill-column-mode %s, cb=%s, major=%s, multi=%s" wrap-to-fill-column-mode (current-buffer)
   ;;          major-mode mumamo-multi-major-mode)
   (if wrap-to-fill-column-mode
       (progn
+        ;; Old values (idea from visual-line-mode)
+	(set (make-local-variable 'wrap-to-fill--saved-state) nil)
+	(dolist (var '(visual-line-mode
+                       ;;left-margin-width
+                       ;;right-margin-width
+                       ))
+          (push (list var (symbol-value var) (local-variable-p var))
+                wrap-to-fill--saved-state))
         ;; Hooks
         (add-hook 'window-configuration-change-hook 'wrap-to-fill-set-values nil t)
         ;; Wrapping
-        (if (fboundp 'visual-line-mode)
-            (visual-line-mode 1)
-          (longlines-mode 1))
-        ;;(message "wrap-to-fill-column-mode word-wrap=%s" word-wrap)
-        ;;(mumamo-backtrace "wrap-to-fill")
-        ;; Margins
-        (setq wrap-to-fill-old-margins (cons left-margin-width right-margin-width))
+        (visual-line-mode 1)
         (wrap-to-fill-set-values-in-buffer-windows))
     ;; Hooks
     (remove-hook 'window-configuration-change-hook 'wrap-to-fill-set-values t)
-    ;; Wrapping
-    (if (fboundp 'visual-line-mode)
-        (visual-line-mode -1)
-      (longlines-mode -1))
+    ;; Old values
+    (dolist (saved wrap-to-fill--saved-state)
+      (let ((var (nth 0 saved))
+            (val (nth 1 saved))
+            (loc (nth 2 saved)))
+        (cond
+         ((eq var 'visual-line-mode)
+          (unless val (visual-line-mode -1)))
+         (t
+          (if loc
+              (set (make-local-variable var) val)
+            (kill-local-variable var))))))
+    (kill-local-variable 'wrap-to-fill--saved-state)
     ;; Margins
-    (setq left-margin-width (car wrap-to-fill-old-margins))
-    (setq right-margin-width (cdr wrap-to-fill-old-margins))
-    (setq wrap-to-fill-old-margins nil)
     (dolist (win (get-buffer-window-list (current-buffer)))
       (set-window-margins win left-margin-width right-margin-width))
     ;; Indentation
@@ -164,6 +190,26 @@ Key bindings added by this minor mode:
   (wrap-to-fill-font-lock wrap-to-fill-column-mode))
 (put 'wrap-to-fill-column-mode 'permanent-local t)
 
+(defcustom wrap-to-fill-major-modes '(org-mode
+                                      html-mode
+                                      nxhtml-mode)
+  "Major modes where to turn on `wrap-to-fill-column-mode'"
+  ;;:type '(repeat major-mode)
+  :type '(repeat command)
+  :group 'wrap-to-fill)
+
+(defun wrap-to-fill-turn-on-in-buffer ()
+  "Turn on fun for globalization."
+  (when (catch 'turn-on
+          (dolist (m wrap-to-fill-major-modes)
+            (when (derived-mode-p m)
+              (throw 'turn-on t))))
+    (wrap-to-fill-column-mode 1)))
+
+(define-globalized-minor-mode wrap-to-fill-column-global-mode wrap-to-fill-column-mode
+  wrap-to-fill-turn-on-in-buffer
+  :group 'wrap-to-fill)
+
 ;; Fix-me: There is a confusion between buffer and window margins
 ;; here. Also the doc says that left-margin-width and dito right may
 ;; be nil. However they seem to be 0 by default, but when displaying a
@@ -181,6 +227,13 @@ Key bindings added by this minor mode:
 (put 'wrap-to-fill-set-values 'permanent-local-hook t)
 
 (defun wrap-to-fill-set-values-in-timer (win buf)
+  (condition-case err
+      (when (buffer-live-p buf)
+        (wrap-to-fill-set-values-in-buffer-windows buf))
+    (error (message "ERROR wrap-to-fill-set-values-in-timer: %s"
+                    (error-message-string err)))))
+
+(defun wrap-to-fill-set-values-in-timer-old (win buf)
   (when (and (window-live-p win) (buffer-live-p buf)
              (eq buf (window-buffer win)))
     (condition-case err
@@ -190,9 +243,12 @@ Key bindings added by this minor mode:
       (error (message "ERROR wrap-to-fill-set-values: %s"
                       (error-message-string err))))))
 
-(defun wrap-to-fill-set-values-in-buffer-windows ()
+(defun wrap-to-fill-set-values-in-buffer-windows (&optional buffer)
   "Use `fill-column' display columns in buffer windows."
-  (let ((buf-windows (get-buffer-window-list (current-buffer))))
+  (let ((buf-windows (get-buffer-window-list (or buffer
+                                                 (current-buffer))
+                                             nil
+                                             t)))
     (dolist (win buf-windows)
       (if wrap-to-fill-column-mode
           (wrap-to-fill-set-values-in-window win)
@@ -229,18 +285,19 @@ Key bindings added by this minor mode:
         (unless (> left-marg 0) (setq left-marg 0))
         (unless (> right-marg 0) (setq right-marg 0))
         (unless nil;(= left-marg (or left-margin-width 0))
-          (setq left-margin-width left-marg)
+          ;;(setq left-margin-width left-marg)
           (setq need-update t))
         (unless nil;(= right-marg (or right-margin-width 0))
-          (setq right-margin-width right-marg)
+          ;;(setq right-margin-width right-marg)
           (setq need-update t))
         ;;(message "win-width a: %s => %s, win-full=%s, e=%s l/r=%s/%s %S %S %S" wrap-old-win-width win-width win-full extra-width left-margin-width right-margin-width (window-edges) (window-inside-edges) (window-margins))
         (when need-update
           ;;(set-window-buffer win (window-buffer win))
           ;;(run-with-idle-timer 0 nil 'set-window-buffer win (window-buffer win))
-          (dolist (win (get-buffer-window-list (current-buffer)))
+          ;;(dolist (win (get-buffer-window-list (current-buffer)))
             ;; Fix-me: check window width...
-            (set-window-margins win left-margin-width right-margin-width))
+          (set-window-margins win left-marg right-marg)
+          ;;)
           ;;(message "win-width b: %s => %s, win-full=%s, e=%s l/r=%s/%s %S %S %S" wrap-old-win-width win-width win-full extra-width left-marg right-marg (window-edges) (window-inside-edges) (window-margins))
           )
         ))))
@@ -264,15 +321,27 @@ Key bindings added by this minor mode:
         (when this-bol
           (goto-char (+ this-bol 0))
           (let (ind-str
+                ind-str-fill
                 (beg-pos this-bol)
                 (end-pos (line-end-position)))
             (when (equal (get-text-property beg-pos 'wrap-prefix)
-                       (get-text-property beg-pos 'wrap-to-fill-prefix))
+                         (get-text-property beg-pos 'wrap-to-fill-prefix))
+              ;; Find indentation
               (skip-chars-forward "[:blank:]")
               (setq ind-str (buffer-substring-no-properties beg-pos (point)))
+              ;; Any special markers like -, * etc
+              (if (and (< (1+ (point)) (point-max))
+                       (memq (char-after) '(?- ;; 45
+                                            ?– ;; 8211
+                                            ?*
+                                            ))
+                       (eq (char-after (1+ (point))) ?\ ))
+                  (setq ind-str-fill (concat "  " ind-str))
+                (setq ind-str-fill ind-str))
+              ;;(setq ind-str-fill (concat "  " ind-str))
               (mumamo-with-buffer-prepared-for-jit-lock
-               (put-text-property beg-pos end-pos 'wrap-prefix ind-str)
-               (put-text-property beg-pos end-pos 'wrap-to-fill-prefix ind-str))))))
+               (put-text-property beg-pos end-pos 'wrap-prefix ind-str-fill)
+               (put-text-property beg-pos end-pos 'wrap-to-fill-prefix ind-str-fill))))))
       (forward-line 1))
     ;; Note: doing it line by line and returning t gave problem in mumamo.
     (when nil ;this-bol

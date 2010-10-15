@@ -47,9 +47,14 @@
 ;;
 ;;; Code:
 
-;;(require 'mumamo) ;; Just for the defmacro ...
-;;(require 'mlinks nil t)
+;; Silence byte compiler
+(defvar jit-lock-start)
+(defvar jit-lock-end)
 
+(eval-when-compile (require 'mumamo)) ;; Just for the defmacro ...
+(eval-when-compile (require 'mlinks nil t))
+
+;;;###autoload
 (defgroup html-write nil
   "Customization group for html-write."
   :group 'nxhtml
