@@ -19,6 +19,7 @@
 (load "~/.emacs.d/site-lisp/nxhtml/autostart.el")
 (setq mumamo-chunk-coloring 2)
 
+(load "~/.emacs.d/site-lisp/jinja.el")
 
 ;(if window-system
  ;(size-screen)
