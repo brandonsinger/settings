@@ -86,6 +86,9 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "<C-f2>") 'bm-toggle)
 (global-set-key (kbd "<f2>")   'bm-next)
 (global-set-key (kbd "<S-f2>") 'bm-previous)
+(global-set-key (kbd "[D") 'bm-toggle) ;ctl-left
+(global-set-key (kbd "[A") 'bm-previous) ;ctl-up
+(global-set-key (kbd "[B") 'bm-next) ;ctl-down
 
 
 (global-set-key (kbd "C-`") 'egg-status)
@@ -110,9 +113,9 @@ If point was already at that position, move point to beginning of line."
 
 ;; color theme (requires http://www.emacswiki.org/cgi-bin/wiki?ColorTheme )
 (require 'color-theme)
-(require 'color-theme-tango)
+(require 'color-theme-echo)
 (if window-system
-  (color-theme-tango))
+  (color-theme-echo))
 
 
 ;(require 'icicles)
