@@ -87,9 +87,12 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "<C-f2>") 'bm-toggle)
 (global-set-key (kbd "<f2>")   'bm-next)
 (global-set-key (kbd "<S-f2>") 'bm-previous)
-(global-set-key (kbd "[D") 'bm-toggle) ;ctl-left
-(global-set-key (kbd "[A") 'bm-previous) ;ctl-up
-(global-set-key (kbd "[B") 'bm-next) ;ctl-down
+(global-set-key (kbd "[D") 'bm-toggle) ;ctl-left through screen
+(global-set-key (kbd "[A") 'bm-previous) ;ctl-up through screen
+(global-set-key (kbd "[B") 'bm-next) ;ctl-down through screen
+(global-set-key (kbd "<C-left>") 'bm-toggle) ;ctl-left
+(global-set-key (kbd "<C-up>") 'bm-previous) ;ctl-up
+(global-set-key (kbd "<C-down>") 'bm-next) ;ctl-down
 
 
 (global-set-key (kbd "C-`") 'egg-status)
