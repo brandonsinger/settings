@@ -32,8 +32,12 @@
 
 (setq c-default-style "python")
 (setq-default c-basic-offset 4
-			  tab-width 4
-			  indent-tabs-mode t)
+              tab-width 4)
+(add-hook 'python-mode-hook
+	  (lambda()
+	    (setq-default indent-tabs-mode nil)
+            (setq-default tab-width 4)
+	    ))
 (add-hook 'html-mode-hook
           (lambda()
             (setq sgml-basic-offset 4)
@@ -87,12 +91,15 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "<C-f2>") 'bm-toggle)
 (global-set-key (kbd "<f2>")   'bm-next)
 (global-set-key (kbd "<S-f2>") 'bm-previous)
-(global-set-key (kbd "[D") 'bm-toggle) ;ctl-left through screen
-(global-set-key (kbd "[A") 'bm-previous) ;ctl-up through screen
-(global-set-key (kbd "[B") 'bm-next) ;ctl-down through screen
-(global-set-key (kbd "<C-left>") 'bm-toggle) ;ctl-left
-(global-set-key (kbd "<C-up>") 'bm-previous) ;ctl-up
-(global-set-key (kbd "<C-down>") 'bm-next) ;ctl-down
+(global-set-key (kbd "[D") 'bm-toggle) ;ctrl-left through screen
+(global-set-key (kbd "[A") 'bm-previous) ;ctrl-up through screen
+(global-set-key (kbd "[B") 'bm-next) ;ctrl-down through screen
+(global-set-key (kbd "<C-left>") 'bm-toggle) ;ctrl-left
+(global-set-key (kbd "<C-up>") 'bm-previous) ;ctrl-up
+(global-set-key (kbd "<C-down>") 'bm-next) ;ctrl-down
+(global-set-key "\M-[1;5D" 'bm-toggle) ;ctrl-left through tmux
+(global-set-key "\M-[1;5A" 'bm-previous) ;ctrl-up through tmux
+(global-set-key "\M-[1;5B" 'bm-next) ;ctrl-down through tmux
 
 
 (global-set-key (kbd "C-`") 'egg-status)
