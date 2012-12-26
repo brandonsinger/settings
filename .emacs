@@ -7,6 +7,8 @@
 (setq split-width-threshold most-positive-fixnum)
 (show-paren-mode 1)
 
+(setq warning-minimum-level :error)
+
 (desktop-save-mode 1)
 
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -145,6 +147,9 @@ If point was already at that position, move point to beginning of line."
 (load-theme 'sanityinc-tomorrow-night t)
 
 
+(require `tramp)
+
+
 
 
 (custom-set-variables
@@ -159,3 +164,5 @@ If point was already at that position, move point to beginning of line."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
