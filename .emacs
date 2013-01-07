@@ -40,17 +40,9 @@
 ;; **Editing Modes Stuff**
 ;;*****************************************************************************
 
-(load "~/.emacs.d/site-lisp/nxhtml/autostart.el")
-(setq mumamo-chunk-coloring 2)
-
-(load "~/.emacs.d/site-lisp/jinja.el")
-
-;(if window-system
- ;(size-screen)
-;)
-
-(add-to-list 'auto-mode-alist '("\\.js\\'" . espresso-mode))
-(autoload 'espresso-mode "espresso" nil t)
+(load "php-mode")
+(add-to-list 'auto-mode-alist
+     	     '("\\.php'" . php-mode))
 
 
 ;;*****************************************************************************
@@ -96,6 +88,7 @@
 ;(setq compilation-scroll-output t)
 ;(global-set-key "\C-c\C-c" 'my-compile)
 
+(global-set-key (kbd "C-t") 'test-case-run)
 
 
 ;;*****************************************************************************
@@ -139,8 +132,8 @@ If point was already at that position, move point to beginning of line."
 ;; **Visuals**
 ;;*****************************************************************************
 
-;;(require 'linum)
-;;(global-linum-mode 1)
+(require 'linum)
+(global-linum-mode 1)
 ;;nlinum-mode?
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
@@ -157,7 +150,8 @@ If point was already at that position, move point to beginning of line."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" default))))
+ '(custom-safe-themes (quote ("06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" default)))
+ '(test-case-phpunit-arguments "--configuration /home/echo/projects/website/test/phpunit.xml"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
