@@ -145,6 +145,36 @@ If point was already at that position, move point to beginning of line."
 ;;(require `tramp)
 
 
+;;*****************************************************************************
+;; **Custom Functions**
+;;*****************************************************************************
+
+;; I know that string is in my Emacs somewhere! (http://stackoverflow.com/questions/2641211/emacs-interactively-search-open-buffers)
+(require 'cl)
+(defcustom search-all-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS") eos)))
+  "Files to ignore when searching buffers via \\[search-all-buffers]."
+  :type 'editable-list)
+
+(require 'grep)
+(defun search-all-buffers (regexp prefix)
+  "Searches file-visiting buffers for occurence of REGEXP.  With
+prefix > 1 (i.e., if you type C-u \\[search-all-buffers]),
+searches all buffers."
+  (interactive (list (grep-read-regexp)
+                     current-prefix-arg))
+  (message "Regexp is %s; prefix is %s" regexp prefix)
+  (multi-occur
+   (if (member prefix '(4 (4)))
+       (buffer-list)
+     (remove-if
+      (lambda (b) (some (lambda (rx) (string-match rx  (file-name-nondirectory (buffer-file-name b)))) search-all-buffers-ignored-files))
+      (remove-if-not 'buffer-file-name (buffer-list))))
+
+   regexp))
+
+(global-set-key [f7] 'search-all-buffers)
+
+
 
 
 (custom-set-variables
@@ -152,6 +182,8 @@ If point was already at that position, move point to beginning of line."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bm-buffer-persistence nil)
+ '(bm-highlight-style (quote bm-highlight-line-and-fringe))
  '(custom-safe-themes (quote ("686d1ccaf211e0a0137436189b618f7b2c6bc8af8b8d470dda5bba3c379ede1e" "d3cb966afe2ba576766e99ea84d577b0df82bce3922379a01d702e17788e7a81" "d4bc75a8a8c49e659e1af3028ae68b470b4746733d6b3abb63019ed4d856bb7c" "71f235187b439da113fc5c67b703ff2e1135244566a3c446284180f2053f1e91" "1d73dd76ef3b22a7bfcdeb24410003bc904b814ff98b2ae6b262447b4da0dc30" "82b39200a25929b0d1e5cbdc985ea70e2091a6d247d35ae2e1b54cc55e05505b" "36c7cd3b0c072f7b60fbe5baea40f9586838eddb153a9d0e505293e68e283a67" "2af7ea3af2e1614eee4d7183086266f44544d6c6e08d4ad46babd429d9e03f40" "0142808c139a2632460c6c565abaf15eb56196b11a4f18648573a2272ecb9393" "af3c3bb2af278cf726be8c76f00b147b0225484fc8d5b30440b470d588193457" "ef8334b6aaa9556a8eb0a20c2e93fa7f748033c6de6e91c12e4f0a2c579f6524" "57fd558dfb773856a2a918cef533306f25bef1b40015cac123b5a58cee514f24" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "936e5cac238333f251a8d76a2ed96c8191b1e755782c99ea1d7b8c215e66d11e" "5bff694d9bd3791807c205d8adf96817ee1e572654f6ddc5e1e58b0488369f9d" "fe6330ecf168de137bb5eddbf9faae1ec123787b5489c14fa5fa627de1d9f82b" "787574e2eb71953390ed2fb65c3831849a195fd32dfdd94b8b623c04c7f753f0" "5e1d1564b6a2435a2054aa345e81c89539a72c4cad8536cfe02583e0b7d5e2fa" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "746b83f9281c7d7e34635ea32a8ffa374cd8e83f438b13d9cc7f5d14dc826d56" "30fe7e72186c728bd7c3e1b8d67bc10b846119c45a0f35c972ed427c45bacc19" "6cfe5b2f818c7b52723f3e121d1157cf9d95ed8923dbc1b47f392da80ef7495d" "617219c11282b84761477059b9339da78ce392c974d9308535ee4ec8c0770bee" "854dc57026d3226addcc46b2b460034a74609edbd9c14e626769ac724b10fcf5" "246a51f19b632c27d7071877ea99805d4f8131b0ff7acb8a607d4fd1c101e163" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" default)))
  '(test-case-phpunit-arguments "--configuration /home/echo/projects/website/test/phpunit.xml"))
 (custom-set-faces
@@ -159,6 +191,8 @@ If point was already at that position, move point to beginning of line."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bm-face ((t (:background "gray20"))))
+ '(bm-fringe-face ((t (:background "DarkOrange1" :foreground "Black"))))
  '(magit-item-highlight ((t nil))))
 
 
