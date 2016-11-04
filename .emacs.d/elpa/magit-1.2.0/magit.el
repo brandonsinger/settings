@@ -775,21 +775,22 @@ record undo information."
                 after-change-functions)
             ,@body)))))
 
-  (if (>= (magit-max-args-internal 'delete-directory) 2)
-      (defalias 'magit-delete-directory 'delete-directory)
-    (defun magit-delete-directory (directory &optional recursive)
-      "Deletes a directory named DIRECTORY.  If RECURSIVE is non-nil,
-recursively delete all of DIRECTORY's contents as well.
-
-Does not follow symlinks."
-      (if (or (file-symlink-p directory)
-              (not (file-directory-p directory)))
-          (delete-file directory)
-        (if recursive
-            ;; `directory-files-no-dot-files-regex' borrowed from Emacs 23
-            (dolist (file (directory-files directory 'full "\\([^.]\\|\\.\\([^.]\\|\\..\\)\\).*"))
-              (magit-delete-directory file recursive)))
-        (delete-directory directory)))))
+;  (if (>= (magit-max-args-internal 'delete-directory) 2)
+;      (defalias 'magit-delete-directory 'delete-directory)
+;    (defun magit-delete-directory (directory &optional recursive)
+;      "Deletes a directory named DIRECTORY.  If RECURSIVE is non-nil,
+;recursively delete all of DIRECTORY's contents as well.
+;
+;Does not follow symlinks."
+;      (if (or (file-symlink-p directory)
+;              (not (file-directory-p directory)))
+;          (delete-file directory)
+;        (if recursive
+;            ;; `directory-files-no-dot-files-regex' borrowed from Emacs 23
+;            (dolist (file (directory-files directory 'full "\\([^.]\\|\\.\\([^.]\\|\\..\\)\\).*"))
+;              (magit-delete-directory file recursive)))
+;        (delete-directory directory)))))  
+  (defalias 'magit-delete-directory 'delete-directory))
 
 ;;; Utilities
 
