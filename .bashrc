@@ -27,6 +27,4 @@ fi
 
 # Put your fun stuff here.
 
-#for bash completion
-source /etc/profile.d/bash-completion.sh
 

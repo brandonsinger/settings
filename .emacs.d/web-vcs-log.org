@@ -1,8 +1,0 @@
-
-* 2011-11-09
-** Downloading file 18:54:37 GMT
-   file [[file:/home/echo/.emacs.d/site-lisp/nxhtml/nxhtml-base.el][/home/echo/.emacs.d/site-lisp/nxhtml/nxhtml-base.el]]
-   from /~nxhtml/nxhtml/main/download/lennart.borgman%40gmail.com-20101228200718-9wwuyehbvtygvstb/nxhtmlbase.el-20100113172514-fyszxn1ypx4ml96h-1/nxhtml-base.el
-** Downloading file 18:56:07 GMT
-   file [[file:/home/echo/.emacs.d/site-lisp/nxhtml/autostart.el][/home/echo/.emacs.d/site-lisp/nxhtml/autostart.el]]
-   from /~nxhtml/nxhtml/main/download/lennart.borgman%40gmail.com-20110313013000-drl16yyp60auegw9/autostart.el-20080724174035-zgon4j679232cch3-2/autostart.el
