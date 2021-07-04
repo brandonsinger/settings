@@ -33,6 +33,10 @@
     kept-new-versions 6
     kept-old-versions 2
     version-control t)
+
+  (save-place-mode 1)
+  (setq save-place-forget-unreadable-files nil)
+
 #+end_src
 
 ** Save hook
@@ -40,21 +44,6 @@
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
-** Smart home
-#+begin_src emacs-lisp
-  (defun smart-beginning-of-line ()
-    "Move point to first non-whitespace character or beginning-of-line.
-
-  Move point to the first non-whitespace character on this line.
-  If point was already at that position, move point to beginning of line."
-    (interactive "^") ; Use (interactive) in Emacs 22 or older
-    (let ((oldpos (point)))
-      (back-to-indentation)
-      (and (= oldpos (point))
-           (beginning-of-line))))
-
-  (global-set-key [home] 'smart-beginning-of-line)
-#+end_src
 * Setup straight.el
 ** Bootstrap
 *Note*: if this doesnt work, will need to clone straight.el
@@ -153,6 +142,17 @@
 #+end_src
 
 * Tools
+** Smart home/end
+#+begin_src emacs-lisp
+  (use-package mwim
+    :bind (("C-a" . mwim-beginning-of-code-or-line)
+           ("C-e" . mwim-end-of-code-or-line)
+           ("<home>" . mwim-beginning-of-line-or-code)
+           ("<end>" . mwim-end-of-line-or-code))
+    )
+
+#+end_src
+
 ** Magit
 #+begin_src emacs-lisp
   (use-package magit
@@ -169,8 +169,23 @@
     )
 
   (use-package yaml-mode
-    :mode "\\.yml\\'"
+    :mode ("\\.yaml\\'" "\\.yml\\'")
     )
+
+  (use-package python-mode
+    :ensure nil
+    :custom
+    (python-shell-interperter "python")
+    )
+
+  ;; Todo
+  (require 'web-mode)
+  (setq web-mode-enable-auto-indentation nil)
+  (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.php[s34]?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+
 #+end_src
 
 ** which-key
@@ -206,6 +221,12 @@
         (when (file-directory-p "~/projects")
           (setq projectile-project-search-path '("~/projects")))
         )
+
+  (use-package counsel-projectile
+    :after (counsel projectile)
+    :config
+    (counsel-projectile-mode)
+    )
 #+end_src
 
 * Interface
@@ -213,18 +234,15 @@
 #+begin_src emacs-lisp
   (use-package ivy
   :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
+  :bind (
+         ("C-s" . swiper)
          :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
+         ("C-k" . (lambda()
+                    (interactive)
+                    (ivy-set-action 'ivy-switch-buffer-kill)
+                    (ivy-done)
+                    ))
+         )
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
@@ -274,7 +292,8 @@
 #+begin_src emacs-lisp
   (use-package doom-themes
     :config
-    (load-theme 'doom-gruvbox)
+    ;(load-theme 'doom-gruvbox)
+    (load-theme 'doom-dracula)
     )
   (use-package doom-modeline
     :init (doom-modeline-mode 1)
@@ -292,9 +311,4 @@
     (add-hook mode (lambda () (display-line-numbers-mode 0)))
     )
 
-#+end_src
-
-* Not organsized yet config
-
-#+begin_src emacs-lisp
 #+end_src

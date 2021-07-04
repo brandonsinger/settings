@@ -22,20 +22,10 @@
   kept-old-versions 2
   version-control t)
 
+(save-place-mode 1)
+(setq save-place-forget-unreadable-files nil)
+
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-(defun smart-beginning-of-line ()
-  "Move point to first non-whitespace character or beginning-of-line.
-
-Move point to the first non-whitespace character on this line.
-If point was already at that position, move point to beginning of line."
-  (interactive "^") ; Use (interactive) in Emacs 22 or older
-  (let ((oldpos (point)))
-    (back-to-indentation)
-    (and (= oldpos (point))
-         (beginning-of-line))))
-
-(global-set-key [home] 'smart-beginning-of-line)
 
 ;; Bootsrap straight.el
 (setq straight-repository-branch "master")
@@ -112,6 +102,13 @@ If point was already at that position, move point to beginning of line."
       (add-to-list 'org-structure-template-alist '("py" . "src python"))
       )
 
+(use-package mwim
+  :bind (("C-a" . mwim-beginning-of-code-or-line)
+         ("C-e" . mwim-end-of-code-or-line)
+         ("<home>" . mwim-beginning-of-line-or-code)
+         ("<end>" . mwim-end-of-line-or-code))
+  )
+
 (use-package magit
     :config
     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
@@ -123,7 +120,13 @@ If point was already at that position, move point to beginning of line."
   )
 
 (use-package yaml-mode
-  :mode "\\.yml\\'"
+  :mode ("\\.yaml\\'" "\\.yml\\'")
+  )
+
+(use-package python-mode
+  :ensure nil
+  :custom
+  (python-shell-interperter "python")
   )
 
 (use-package which-key
@@ -151,20 +154,23 @@ If point was already at that position, move point to beginning of line."
         (setq projectile-project-search-path '("~/projects")))
       )
 
+(use-package counsel-projectile
+  :after (counsel projectile)
+  :config
+  (counsel-projectile-mode)
+  )
+
 (use-package ivy
 :diminish
-:bind (("C-s" . swiper)
-       :map ivy-minibuffer-map
-       ("TAB" . ivy-alt-done)
-       ("C-j" . ivy-next-line)
-       ("C-k" . ivy-previous-line)
+:bind (
+       ("C-s" . swiper)
        :map ivy-switch-buffer-map
-       ("C-k" . ivy-previous-line)
-       ("C-l" . ivy-done)
-       ("C-d" . ivy-switch-buffer-kill)
-       :map ivy-reverse-i-search-map
-       ("C-k" . ivy-previous-line)
-       ("C-d" . ivy-reverse-i-search-kill))
+       ("C-k" . (lambda()
+                  (interactive)
+                  (ivy-set-action 'ivy-switch-buffer-kill)
+                  (ivy-done)
+                  ))
+       )
 :config
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t)
@@ -205,7 +211,8 @@ If point was already at that position, move point to beginning of line."
 
 (use-package doom-themes
   :config
-  (load-theme 'doom-gruvbox)
+  ;(load-theme 'doom-gruvbox)
+  (load-theme 'doom-dracula)
   )
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
@@ -222,5 +229,17 @@ If point was already at that position, move point to beginning of line."
               )
   (add-hook mode (lambda () (display-line-numbers-mode 0)))
   )
-
-
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("5784d048e5a985627520beb8a101561b502a191b52fa401139f4dd20acb07607" "f91395598d4cb3e2ae6a2db8527ceb83fed79dbaf007f435de3e91e5bda485fb" "b7e460a67bcb6cac0a6aadfdc99bdf8bbfca1393da535d4e8945df0648fa95fb" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

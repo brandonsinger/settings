@@ -2,3 +2,12 @@
 .emacs.d/elpa/*
 *.elc
 .places
+/.emacs.d/.emacs.desktop
+/.emacs.d/.emacs.desktop.lock
+/.emacs.d/.last-package-update-day
+/.emacs.d/amx-items
+/.emacs.d/places
+/.emacs.d/projectile-bookmarks.eld
+/.emacs.d/recentf
+/.emacs.d/transient/
+/.emacs.d/straight/

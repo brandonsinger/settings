@@ -6,7 +6,7 @@
   tasks:
   -  name:
      ansible.builtin.file:
-       src: "~/settings/{{item}}"
+       src: "{{playbook_dir}}/{{item}}"
        dest: "~/{{item}}"
        state: link
        force: yes
