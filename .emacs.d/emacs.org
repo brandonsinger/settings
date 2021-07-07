@@ -15,6 +15,8 @@
 
   (show-paren-mode 1)
   ;(setq show-paren-style 'expression)
+
+  (setq-default tab-width 4)
 #+end_src
 
 ** Set some global keys
@@ -147,8 +149,8 @@
   (use-package mwim
     :bind (("C-a" . mwim-beginning-of-code-or-line)
            ("C-e" . mwim-end-of-code-or-line)
-           ("<home>" . mwim-beginning-of-line-or-code)
-           ("<end>" . mwim-end-of-line-or-code))
+           ("<home>" . mwim-beginning-of-code-or-line)
+           ("<end>" . mwim-end-of-code-or-line))
     )
 
 #+end_src
