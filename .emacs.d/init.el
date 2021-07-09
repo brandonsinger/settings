@@ -10,6 +10,8 @@
 (show-paren-mode 1)
 ;(setq show-paren-style 'expression)
 
+(setq-default tab-width 4)
+
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "C-x <") 'org-insert-structure-template)
 
@@ -105,8 +107,8 @@
 (use-package mwim
   :bind (("C-a" . mwim-beginning-of-code-or-line)
          ("C-e" . mwim-end-of-code-or-line)
-         ("<home>" . mwim-beginning-of-line-or-code)
-         ("<end>" . mwim-end-of-line-or-code))
+         ("<home>" . mwim-beginning-of-code-or-line)
+         ("<end>" . mwim-end-of-code-or-line))
   )
 
 (use-package magit
@@ -128,6 +130,13 @@
   :custom
   (python-shell-interperter "python")
   )
+
+;; Todo
+(require 'web-mode)
+(setq web-mode-enable-auto-indentation nil)
+(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php[s34]?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 (use-package which-key
   :init (which-key-mode)
@@ -229,17 +238,3 @@
               )
   (add-hook mode (lambda () (display-line-numbers-mode 0)))
   )
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("5784d048e5a985627520beb8a101561b502a191b52fa401139f4dd20acb07607" "f91395598d4cb3e2ae6a2db8527ceb83fed79dbaf007f435de3e91e5bda485fb" "b7e460a67bcb6cac0a6aadfdc99bdf8bbfca1393da535d4e8945df0648fa95fb" default))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
