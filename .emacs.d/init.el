@@ -3,7 +3,7 @@
 (setq inhibit-startup-message t)
 (menu-bar-mode 0)
 (tool-bar-mode 0)
-(setq split-width-threshold most-positive-fixnum)
+;(setq split-width-threshold most-positive-fixnum)
 
 (setq-default indent-tabs-mode nil)
 
@@ -212,11 +212,28 @@
       )
 
 (use-package bm
-      :bind
-      ("<C-left>" . bm-toggle)
-      ("<C-up>" . bm-previous)
-      ("<C-down>" . bm-next)
-      )
+  :bind
+  ("<C-left>" . bm-toggle)
+  ("<C-up>" . bm-previous)
+  ("<C-down>" . bm-next)
+  )
+
+(use-package switch-window
+  :bind
+  ("C-x o" . switch-window)
+  ("C-x 1" . switch-window-then-maximize)
+  ("C-x 2" . switch-window-then-split-below)
+  ("C-x 3" . switch-window-then-split-right)
+  ("C-x 0" . switch-window-then-delete)
+  :config
+  (setq switch-window-minibuffer-shortcut ?z)
+  (setq switch-window-shortcut-appearance 'asciiart)
+  )
+
+(use-package golden-ratio
+  :config
+  (golden-radio-mode 1)
+  )
 
 (use-package doom-themes
   :config
