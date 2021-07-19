@@ -40,7 +40,6 @@
 
   (save-place-mode 1)
   (setq save-place-forget-unreadable-files nil)
-
 #+end_src
 
 ** Save hook
@@ -84,7 +83,6 @@
     (setq auto-package-update-hide-results t)
     (auto-package-update-maybe)
     )
-
 #+end_src
 
 * Org Config
@@ -310,9 +308,11 @@
     (setq switch-window-minibuffer-shortcut ?z)
     (setq switch-window-shortcut-appearance 'asciiart)
     )
+  ; maybe use winmode instead of switch-window?
 
   (use-package winner-mode
     :ensure nil
+    :straight nil
     :config
     (winner-mode)
     )
@@ -348,7 +348,6 @@
        ("q" nil)
        )
   (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
-
 #+end_src
 
 

@@ -12,3 +12,4 @@
 /.emacs.d/transient/
 /.emacs.d/straight/
 /.emacs.d/projectile.cache
+/.emacs.d/eshell/
