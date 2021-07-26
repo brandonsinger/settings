@@ -59,14 +59,14 @@
   )
 
 (defun echo/org-mode-setup ()
-    (org-indent-mode)
-    (visual-line-mode 1)
-    )
-  (use-package org
-    :hook (org-mode . echo/org-mode-setup)
-    :config
-    (setq org-ellipsis " ▾")
-    )
+  (org-indent-mode)
+  (visual-line-mode 1)
+  )
+(use-package org
+  :hook (org-mode . echo/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾")
+  )
 
 ;  (use-package org-bullets
 ;        :after org
@@ -98,13 +98,13 @@
 )
 
 (use-package org-contrib
-      :after org
-      :config
-      (require 'org-tempo)
-      (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-      (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-      (add-to-list 'org-structure-template-alist '("py" . "src python"))
-      )
+  :after org
+  :config
+  (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  )
 
 (use-package mwim
   :bind (("C-a" . mwim-beginning-of-code-or-line)
@@ -114,9 +114,9 @@
   )
 
 (use-package magit
-    :config
-    (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
-    )
+  :config
+  (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
+  )
 
 (use-package web-mode
   :config
@@ -148,22 +148,22 @@
   )
 
 (use-package amx
-      :config
-      (amx-mode)
-      )
+  :config
+  (amx-mode)
+  )
 
 (use-package projectile
-      :diminish projectile-mode
-      :config
-      (projectile-mode)
-      :custom
-      ((projectile-completion-system 'ivy))
-      :bind
-      ("C-p" . projectile-command-map)
-      :init
-      (when (file-directory-p "~/projects")
-        (setq projectile-project-search-path '("~/projects")))
-      )
+  :diminish projectile-mode
+  :config
+  (projectile-mode)
+  :custom
+  ((projectile-completion-system 'ivy))
+  :bind
+  ("C-p" . projectile-command-map)
+  :init
+  (when (file-directory-p "~/projects")
+    (setq projectile-project-search-path '("~/projects")))
+  )
 
 (use-package counsel-projectile
   :after (counsel projectile)
@@ -175,8 +175,7 @@
 
 (use-package ivy
 :diminish
-:bind (
-       ("C-s" . swiper)
+:bind (("C-s" . swiper)
        :map ivy-switch-buffer-map
        ("C-k" . (lambda()
                   (interactive)
@@ -195,7 +194,7 @@
   (ivy-rich-mode 1)
   :after
   (ivy)
-    )
+  )
 
 (use-package hydra)
 
@@ -205,15 +204,14 @@
   )
 
 (use-package counsel
-      :bind (
-             ("M-x" . counsel-M-x)
-             ("C-x b" . counsel-ibuffer)
-             ("C-x C-b" . counsel-ibuffer)
-             ("C-x C-f" . counsel-find-file)
-             :map minibuffer-local-map
-             ("C-r" . 'counsel-minibuffer-history)
-             )
-      )
+  :bind (("M-x" . counsel-M-x)
+         ("C-x b" . counsel-ibuffer)
+         ("C-x C-b" . counsel-ibuffer)
+         ("C-x C-f" . counsel-find-file)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-history)
+         )
+  )
 
 (use-package bm
   :bind
@@ -235,17 +233,13 @@
   )
 ; maybe use winmode instead of switch-window?
 
-(use-package winner-mode
-  :ensure nil
-  :straight nil
-  :config
-  (winner-mode)
-  )
+(winner-mode)
+
 
 (use-package buffer-move)
 
 (defhydra hydra-mywindow ()
-     "
+  "
   ^Change Window^   ^Buffer Move^      ^Window^         ^Resize Window^
   -------------------------------------------
       ↑     	        C-↑             Split _v_ertical    _<prior>_ Enlarge Horizontally
@@ -254,24 +248,24 @@
       →               C-→             _u_ndo
   _SPC_ cancel
   "
-     ("<up>" windmove-up)
-     ("<down>" windmove-down)
-     ("<left>" windmove-left)
-     ("<right>" windmove-right)
-     ("C-<up>" buf-move-up)
-     ("C-<down>" buf-move-down)
-     ("C-<left>" buf-move-left)
-     ("C-<right>" buf-move-right)
-     ("v" split-window-right)
-     ("h" split-window-below)
-     ("k" delete-window)
-     ("u" winner-undo)
-     ("<prior>" enlarge-window-horizontally)
-     ("<next>" shrink-window-horizontally)
-     ("<deletechar>" shrink-window)
-     ("SPC" nil)
-     ("q" nil)
-     )
+  ("<up>" windmove-up)
+  ("<down>" windmove-down)
+  ("<left>" windmove-left)
+  ("<right>" windmove-right)
+  ("C-<up>" buf-move-up)
+  ("C-<down>" buf-move-down)
+  ("C-<left>" buf-move-left)
+  ("C-<right>" buf-move-right)
+  ("v" split-window-right)
+  ("h" split-window-below)
+  ("k" delete-window)
+  ("u" winner-undo)
+  ("<prior>" enlarge-window-horizontally)
+  ("<next>" shrink-window-horizontally)
+  ("<deletechar>" shrink-window)
+  ("SPC" nil)
+  ("q" nil)
+  )
 (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
 
 (use-package doom-themes
@@ -294,17 +288,5 @@
               )
   (add-hook mode (lambda () (display-line-numbers-mode 0)))
   )
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("b7e460a67bcb6cac0a6aadfdc99bdf8bbfca1393da535d4e8945df0648fa95fb" default))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+(setq frame-background-mode 'dark)
