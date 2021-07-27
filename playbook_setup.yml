@@ -1,0 +1,23 @@
+#!/usr/bin/env ansible-playbook
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+  - name: Create symlinks
+    ansible.builtin.file:
+      src: "{{playbook_dir}}/{{item}}"
+      dest: "~/{{item}}"
+      state: link
+      force: yes
+      follow: no
+    loop:
+      - .bashrc
+      - .emacs.d
+
+  - name:
+    systemd:
+      name: emacs
+      enabled: yes
+      state: started
+      scope: user

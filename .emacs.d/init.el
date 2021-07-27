@@ -271,10 +271,17 @@
 (use-package doom-themes
   :config
   ;(load-theme 'doom-gruvbox)
-  (load-theme 'doom-dracula)
+  (load-theme 'doom-dracula t)
   )
 (use-package doom-modeline
-  :init (doom-modeline-mode 1)
+  :init
+  (doom-modeline-mode 1)
+  )
+
+(use-package solaire-mode
+  :init
+  (solaire-global-mode +1)
+  (add-to-list 'solaire-mode-themes-to-face-swap 'doom-dracula)
   )
 
 (setq visible-bell t)
