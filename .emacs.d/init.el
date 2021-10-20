@@ -17,7 +17,7 @@
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "C-x <") 'org-insert-structure-template)
 
-(desktop-save-mode 1)
+;(desktop-save-mode 1)
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq backup-by-copying t)
@@ -156,8 +156,6 @@
   :diminish projectile-mode
   :config
   (projectile-mode)
-  :custom
-  ((projectile-completion-system 'ivy))
   :bind
   ("C-p" . projectile-command-map)
   :init
@@ -165,53 +163,61 @@
     (setq projectile-project-search-path '("~/projects")))
   )
 
-(use-package counsel-projectile
-  :after (counsel projectile)
-  :config
-  (counsel-projectile-mode)
-  )
 
 
+(use-package vertico
+   :init
+   (vertico-mode)
+   (setq vertico-cycle t))
 
-(use-package ivy
-:diminish
-:bind (("C-s" . swiper)
-       :map ivy-switch-buffer-map
-       ("C-k" . (lambda()
-                  (interactive)
-                  (ivy-set-action 'ivy-switch-buffer-kill)
-                  (ivy-done)
-                  ))
-       )
-:config
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq ivy-wrap t)
-)
+ (use-package savehist
+   :straight nil
+   :init
+   (savehist-mode))
 
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1)
-  :after
-  (ivy)
-  )
+ (use-package orderless
+   :init
+   (setq completion-styles '(orderless)
+         completion-category-defaults nil
+         completion-category-overrides '((file (styles partial-completion)))))
 
-(use-package hydra)
+ (use-package marginalia
+   :after vertico
+   :init
+   (marginalia-mode))
 
-(use-package ivy-hydra
-  :after
-  (ivy hydra)
-  )
+ (use-package consult
+   :bind
+   (("C-x b" . consult-buffer)
+    ("C-x C-b" . consult-buffer)
+    ("M-g M-g" . consult-goto-line)
+    ("C-s" . consult-line)
+    ("C-f" . consult-imenu))
+   :config
+   (consult-customize
+    consult-theme :preview-key 'any
+    consult-line :prompt "Search: " :preview-key 'any)
 
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-ibuffer)
-         ("C-x C-b" . counsel-ibuffer)
-         ("C-x C-f" . counsel-find-file)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history)
-         )
-  )
+   (setq consult-project-root-function #'projectile-project-root))
+
+ (use-package embark
+   :bind
+   (("C-x C-a" . embark-act)         ;; pick some comfortable binding
+    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+   :config
+   ;; Hide the mode line of the Embark live/completions buffers
+   (add-to-list 'display-buffer-alist
+                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                  nil
+                  (window-parameters (mode-line-format . none)))))
+
+ (use-package embark-consult
+   :after (embark consult)
+   :demand t ; only necessary if you have the hook below
+   ;; if you want to have consult previews as you move around an
+   ;; auto-updating embark collect buffer
+   :hook
+   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package bm
   :bind
@@ -238,6 +244,7 @@
 
 (use-package buffer-move)
 
+(use-package hydra)
 (defhydra hydra-mywindow ()
   "
   ^Change Window^   ^Buffer Move^      ^Window^         ^Resize Window^
@@ -270,8 +277,8 @@
 
 (use-package doom-themes
   :config
-  ;(load-theme 'doom-gruvbox)
-  (load-theme 'doom-dracula t)
+  (load-theme 'doom-gruvbox t)
+  ;(load-theme 'doom-dracula t)
   )
 (use-package doom-modeline
   :init
