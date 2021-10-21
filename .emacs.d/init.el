@@ -140,6 +140,12 @@
 (add-to-list 'auto-mode-alist '("\\.php[s34]?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
+(setq web-mode-engines-alist
+    '(
+      ("smarty" . "/home/echo/projects/website/templates/.*\\.html\\'")
+      )
+    )
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
@@ -202,7 +208,7 @@
 
  (use-package embark
    :bind
-   (("C-x C-a" . embark-act)         ;; pick some comfortable binding
+   (("C-\\" . embark-act)         ;; pick some comfortable binding
     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
    :config
    ;; Hide the mode line of the Embark live/completions buffers
