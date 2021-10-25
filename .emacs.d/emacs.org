@@ -225,6 +225,9 @@
     (when (file-directory-p "~/projects")
       (setq projectile-project-search-path '("~/projects")))
     )
+
+  (use-package ripgrep)
+
 #+end_src
 
 ** dired

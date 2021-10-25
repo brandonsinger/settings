@@ -169,6 +169,8 @@
     (setq projectile-project-search-path '("~/projects")))
   )
 
+(use-package ripgrep)
+
 
 
 (use-package vertico
