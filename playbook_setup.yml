@@ -15,9 +15,9 @@
       - .bashrc
       - .emacs.d
 
-  - name:
-    systemd:
-      name: emacs
-      enabled: yes
-      state: started
-      scope: user
+#  - name:
+#    systemd:
+#      name: emacs
+#      enabled: yes
+#      state: started
+#      scope: user
