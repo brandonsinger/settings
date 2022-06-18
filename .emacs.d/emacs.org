@@ -19,6 +19,11 @@
   (setq-default tab-width 4)
 
   (column-number-mode)
+
+  (setq use-dialog-box nil)
+
+  (global-auto-revert-mode 1)
+  (setq global-auto-revert-non-file-buffers t)
 #+end_src
 
 ** Set some global keys
@@ -29,8 +34,6 @@
 
 ** Desktop mode
 #+begin_src emacs-lisp
-  ;(desktop-save-mode 1)
-
   (setq backup-directory-alist `(("." . "~/.saves")))
   (setq backup-by-copying t)
   (setq delete-old-versions t
@@ -245,7 +248,7 @@
      (use-package savehist
        :straight nil
        :init
-       (savehist-mode))
+       (savehist-mode 1))
 
      (use-package orderless
        :init
