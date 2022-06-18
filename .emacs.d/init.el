@@ -66,6 +66,7 @@
   (visual-line-mode 1)
   )
 (use-package org
+  :delight
   :hook (org-mode . echo/org-mode-setup)
   :config
   (setq org-ellipsis " ▾")
@@ -82,11 +83,6 @@
  'org-babel-load-languages
  '((emacs-lisp . t)
    (python . t)))
-
-(add-hook 'find-file-hook 'my-org-mode-file-hook)
-(defun my-org-mode-file-hook ()
-  (when (string= (file-name-extension buffer-file-name) "org")
-    (org-mode)))
 
 (defun echo/org-babel-tangle-config ()
   (when (string-equal (buffer-file-name)
@@ -149,7 +145,7 @@
 
 (use-package which-key
   :init (which-key-mode)
-  :diminish which-key-mode
+  :delight which-key-mode
   :config
   (setq which-key-idle-delay 0.5)
   )
@@ -160,7 +156,7 @@
   )
 
 (use-package projectile
-  :diminish projectile-mode
+  :delight '(:eval (concat " " (projectile-project-name)))
   :config
   (projectile-mode)
   :bind
@@ -172,61 +168,68 @@
 
 (use-package ripgrep)
 
-
+(use-package dired
+  :straight nil
+  )
 
 (use-package vertico
-   :init
-   (vertico-mode)
-   (setq vertico-cycle t))
+  :init
+  (vertico-mode 1)
+  (setq vertico-cycle t))
 
- (use-package savehist
-   :straight nil
-   :init
-   (savehist-mode 1))
+(use-package savehist
+  :straight nil
+  :init
+  (savehist-mode 1))
 
- (use-package orderless
-   :init
-   (setq completion-styles '(orderless)
-         completion-category-defaults nil
-         completion-category-overrides '((file (styles partial-completion)))))
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
- (use-package marginalia
-   :after vertico
-   :init
-   (marginalia-mode))
+(use-package marginalia
+  :after vertico
+  :init
+  (marginalia-mode 1))
 
- (use-package consult
-   :bind
-   (("C-x b" . consult-buffer)
-    ("C-x C-b" . consult-buffer)
-    ("M-g M-g" . consult-goto-line)
-    ("C-s" . consult-line)
-    ("C-f" . consult-imenu))
-   :config
-   (consult-customize
-    consult-theme :preview-key 'any
-    consult-line :prompt "Search: " :preview-key 'any)
+(use-package consult
+  :bind
+  (("C-x b" . consult-buffer)
+   ("C-x C-b" . consult-buffer)
+   ("M-g M-g" . consult-goto-line)
+   ("C-s" . consult-line)
+   ("C-f" . consult-imenu))
+  :config
+  (consult-customize
+   consult-theme :preview-key 'any
+   consult-line :prompt "Search: " :preview-key 'any)
 
-   (setq consult-project-root-function #'projectile-project-root))
+  (setq consult-project-root-function #'projectile-project-root))
 
- (use-package embark
-   :bind
-   (("C-\\" . embark-act)         ;; pick some comfortable binding
-    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-   :config
-   ;; Hide the mode line of the Embark live/completions buffers
-   (add-to-list 'display-buffer-alist
-                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                  nil
-                  (window-parameters (mode-line-format . none)))))
+(use-package embark
+  :bind
+  (("C-\\" . embark-act)         ;; pick some comfortable binding
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
 
- (use-package embark-consult
-   :after (embark consult)
-   :demand t ; only necessary if you have the hook below
-   ;; if you want to have consult previews as you move around an
-   ;; auto-updating embark collect buffer
-   :hook
-   (embark-collect-mode . consult-preview-at-point-mode))
+(use-package embark-consult
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package corfu
+  :init
+  (global-corfu-mode)
+  )
 
 (use-package bm
   :bind
@@ -286,6 +289,15 @@
 
 (setq visible-bell t)
 
+(global-display-line-numbers-mode t)
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook)
+              )
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
 (use-package modus-themes
   :demand t
   :after (org)
@@ -307,5 +319,8 @@
   (setq modus-themes-subtle-line-numbers t)
   :config
   (load-theme 'modus-vivendi t)
-  :bind ("<f5>" . modus-themes-toggle)
+  :bind
+  ("<f5>" . modus-themes-toggle)
   )
+
+(use-package rainbow-mode)
