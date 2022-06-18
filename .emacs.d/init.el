@@ -3,12 +3,12 @@
 (setq inhibit-startup-message t)
 (menu-bar-mode 0)
 (tool-bar-mode 0)
-;(setq split-width-threshold most-positive-fixnum)
+
 
 (setq-default indent-tabs-mode nil)
 
 (show-paren-mode 1)
-;(setq show-paren-style 'expression)
+                                          ;(setq show-paren-style 'expression)
 
 (setq-default tab-width 4)
 
@@ -18,6 +18,15 @@
 
 (global-auto-revert-mode 1)
 (setq global-auto-revert-non-file-buffers t)
+
+(customize-set-variable 'kill-do-not-save-duplicates t)
+
+;; Make scrolling less stuttered
+(setq auto-window-vscroll nil)
+(customize-set-variable 'fast-but-imprecise-scrolling t)
+(customize-set-variable 'scroll-conservatively 101)
+(customize-set-variable 'scroll-margin 0)
+(customize-set-variable 'scroll-preserve-screen-position t)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "C-x <") 'org-insert-structure-template)
@@ -156,7 +165,7 @@
   )
 
 (use-package projectile
-  :delight '(:eval (concat " " (projectile-project-name)))
+  :diminish projectile-mode
   :config
   (projectile-mode)
   :bind
@@ -186,7 +195,7 @@
   :init
   (setq completion-styles '(orderless)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-overrides '((file (styles . (partial-completion))))))
 
 (use-package marginalia
   :after vertico
