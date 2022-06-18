@@ -14,10 +14,13 @@
 
 (column-number-mode)
 
+(setq use-dialog-box nil)
+
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "C-x <") 'org-insert-structure-template)
-
-;(desktop-save-mode 1)
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq backup-by-copying t)
@@ -179,7 +182,7 @@
  (use-package savehist
    :straight nil
    :init
-   (savehist-mode))
+   (savehist-mode 1))
 
  (use-package orderless
    :init
