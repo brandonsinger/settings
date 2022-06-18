@@ -13,3 +13,4 @@
 /.emacs.d/straight/
 /.emacs.d/projectile.cache
 /.emacs.d/eshell/
+/.emacs.d/history
