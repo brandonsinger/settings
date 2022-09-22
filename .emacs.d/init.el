@@ -30,6 +30,8 @@
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "C-x <") 'org-insert-structure-template)
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c a") 'org-agenda)
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq backup-by-copying t)
@@ -79,6 +81,29 @@
   :hook (org-mode . echo/org-mode-setup)
   :config
   (setq org-ellipsis " ▾")
+  (setq org-agenda-files '("~/gtd/inbox.org"
+                           "~/gtd/gtd.org"
+                           "~/gtd/tickler.org"))
+  (setq org-capture-templates '(("t" "Todo [inbox]" entry
+                                 (file+headline "~/gtd/inbox.org" "Tasks")
+                                 "* TODO %i%?")
+                                ("T" "Tickler" entry
+                                 (file+headline "~/gtd/tickler.org" "Tickler")
+                                 "* %i%? \n %U")))
+  (setq org-refile-targets '(("~/gtd/gtd.org" :maxlevel . 3)
+                             ("~/gtd/someday.org" :level . 1)
+                             ("~/gtd/tickler.org" :maxlevel . 2)))
+  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+  (setq-default org-enforce-todo-dependencies t)
+  (setq org-refile-use-outline-path 'file)
+  (setq org-outline-path-complete-in-steps nil)
+  (setq org-tag-alist '((:startgroup . nil)
+                        ("@work" . ?w)
+                        ("@home" . ?h)
+                        ("@computer" . ?c)
+                        (:endgroup . nil)
+                        ("emacs" . ?e)
+                        ))
   )
 
 (defun echo/org-mode-visual-fill ()
