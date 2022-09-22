@@ -4,6 +4,18 @@
 * Basic Config
 ** Some basic init
 #+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+
+  ;; The default is 800 kilobytes.  Measured in bytes.
+  (setq gc-cons-threshold (* 50 1000 1000))
+
+  ;; Profile emacs startup
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (message "*** Emacs loaded in %s seconds with %d garbage collections."
+                       (emacs-init-time "%.2f")
+                       gcs-done)))
+
   (setq package-enable-at-startup nil)
 
   (setq inhibit-startup-message t)
@@ -148,6 +160,40 @@
    '((emacs-lisp . t)
      (python . t)))
 
+
+  (use-package org-super-agenda
+    :after org
+    :config
+    (setq org-agenda-skip-scheduled-if-done t
+          org-agenda-skip-deadline-if-done t
+          org-agenda-include-deadlines t
+          org-agenda-include-diary t
+          ;org-agenda-block-separator nil
+          ;org-agenda-compact-blocks t
+          ;org-agenda-start-with-log-mode t
+          )
+    (setq org-super-agenda-groups
+          '(
+            (:name "Inbox"
+                   :file-path "inbox\.org")
+            (:name "Emacs"
+                   :tag "emacs")
+            (:name "Today"
+                   :time-grid t
+                   :scheduled today)
+            (:name "Due today"
+                   :deadline today)
+            (:name "Important"
+                   :priority "A")
+            (:name "Overdue"
+                   :deadline past)
+            (:name "Due soon"
+                   :deadline future)
+            (:name "Waiting"
+                   :todo "WAIT")
+            ))
+    (org-super-agenda-mode)
+  )
 #+end_src
 
 ** Auto-tangle Config
