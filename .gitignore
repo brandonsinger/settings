@@ -14,3 +14,6 @@
 /.emacs.d/projectile.cache
 /.emacs.d/eshell/
 /.emacs.d/history
+/.emacs.d/eln-cache/
+/.emacs.d/devdocs/
+/.emacs.d/bookmarks
