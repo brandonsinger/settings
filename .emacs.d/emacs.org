@@ -40,20 +40,20 @@
   ;; Set the right directory to store the native comp cache
   (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
-  ;; ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
-  ;; (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
-  ;;       url-history-file (expand-file-name "url/history" user-emacs-directory))
+  ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
+  (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
+        url-history-file (expand-file-name "url/history" user-emacs-directory))
 
-  ;; ;; Use no-littering to automatically set common paths to the new user-emacs-directory
-  ;; (setup (:pkg no-littering)
-  ;;        (require 'no-littering))
+  ;; Use no-littering to automatically set common paths to the new user-emacs-directory
+  ;;(setup (:pkg no-littering)
+  ;;       (require 'no-littering)) todo:fix
 
-  ;; ;; Keep customization settings in a temporary file (thanks Ambrevar!)
-  ;; (setq custom-file
-  ;;       (if (boundp 'server-socket-dir)
-  ;;           (expand-file-name "custom.el" server-socket-dir)
-  ;;         (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
-  ;; (load custom-file t)
+  ;; Keep customization settings in a temporary file (thanks Ambrevar!)
+  (setq custom-file
+        (if (boundp 'server-socket-dir)
+            (expand-file-name "custom.el" server-socket-dir)
+          (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+  (load custom-file t)
 
   (customize-set-variable 'kill-do-not-save-duplicates t)
 
@@ -274,6 +274,9 @@
     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
     )
 
+  (use-package magit-todos
+    )
+
   ;;(use-package git-timemachine)
 #+end_src
 
@@ -350,7 +353,7 @@
   (use-package perspective
     :straight t
     :bind
-    ("C-x k" . persp-killbuffer*)
+    ("C-x k" . persp-kill-buffer*)
     ("C-x b" . persp-switch-to-buffer*)
     ("C-x C-b" . persp-switch-to-buffer*)
     :custom
