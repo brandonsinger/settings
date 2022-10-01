@@ -93,18 +93,21 @@
   :hook (org-mode . echo/org-mode-setup)
   :config
   (setq org-ellipsis " ▾")
-  (setq org-agenda-files '("~/gtd/inbox.org"
-                           "~/gtd/gtd.org"
-                           "~/gtd/tickler.org"))
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file+headline "~/gtd/inbox.org" "Tasks")
-                                 "* TODO %i%?")
-                                ("T" "Tickler" entry
-                                 (file+headline "~/gtd/tickler.org" "Tickler")
-                                 "* %i%? \n %U")))
-  (setq org-refile-targets '(("~/gtd/gtd.org" :maxlevel . 3)
-                             ("~/gtd/someday.org" :level . 1)
-                             ("~/gtd/tickler.org" :maxlevel . 2)))
+  (setq org-agenda-files '("~/projects/gtd/inbox.org"
+                           "~/projects/gtd/gtd.org"
+                           "~/projects/gtd/tickler.org"))
+  (setq org-capture-templates
+        '(
+          ("t" "Todo [inbox]" entry
+           (file+headline "~/projects/gtd/inbox.org" "Tasks")
+           "* TODO %i%?")
+          ("T" "Tickler" entry
+           (file+headline "~/projects/gtd/tickler.org" "Tickler")
+           "* %i%? \n %U")
+          ))
+  (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
+                             ("~/projects/gtd/someday.org" :level . 1)
+                             ("~/projects/gtd/tickler.org" :maxlevel . 2)))
   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
   (setq-default org-enforce-todo-dependencies t)
   (setq org-refile-use-outline-path 'file)

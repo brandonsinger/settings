@@ -114,86 +114,89 @@
 * Org Config
 ** Setup
 #+begin_src emacs-lisp
-  (defun echo/org-mode-setup ()
-    (org-indent-mode)
-    (visual-line-mode 1)
+    (defun echo/org-mode-setup ()
+      (org-indent-mode)
+      (visual-line-mode 1)
+      )
+    (use-package org
+      :delight
+      :hook (org-mode . echo/org-mode-setup)
+      :config
+      (setq org-ellipsis " ▾")
+      (setq org-agenda-files '("~/projects/gtd/inbox.org"
+                               "~/projects/gtd/gtd.org"
+                               "~/projects/gtd/tickler.org"))
+      (setq org-capture-templates
+            '(
+              ("t" "Todo [inbox]" entry
+               (file+headline "~/projects/gtd/inbox.org" "Tasks")
+               "* TODO %i%?")
+              ("T" "Tickler" entry
+               (file+headline "~/projects/gtd/tickler.org" "Tickler")
+               "* %i%? \n %U")
+              ))
+      (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
+                                 ("~/projects/gtd/someday.org" :level . 1)
+                                 ("~/projects/gtd/tickler.org" :maxlevel . 2)))
+      (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+      (setq-default org-enforce-todo-dependencies t)
+      (setq org-refile-use-outline-path 'file)
+      (setq org-outline-path-complete-in-steps nil)
+      (setq org-tag-alist '((:startgroup . nil)
+                            ("@work" . ?w)
+                            ("@home" . ?h)
+                            ("@computer" . ?c)
+                            (:endgroup . nil)
+                            ("emacs" . ?e)
+                            ))
+      )
+
+    (defun echo/org-mode-visual-fill ()
+      (setq visual-fill-column-width 100
+            visual-fill-column-center-text t)
+      (visual-fill-column-mode 1))
+    (use-package visual-fill-column
+      :hook (org-mode . echo/org-mode-visual-fill))
+
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (python . t)))
+
+
+    (use-package org-super-agenda
+      :after org
+      :config
+      (setq org-agenda-skip-scheduled-if-done t
+            org-agenda-skip-deadline-if-done t
+            org-agenda-include-deadlines t
+            org-agenda-include-diary t
+            ;org-agenda-block-separator nil
+            ;org-agenda-compact-blocks t
+            ;org-agenda-start-with-log-mode t
+            )
+      (setq org-super-agenda-groups
+            '(
+              (:name "Inbox"
+                     :file-path "inbox\.org")
+              (:name "Emacs"
+                     :tag "emacs")
+              (:name "Today"
+                     :time-grid t
+                     :scheduled today)
+              (:name "Due today"
+                     :deadline today)
+              (:name "Important"
+                     :priority "A")
+              (:name "Overdue"
+                     :deadline past)
+              (:name "Due soon"
+                     :deadline future)
+              (:name "Waiting"
+                     :todo "WAIT")
+              ))
+      (org-super-agenda-mode)
     )
-  (use-package org
-    :delight
-    :hook (org-mode . echo/org-mode-setup)
-    :config
-    (setq org-ellipsis " ▾")
-    (setq org-agenda-files '("~/gtd/inbox.org"
-                             "~/gtd/gtd.org"
-                             "~/gtd/tickler.org"))
-    (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                   (file+headline "~/gtd/inbox.org" "Tasks")
-                                   "* TODO %i%?")
-                                  ("T" "Tickler" entry
-                                   (file+headline "~/gtd/tickler.org" "Tickler")
-                                   "* %i%? \n %U")))
-    (setq org-refile-targets '(("~/gtd/gtd.org" :maxlevel . 3)
-                               ("~/gtd/someday.org" :level . 1)
-                               ("~/gtd/tickler.org" :maxlevel . 2)))
-    (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
-    (setq-default org-enforce-todo-dependencies t)
-    (setq org-refile-use-outline-path 'file)
-    (setq org-outline-path-complete-in-steps nil)
-    (setq org-tag-alist '((:startgroup . nil)
-                          ("@work" . ?w)
-                          ("@home" . ?h)
-                          ("@computer" . ?c)
-                          (:endgroup . nil)
-                          ("emacs" . ?e)
-                          ))
-    )
-
-  (defun echo/org-mode-visual-fill ()
-    (setq visual-fill-column-width 100
-          visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
-  (use-package visual-fill-column
-    :hook (org-mode . echo/org-mode-visual-fill))
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)))
-
-
-  (use-package org-super-agenda
-    :after org
-    :config
-    (setq org-agenda-skip-scheduled-if-done t
-          org-agenda-skip-deadline-if-done t
-          org-agenda-include-deadlines t
-          org-agenda-include-diary t
-          ;org-agenda-block-separator nil
-          ;org-agenda-compact-blocks t
-          ;org-agenda-start-with-log-mode t
-          )
-    (setq org-super-agenda-groups
-          '(
-            (:name "Inbox"
-                   :file-path "inbox\.org")
-            (:name "Emacs"
-                   :tag "emacs")
-            (:name "Today"
-                   :time-grid t
-                   :scheduled today)
-            (:name "Due today"
-                   :deadline today)
-            (:name "Important"
-                   :priority "A")
-            (:name "Overdue"
-                   :deadline past)
-            (:name "Due soon"
-                   :deadline future)
-            (:name "Waiting"
-                   :todo "WAIT")
-            ))
-    (org-super-agenda-mode)
-  )
 #+end_src
 
 ** Auto-tangle Config
