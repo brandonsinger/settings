@@ -16,11 +16,9 @@
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 
-
 (setq-default indent-tabs-mode nil)
 
 (show-paren-mode 1)
-                                          ;(setq show-paren-style 'expression)
 
 (setq-default tab-width 4)
 
@@ -31,7 +29,33 @@
 (global-auto-revert-mode 1)
 (setq global-auto-revert-non-file-buffers t)
 
+;; Silence compiler warnings as they can be pretty disruptive
+(setq native-comp-async-report-warnings-errors nil)
+;; Set the right directory to store the native comp cache
+(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+
+;; ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
+;; (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
+;;       url-history-file (expand-file-name "url/history" user-emacs-directory))
+
+;; ;; Use no-littering to automatically set common paths to the new user-emacs-directory
+;; (setup (:pkg no-littering)
+;;        (require 'no-littering))
+
+;; ;; Keep customization settings in a temporary file (thanks Ambrevar!)
+;; (setq custom-file
+;;       (if (boundp 'server-socket-dir)
+;;           (expand-file-name "custom.el" server-socket-dir)
+;;         (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+;; (load custom-file t)
+
 (customize-set-variable 'kill-do-not-save-duplicates t)
+
+(customize-set-variable 'display-buffer-base-action
+                        '((display-buffer-reuse-window display-buffer-same-window)
+                          (reusable-frames . t)))
+
+(customize-set-variable 'even-window-sizes nil)     ; avoid resizing
 
 ;; Make scrolling less stuttered
 (setq auto-window-vscroll nil)
@@ -168,6 +192,14 @@
   (org-super-agenda-mode)
 )
 
+(use-package org-sticky-header
+  :hook (org-mode . org-sticky-header-mode)
+  :config
+  (setq-default
+   org-sticky-header-full-path 'full
+   ;; Child and parent headings are seperated by a /.
+   org-sticky-header-outline-path-separator " / "))
+
 (defun echo/org-babel-tangle-config ()
   (when (string-equal (buffer-file-name)
                       (expand-file-name "~/projects/settings/.emacs.d/emacs.org"))
@@ -199,6 +231,8 @@
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
   )
 
+;;(use-package git-timemachine)
+
 (use-package web-mode
   :config
   (setq web-mode-enable-auto-indentation nil)
@@ -220,6 +254,7 @@
 (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php[s34]?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html.j2\\'" . web-mode))
 
 (setq web-mode-engines-alist
     '(
@@ -252,8 +287,41 @@
 
 (use-package ripgrep)
 
+(use-package perspective
+  :straight t
+  :bind
+  ("C-x k" . persp-killbuffer*)
+  ("C-x b" . persp-switch-to-buffer*)
+  ("C-x C-b" . persp-switch-to-buffer*)
+  :custom
+  (persp-mode-prefix-key (kbd "C-c M-p"))
+  (persp-state-default-file (expand-file-name ".persp" user-emacs-directory))
+  (persp-sort 'created)
+  :init
+  (persp-mode)
+  (persp-state-save)
+  (add-hook 'kill-emacs-hook #'persp-state-save)
+  )
+
+(use-package persp-projectile
+  :after (perspective projectile)
+  :straight t
+  :init
+  (define-key projectile-mode-map (kbd "s-s") 'projectile-persp-switch-project)
+  )
+
 (use-package dired
   :straight nil
+  :custom
+  (dired-listing-switches "-agho --group-directories-first")
+  )
+
+(use-package clipetty
+  :hook (after-init . global-clipetty-mode))
+
+(use-package devdocs
+  :bind
+  ("C-h D" . devdocs-lookup)
   )
 
 (use-package vertico
@@ -287,9 +355,12 @@
   :config
   (consult-customize
    consult-theme :preview-key 'any
-   consult-line :prompt "Search: " :preview-key 'any)
+   consult-line :prompt "Search: " :preview-key 'any
+   consult--source-buffer :hidden t :default nil)
 
-  (setq consult-project-root-function #'projectile-project-root))
+  (setq consult-project-root-function #'projectile-project-root)
+  (add-to-list 'consult-buffer-sources persp-consult-source))
+
 
 (use-package embark
   :bind
@@ -407,4 +478,10 @@
   ("<f5>" . modus-themes-toggle)
   )
 
-(use-package rainbow-mode)
+(use-package rainbow-mode
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-mode))
+
+(use-package beacon
+  :config
+  (beacon-mode 1))

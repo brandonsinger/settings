@@ -22,11 +22,9 @@
   (menu-bar-mode 0)
   (tool-bar-mode 0)
 
-
   (setq-default indent-tabs-mode nil)
 
   (show-paren-mode 1)
-                                            ;(setq show-paren-style 'expression)
 
   (setq-default tab-width 4)
 
@@ -37,7 +35,33 @@
   (global-auto-revert-mode 1)
   (setq global-auto-revert-non-file-buffers t)
 
+  ;; Silence compiler warnings as they can be pretty disruptive
+  (setq native-comp-async-report-warnings-errors nil)
+  ;; Set the right directory to store the native comp cache
+  (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+
+  ;; ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
+  ;; (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
+  ;;       url-history-file (expand-file-name "url/history" user-emacs-directory))
+
+  ;; ;; Use no-littering to automatically set common paths to the new user-emacs-directory
+  ;; (setup (:pkg no-littering)
+  ;;        (require 'no-littering))
+
+  ;; ;; Keep customization settings in a temporary file (thanks Ambrevar!)
+  ;; (setq custom-file
+  ;;       (if (boundp 'server-socket-dir)
+  ;;           (expand-file-name "custom.el" server-socket-dir)
+  ;;         (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+  ;; (load custom-file t)
+
   (customize-set-variable 'kill-do-not-save-duplicates t)
+
+  (customize-set-variable 'display-buffer-base-action
+                          '((display-buffer-reuse-window display-buffer-same-window)
+                            (reusable-frames . t)))
+
+  (customize-set-variable 'even-window-sizes nil)     ; avoid resizing
 
   ;; Make scrolling less stuttered
   (setq auto-window-vscroll nil)
@@ -45,7 +69,6 @@
   (customize-set-variable 'scroll-conservatively 101)
   (customize-set-variable 'scroll-margin 0)
   (customize-set-variable 'scroll-preserve-screen-position t)
-
 #+end_src
 
 ** TODO Set some global keys
@@ -114,89 +137,97 @@
 * Org Config
 ** Setup
 #+begin_src emacs-lisp
-    (defun echo/org-mode-setup ()
-      (org-indent-mode)
-      (visual-line-mode 1)
-      )
-    (use-package org
-      :delight
-      :hook (org-mode . echo/org-mode-setup)
-      :config
-      (setq org-ellipsis " ▾")
-      (setq org-agenda-files '("~/projects/gtd/inbox.org"
-                               "~/projects/gtd/gtd.org"
-                               "~/projects/gtd/tickler.org"))
-      (setq org-capture-templates
-            '(
-              ("t" "Todo [inbox]" entry
-               (file+headline "~/projects/gtd/inbox.org" "Tasks")
-               "* TODO %i%?")
-              ("T" "Tickler" entry
-               (file+headline "~/projects/gtd/tickler.org" "Tickler")
-               "* %i%? \n %U")
-              ))
-      (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
-                                 ("~/projects/gtd/someday.org" :level . 1)
-                                 ("~/projects/gtd/tickler.org" :maxlevel . 2)))
-      (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
-      (setq-default org-enforce-todo-dependencies t)
-      (setq org-refile-use-outline-path 'file)
-      (setq org-outline-path-complete-in-steps nil)
-      (setq org-tag-alist '((:startgroup . nil)
-                            ("@work" . ?w)
-                            ("@home" . ?h)
-                            ("@computer" . ?c)
-                            (:endgroup . nil)
-                            ("emacs" . ?e)
-                            ))
-      )
-
-    (defun echo/org-mode-visual-fill ()
-      (setq visual-fill-column-width 100
-            visual-fill-column-center-text t)
-      (visual-fill-column-mode 1))
-    (use-package visual-fill-column
-      :hook (org-mode . echo/org-mode-visual-fill))
-
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((emacs-lisp . t)
-       (python . t)))
-
-
-    (use-package org-super-agenda
-      :after org
-      :config
-      (setq org-agenda-skip-scheduled-if-done t
-            org-agenda-skip-deadline-if-done t
-            org-agenda-include-deadlines t
-            org-agenda-include-diary t
-            ;org-agenda-block-separator nil
-            ;org-agenda-compact-blocks t
-            ;org-agenda-start-with-log-mode t
-            )
-      (setq org-super-agenda-groups
-            '(
-              (:name "Inbox"
-                     :file-path "inbox\.org")
-              (:name "Emacs"
-                     :tag "emacs")
-              (:name "Today"
-                     :time-grid t
-                     :scheduled today)
-              (:name "Due today"
-                     :deadline today)
-              (:name "Important"
-                     :priority "A")
-              (:name "Overdue"
-                     :deadline past)
-              (:name "Due soon"
-                     :deadline future)
-              (:name "Waiting"
-                     :todo "WAIT")
-              ))
-      (org-super-agenda-mode)
+  (defun echo/org-mode-setup ()
+    (org-indent-mode)
+    (visual-line-mode 1)
     )
+  (use-package org
+    :delight
+    :hook (org-mode . echo/org-mode-setup)
+    :config
+    (setq org-ellipsis " ▾")
+    (setq org-agenda-files '("~/projects/gtd/inbox.org"
+                             "~/projects/gtd/gtd.org"
+                             "~/projects/gtd/tickler.org"))
+    (setq org-capture-templates
+          '(
+            ("t" "Todo [inbox]" entry
+             (file+headline "~/projects/gtd/inbox.org" "Tasks")
+             "* TODO %i%?")
+            ("T" "Tickler" entry
+             (file+headline "~/projects/gtd/tickler.org" "Tickler")
+             "* %i%? \n %U")
+            ))
+    (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
+                               ("~/projects/gtd/someday.org" :level . 1)
+                               ("~/projects/gtd/tickler.org" :maxlevel . 2)))
+    (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+    (setq-default org-enforce-todo-dependencies t)
+    (setq org-refile-use-outline-path 'file)
+    (setq org-outline-path-complete-in-steps nil)
+    (setq org-tag-alist '((:startgroup . nil)
+                          ("@work" . ?w)
+                          ("@home" . ?h)
+                          ("@computer" . ?c)
+                          (:endgroup . nil)
+                          ("emacs" . ?e)
+                          ))
+    )
+
+  (defun echo/org-mode-visual-fill ()
+    (setq visual-fill-column-width 100
+          visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+  (use-package visual-fill-column
+    :hook (org-mode . echo/org-mode-visual-fill))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)))
+
+
+  (use-package org-super-agenda
+    :after org
+    :config
+    (setq org-agenda-skip-scheduled-if-done t
+          org-agenda-skip-deadline-if-done t
+          org-agenda-include-deadlines t
+          org-agenda-include-diary t
+          ;org-agenda-block-separator nil
+          ;org-agenda-compact-blocks t
+          ;org-agenda-start-with-log-mode t
+          )
+    (setq org-super-agenda-groups
+          '(
+            (:name "Inbox"
+                   :file-path "inbox\.org")
+            (:name "Emacs"
+                   :tag "emacs")
+            (:name "Today"
+                   :time-grid t
+                   :scheduled today)
+            (:name "Due today"
+                   :deadline today)
+            (:name "Important"
+                   :priority "A")
+            (:name "Overdue"
+                   :deadline past)
+            (:name "Due soon"
+                   :deadline future)
+            (:name "Waiting"
+                   :todo "WAIT")
+            ))
+    (org-super-agenda-mode)
+  )
+
+  (use-package org-sticky-header
+    :hook (org-mode . org-sticky-header-mode)
+    :config
+    (setq-default
+     org-sticky-header-full-path 'full
+     ;; Child and parent headings are seperated by a /.
+     org-sticky-header-outline-path-separator " / "))
 #+end_src
 
 ** Auto-tangle Config
@@ -236,12 +267,14 @@
 
 #+end_src
 
-** Magit
+** git
 #+begin_src emacs-lisp
   (use-package magit
     :config
     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
     )
+
+  ;;(use-package git-timemachine)
 #+end_src
 
 ** modes
@@ -267,6 +300,7 @@
   (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.php[s34]?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html.j2\\'" . web-mode))
 
   (setq web-mode-engines-alist
       '(
@@ -311,10 +345,52 @@
 
 #+end_src
 
+** perspective
+#+begin_src emacs-lisp
+  (use-package perspective
+    :straight t
+    :bind
+    ("C-x k" . persp-killbuffer*)
+    ("C-x b" . persp-switch-to-buffer*)
+    ("C-x C-b" . persp-switch-to-buffer*)
+    :custom
+    (persp-mode-prefix-key (kbd "C-c M-p"))
+    (persp-state-default-file (expand-file-name ".persp" user-emacs-directory))
+    (persp-sort 'created)
+    :init
+    (persp-mode)
+    (persp-state-save)
+    (add-hook 'kill-emacs-hook #'persp-state-save)
+    )
+
+  (use-package persp-projectile
+    :after (perspective projectile)
+    :straight t
+    :init
+    (define-key projectile-mode-map (kbd "s-s") 'projectile-persp-switch-project)
+    )
+#+end_src
+
 ** dired
 #+begin_src emacs-lisp
-  (use-package dired
-    :straight nil
+    (use-package dired
+      :straight nil
+      :custom
+      (dired-listing-switches "-agho --group-directories-first")
+      )
+#+end_src
+
+** clipetty
+#+begin_src emacs-lisp
+  (use-package clipetty
+    :hook (after-init . global-clipetty-mode))
+#+end_src
+
+** devdocs
+#+begin_src emacs-lisp
+  (use-package devdocs
+    :bind
+    ("C-h D" . devdocs-lookup)
     )
 #+end_src
 
@@ -352,9 +428,12 @@
     :config
     (consult-customize
      consult-theme :preview-key 'any
-     consult-line :prompt "Search: " :preview-key 'any)
+     consult-line :prompt "Search: " :preview-key 'any
+     consult--source-buffer :hidden t :default nil)
 
-    (setq consult-project-root-function #'projectile-project-root))
+    (setq consult-project-root-function #'projectile-project-root)
+    (add-to-list 'consult-buffer-sources persp-consult-source))
+
 
   (use-package embark
     :bind
@@ -482,5 +561,11 @@
     ("<f5>" . modus-themes-toggle)
     )
 
-  (use-package rainbow-mode)
+  (use-package rainbow-mode
+    :config
+    (add-hook 'emacs-lisp-mode-hook 'rainbow-mode))
+
+  (use-package beacon
+    :config
+    (beacon-mode 1))
 #+end_src
