@@ -232,6 +232,8 @@
   )
 
 (use-package magit-todos
+  :init
+  (magit-todos-mode)
   )
 
 ;;(use-package git-timemachine)
@@ -302,7 +304,7 @@
   (persp-sort 'created)
   :init
   (persp-mode)
-  (persp-state-save)
+  (persp-state-load persp-state-default-file)
   (add-hook 'kill-emacs-hook #'persp-state-save)
   )
 
