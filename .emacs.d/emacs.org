@@ -44,9 +44,7 @@
   (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
         url-history-file (expand-file-name "url/history" user-emacs-directory))
 
-  ;; Use no-littering to automatically set common paths to the new user-emacs-directory
-  ;;(setup (:pkg no-littering)
-  ;;       (require 'no-littering)) todo:fix
+  ;;{use-package no-littering)
 
   ;; Keep customization settings in a temporary file (thanks Ambrevar!)
   (setq custom-file
@@ -137,97 +135,121 @@
 * Org Config
 ** Setup
 #+begin_src emacs-lisp
-  (defun echo/org-mode-setup ()
-    (org-indent-mode)
-    (visual-line-mode 1)
+    (defun echo/org-mode-setup ()
+      (org-indent-mode)
+      (visual-line-mode 1)
+      )
+    (use-package org
+      :delight
+      :hook (org-mode . echo/org-mode-setup)
+      :config
+      (setq org-ellipsis " ▾")
+      (setq org-agenda-files '("~/projects/gtd/inbox.org"
+                               "~/projects/gtd/gtd.org"
+                               "~/projects/gtd/tickler.org"))
+      (setq org-capture-templates
+            '(
+              ("t" "Todo [inbox]" entry
+               (file+headline "~/projects/gtd/inbox.org" "Tasks")
+               "* TODO %i%?")
+              ("T" "Tickler" entry
+               (file+headline "~/projects/gtd/tickler.org" "Tickler")
+               "* %i%? \n %U")
+              ))
+      (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
+                                 ("~/projects/gtd/someday.org" :level . 1)
+                                 ("~/projects/gtd/tickler.org" :maxlevel . 2)))
+      (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+      (setq-default org-enforce-todo-dependencies t)
+      (setq org-refile-use-outline-path 'file)
+      (setq org-outline-path-complete-in-steps nil)
+      (setq org-tag-alist '((:startgroup . nil)
+                            ("@work" . ?w)
+                            ("@home" . ?h)
+                            ("@computer" . ?c)
+                            (:endgroup . nil)
+                            ("emacs" . ?e)
+                            ))
+      )
+
+    (defun echo/org-mode-visual-fill ()
+      (setq visual-fill-column-width 100
+            visual-fill-column-center-text t)
+      (visual-fill-column-mode 1))
+    (use-package visual-fill-column
+      :hook (org-mode . echo/org-mode-visual-fill))
+
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (python . t)))
+
+  (use-package org-journal
+    :after (org)
+    :bind (("C-c C-j" . org-journal-new-entry)
+           )
+    :custom
+    (org-journal-dir "~/projects/journal")
+    (org-journal-file-type 'weekly)
+    ;;(org-journal-start-on-weekday ?)
+    (org-journal-file-format "%F")
+    (org-journal-date-format "%e %b %Y (%A)")
+    (org-journal-time-format "%I:%M %p")
+    (org-journal-enable-agenda-integration t))
+
+    (defun my-old-carryover (old_carryover)
+      (save-excursion
+        (let ((matcher (cdr (org-make-tags-matcher org-journal-carryover-items))))
+          (dolist (entry (reverse old_carryover))
+            (save-restriction
+              (narrow-to-region (car entry) (cadr entry))
+              (goto-char (point-min))
+              (org-scan-tags '(lambda ()
+                                (org-set-tags ":carried:"))
+                             matcher org--matcher-tags-todo-only))))))
+    (setq org-journal-handle-old-carryover 'my-old-carryover)
+
+    (use-package org-super-agenda
+      :after (org)
+      :config
+      (setq org-agenda-skip-scheduled-if-done t
+            org-agenda-skip-deadline-if-done t
+            org-agenda-include-deadlines t
+            org-agenda-include-diary t
+            ;org-agenda-block-separator nil
+            ;org-agenda-compact-blocks t
+            ;org-agenda-start-with-log-mode t
+            )
+      (setq org-super-agenda-groups
+            '(
+              (:name "Inbox"
+                     :file-path "inbox\.org")
+              (:name "Emacs"
+                     :tag "emacs")
+              (:name "Today"
+                     :time-grid t
+                     :scheduled today)
+              (:name "Due today"
+                     :deadline today)
+              (:name "Important"
+                     :priority "A")
+              (:name "Overdue"
+                     :deadline past)
+              (:name "Due soon"
+                     :deadline future)
+              (:name "Waiting"
+                     :todo "WAIT")
+              ))
+      (org-super-agenda-mode)
     )
-  (use-package org
-    :delight
-    :hook (org-mode . echo/org-mode-setup)
-    :config
-    (setq org-ellipsis " ▾")
-    (setq org-agenda-files '("~/projects/gtd/inbox.org"
-                             "~/projects/gtd/gtd.org"
-                             "~/projects/gtd/tickler.org"))
-    (setq org-capture-templates
-          '(
-            ("t" "Todo [inbox]" entry
-             (file+headline "~/projects/gtd/inbox.org" "Tasks")
-             "* TODO %i%?")
-            ("T" "Tickler" entry
-             (file+headline "~/projects/gtd/tickler.org" "Tickler")
-             "* %i%? \n %U")
-            ))
-    (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
-                               ("~/projects/gtd/someday.org" :level . 1)
-                               ("~/projects/gtd/tickler.org" :maxlevel . 2)))
-    (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
-    (setq-default org-enforce-todo-dependencies t)
-    (setq org-refile-use-outline-path 'file)
-    (setq org-outline-path-complete-in-steps nil)
-    (setq org-tag-alist '((:startgroup . nil)
-                          ("@work" . ?w)
-                          ("@home" . ?h)
-                          ("@computer" . ?c)
-                          (:endgroup . nil)
-                          ("emacs" . ?e)
-                          ))
-    )
 
-  (defun echo/org-mode-visual-fill ()
-    (setq visual-fill-column-width 100
-          visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
-  (use-package visual-fill-column
-    :hook (org-mode . echo/org-mode-visual-fill))
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)))
-
-
-  (use-package org-super-agenda
-    :after org
-    :config
-    (setq org-agenda-skip-scheduled-if-done t
-          org-agenda-skip-deadline-if-done t
-          org-agenda-include-deadlines t
-          org-agenda-include-diary t
-          ;org-agenda-block-separator nil
-          ;org-agenda-compact-blocks t
-          ;org-agenda-start-with-log-mode t
-          )
-    (setq org-super-agenda-groups
-          '(
-            (:name "Inbox"
-                   :file-path "inbox\.org")
-            (:name "Emacs"
-                   :tag "emacs")
-            (:name "Today"
-                   :time-grid t
-                   :scheduled today)
-            (:name "Due today"
-                   :deadline today)
-            (:name "Important"
-                   :priority "A")
-            (:name "Overdue"
-                   :deadline past)
-            (:name "Due soon"
-                   :deadline future)
-            (:name "Waiting"
-                   :todo "WAIT")
-            ))
-    (org-super-agenda-mode)
-  )
-
-  (use-package org-sticky-header
-    :hook (org-mode . org-sticky-header-mode)
-    :config
-    (setq-default
-     org-sticky-header-full-path 'full
-     ;; Child and parent headings are seperated by a /.
-     org-sticky-header-outline-path-separator " / "))
+    (use-package org-sticky-header
+      :hook (org-mode . org-sticky-header-mode)
+      :config
+      (setq-default
+       org-sticky-header-full-path 'full
+       ;; Child and parent headings are seperated by a /.
+       org-sticky-header-outline-path-separator " / "))
 #+end_src
 
 ** Auto-tangle Config
@@ -272,6 +294,18 @@
   (use-package magit
     :config
     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
+    (setq magit-repository-directories '(("~/projects" . 1)))
+    (setq magit-repolist-columns
+          '(("Name"    25 magit-repolist-column-ident ())
+            ("Version" 25 magit-repolist-column-version ())
+            ("D"        1 magit-repolist-column-dirty ())
+            ("B<U"      3 magit-repolist-column-unpulled-from-upstream
+             ((:right-align t)
+              (:help-echo "Upstream changes not in branch")))
+            ("B>U"      3 magit-repolist-column-unpushed-to-upstream
+             ((:right-align t)
+              (:help-echo "Local changes not in upstream")))
+            ("Path"    99 magit-repolist-column-path ())))
     )
 
   (use-package magit-todos
@@ -359,7 +393,7 @@
     ("C-x b" . persp-switch-to-buffer*)
     ("C-x C-b" . persp-switch-to-buffer*)
     :custom
-    (persp-mode-prefix-key (kbd "C-c M-p"))
+    (persp-mode-prefix-key (kbd "M-p"))
     (persp-state-default-file (expand-file-name ".persp" user-emacs-directory))
     (persp-sort 'created)
     :init
@@ -368,7 +402,7 @@
     (add-hook 'kill-emacs-hook #'persp-state-save)
     )
 
-  (use-package persp-projectile
+  (use-package persp-projectile ;;TODO:invesitgate more
     :after (perspective projectile)
     :straight t
     :init
@@ -378,11 +412,11 @@
 
 ** dired
 #+begin_src emacs-lisp
-    (use-package dired
-      :straight nil
-      :custom
-      (dired-listing-switches "-agho --group-directories-first")
-      )
+  (use-package dired
+    :straight nil
+    :custom
+    (dired-listing-switches "-agho --group-directories-first")
+    )
 #+end_src
 
 ** clipetty
