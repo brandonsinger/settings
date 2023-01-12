@@ -306,7 +306,7 @@
 
 (use-package which-key
   :init (which-key-mode)
-  :delight which-key-mode
+  :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.5)
   )
@@ -365,6 +365,16 @@
   :bind
   ("C-h D" . devdocs-lookup)
   )
+
+;; (straight-use-package
+;;  '(eat :type git
+;;        :host codeberg
+;;        :repo "akib/emacs-eat"
+;;        :files ("*.el" ("term" "term/*.el") "*.texi"
+;;                "*.ti" ("terminfo/e" "terminfo/e/*")
+;;                ("terminfo/65" "terminfo/65/*")
+;;                ("integration" "integration/*")
+;;                (:exclude ".dir-locals.el" "*-tests.el"))))
 
 (use-package vertico
   :init
@@ -495,6 +505,13 @@
               )
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
+(setq mode-line-format
+      '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
+
+(use-package eldoc
+  :straight nil
+  :diminish)
+
 (use-package modus-themes
   :demand t
   :after (org)
@@ -525,5 +542,6 @@
   (add-hook 'emacs-lisp-mode-hook 'rainbow-mode))
 
 (use-package beacon
+  :diminish
   :config
   (beacon-mode 1))
