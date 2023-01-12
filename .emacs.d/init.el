@@ -38,8 +38,6 @@
 (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
       url-history-file (expand-file-name "url/history" user-emacs-directory))
 
-;;{use-package no-littering)
-
 ;; Keep customization settings in a temporary file (thanks Ambrevar!)
 (setq custom-file
       (if (boundp 'server-socket-dir)
@@ -77,6 +75,8 @@
 (save-place-mode 1)
 (setq save-place-forget-unreadable-files nil)
 
+;;todo: use instead? (setq auto-save-file-name-transforms '((".*" "~/.config/emacs/auto-save-list/" t)))
+
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Bootsrap straight.el
@@ -97,6 +97,7 @@
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
+(use-package diminish)
 
 (use-package auto-package-update
   :config
@@ -105,6 +106,8 @@
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe)
   )
+
+(use-package no-littering)
 
 (defun echo/org-mode-setup ()
     (org-indent-mode)
@@ -168,59 +171,59 @@
   (org-journal-time-format "%I:%M %p")
   (org-journal-enable-agenda-integration t))
 
-  (defun my-old-carryover (old_carryover)
-    (save-excursion
-      (let ((matcher (cdr (org-make-tags-matcher org-journal-carryover-items))))
-        (dolist (entry (reverse old_carryover))
-          (save-restriction
-            (narrow-to-region (car entry) (cadr entry))
-            (goto-char (point-min))
-            (org-scan-tags '(lambda ()
-                              (org-set-tags ":carried:"))
-                           matcher org--matcher-tags-todo-only))))))
-  (setq org-journal-handle-old-carryover 'my-old-carryover)
+(defun my-old-carryover (old_carryover)
+  (save-excursion
+    (let ((matcher (cdr (org-make-tags-matcher org-journal-carryover-items))))
+      (dolist (entry (reverse old_carryover))
+        (save-restriction
+          (narrow-to-region (car entry) (cadr entry))
+          (goto-char (point-min))
+          (org-scan-tags '(lambda ()
+                            (org-set-tags ":carried:"))
+                         matcher org--matcher-tags-todo-only))))))
+(setq org-journal-handle-old-carryover 'my-old-carryover)
 
-  (use-package org-super-agenda
-    :after (org)
-    :config
-    (setq org-agenda-skip-scheduled-if-done t
-          org-agenda-skip-deadline-if-done t
-          org-agenda-include-deadlines t
-          org-agenda-include-diary t
-          ;org-agenda-block-separator nil
-          ;org-agenda-compact-blocks t
-          ;org-agenda-start-with-log-mode t
-          )
-    (setq org-super-agenda-groups
-          '(
-            (:name "Inbox"
-                   :file-path "inbox\.org")
-            (:name "Emacs"
-                   :tag "emacs")
-            (:name "Today"
-                   :time-grid t
-                   :scheduled today)
-            (:name "Due today"
-                   :deadline today)
-            (:name "Important"
-                   :priority "A")
-            (:name "Overdue"
-                   :deadline past)
-            (:name "Due soon"
-                   :deadline future)
-            (:name "Waiting"
-                   :todo "WAIT")
-            ))
-    (org-super-agenda-mode)
+(use-package org-super-agenda
+  :after (org)
+  :config
+  (setq org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-include-deadlines t
+        org-agenda-include-diary t
+                                        ;org-agenda-block-separator nil
+                                        ;org-agenda-compact-blocks t
+                                        ;org-agenda-start-with-log-mode t
+        )
+  (setq org-super-agenda-groups
+        '(
+          (:name "Inbox"
+                 :file-path "inbox\.org")
+          (:name "Emacs"
+                 :tag "emacs")
+          (:name "Today"
+                 :time-grid t
+                 :scheduled today)
+          (:name "Due today"
+                 :deadline today)
+          (:name "Important"
+                 :priority "A")
+          (:name "Overdue"
+                 :deadline past)
+          (:name "Due soon"
+                 :deadline future)
+          (:name "Waiting"
+                 :todo "WAIT")
+          ))
+  (org-super-agenda-mode)
   )
 
-  (use-package org-sticky-header
-    :hook (org-mode . org-sticky-header-mode)
-    :config
-    (setq-default
-     org-sticky-header-full-path 'full
-     ;; Child and parent headings are seperated by a /.
-     org-sticky-header-outline-path-separator " / "))
+(use-package org-sticky-header
+  :hook (org-mode . org-sticky-header-mode)
+  :config
+  (setq-default
+   org-sticky-header-full-path 'full
+   ;; Child and parent headings are seperated by a /.
+   org-sticky-header-outline-path-separator " / "))
 
 (defun echo/org-babel-tangle-config ()
   (when (string-equal (buffer-file-name)
