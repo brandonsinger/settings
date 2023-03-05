@@ -13,8 +13,9 @@
 (setq package-enable-at-startup nil)
 
 (setq inhibit-startup-message t)
-(menu-bar-mode 0)
-(tool-bar-mode 0)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 
 (setq-default indent-tabs-mode nil)
 
@@ -304,6 +305,9 @@
       )
     )
 
+(use-package python-pytest)
+(global-set-key (kbd "C-x T") 'python-pytest-dispatch)
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
@@ -375,6 +379,30 @@
 ;;                ("terminfo/65" "terminfo/65/*")
 ;;                ("integration" "integration/*")
 ;;                (:exclude ".dir-locals.el" "*-tests.el"))))
+
+(use-package w3m
+  )
+
+(use-package wucuo
+  :config
+  (setq ispell-program-name "aspell")
+  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
+  (setq wucuo-spell-check-buffer-predicate
+        (lambda ()
+          (not (memq major-mode '(dired-mode
+                                  log-edit-mode
+                                  compilation-mode
+                                  help-mode
+                                  profiler-report-mode
+                                  speedbar-mode
+                                  gud-mode
+                                  calc-mode
+                                  Info-mode)))))
+
+  :hook
+  (prog-mode . wucuo-start)
+  (text-mode . wucuo-start)
+  )
 
 (use-package vertico
   :init
