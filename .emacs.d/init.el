@@ -352,12 +352,12 @@
   (add-hook 'kill-emacs-hook #'persp-state-save)
   )
 
-(use-package persp-projectile ;;TODO:invesitgate more
-  :after (perspective projectile)
-  :straight t
-  :init
-  (define-key projectile-mode-map (kbd "s-s") 'projectile-persp-switch-project)
-  )
+;; (use-package persp-projectile ;;TODO:invesitgate more
+;;   :after (perspective projectile)
+;;   :straight t
+;;   :init
+;;   (define-key projectile-mode-map (kbd "s-s") 'projectile-persp-switch-project)
+;;   )
 
 (use-package dired
   :straight nil
