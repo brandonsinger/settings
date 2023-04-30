@@ -81,8 +81,6 @@
 
 ;;todo: use instead? (setq auto-save-file-name-transforms '((".*" "~/.config/emacs/auto-save-list/" t)))
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
 ;; Bootsrap straight.el
 (setq straight-repository-branch "master")
 (setq straight-use-package-by-default t)
@@ -114,53 +112,53 @@
 (use-package no-littering)
 
 (defun echo/org-mode-setup ()
-    (org-indent-mode)
-    (visual-line-mode 1)
-    )
-  (use-package org
-    :delight
-    :hook (org-mode . echo/org-mode-setup)
-    :config
-    (setq org-ellipsis " ▾")
-    (setq org-agenda-files '("~/projects/gtd/inbox.org"
-                             "~/projects/gtd/gtd.org"
-                             "~/projects/gtd/tickler.org"))
-    (setq org-capture-templates
-          '(
-            ("t" "Todo [inbox]" entry
-             (file+headline "~/projects/gtd/inbox.org" "Tasks")
-             "* TODO %i%?")
-            ("T" "Tickler" entry
-             (file+headline "~/projects/gtd/tickler.org" "Tickler")
-             "* %i%? \n %U")
-            ))
-    (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
-                               ("~/projects/gtd/someday.org" :level . 1)
-                               ("~/projects/gtd/tickler.org" :maxlevel . 2)))
-    (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
-    (setq-default org-enforce-todo-dependencies t)
-    (setq org-refile-use-outline-path 'file)
-    (setq org-outline-path-complete-in-steps nil)
-    (setq org-tag-alist '((:startgroup . nil)
-                          ("@work" . ?w)
-                          ("@home" . ?h)
-                          ("@computer" . ?c)
-                          (:endgroup . nil)
-                          ("emacs" . ?e)
-                          ))
-    )
+  (org-indent-mode)
+  (visual-line-mode 1)
+  )
+(use-package org
+  :delight
+  :hook (org-mode . echo/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾")
+  (setq org-agenda-files '("~/projects/gtd/inbox.org"
+                           "~/projects/gtd/gtd.org"
+                           "~/projects/gtd/tickler.org"))
+  (setq org-capture-templates
+        '(
+          ("t" "Todo [inbox]" entry
+           (file+headline "~/projects/gtd/inbox.org" "Tasks")
+           "* TODO %i%?")
+          ("T" "Tickler" entry
+           (file+headline "~/projects/gtd/tickler.org" "Tickler")
+           "* %i%? \n %U")
+          ))
+  (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
+                             ("~/projects/gtd/someday.org" :level . 1)
+                             ("~/projects/gtd/tickler.org" :maxlevel . 2)))
+  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+  (setq-default org-enforce-todo-dependencies t)
+  (setq org-refile-use-outline-path 'file)
+  (setq org-outline-path-complete-in-steps nil)
+  (setq org-tag-alist '((:startgroup . nil)
+                        ("@work" . ?w)
+                        ("@home" . ?h)
+                        ("@computer" . ?c)
+                        (:endgroup . nil)
+                        ("emacs" . ?e)
+                        ))
+  )
 
-  (defun echo/org-mode-visual-fill ()
-    (setq visual-fill-column-width 100
-          visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
-  (use-package visual-fill-column
-    :hook (org-mode . echo/org-mode-visual-fill))
+(defun echo/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+(use-package visual-fill-column
+  :hook (org-mode . echo/org-mode-visual-fill))
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)))
 
 (use-package org-journal
   :after (org)
@@ -170,7 +168,7 @@
   (org-journal-dir "~/projects/journal")
   (org-journal-file-type 'weekly)
   ;;(org-journal-start-on-weekday ?)
-  (org-journal-file-format "%F")
+  (org-journal-file-format "%F.org")
   (org-journal-date-format "%e %b %Y (%A)")
   (org-journal-time-format "%I:%M %p")
   (org-journal-enable-agenda-integration t))
@@ -255,6 +253,10 @@
          ("<end>" . mwim-end-of-code-or-line))
   )
 
+(use-package ws-butler
+  :hook ((text-mode . ws-butler-mode)
+         (prog-mode . ws-butler-mode)))
+
 (use-package magit
   :config
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
@@ -303,10 +305,10 @@
 (add-to-list 'auto-mode-alist '("\\.html.j2\\'" . web-mode))
 
 (setq web-mode-engines-alist
-    '(
-      ("smarty" . "/home/echo/projects/website/templates/.*\\.html\\'")
+      '(
+        ("smarty" . "/home/echo/projects/website/templates/.*\\.html\\'")
+        )
       )
-    )
 
 (use-package python-pytest)
 (global-set-key (kbd "C-x T") 'python-pytest-dispatch)
@@ -352,13 +354,6 @@
   (add-hook 'kill-emacs-hook #'persp-state-save)
   )
 
-;; (use-package persp-projectile ;;TODO:invesitgate more
-;;   :after (perspective projectile)
-;;   :straight t
-;;   :init
-;;   (define-key projectile-mode-map (kbd "s-s") 'projectile-persp-switch-project)
-;;   )
-
 (use-package dired
   :straight nil
   :custom
@@ -382,9 +377,6 @@
 ;;                ("terminfo/65" "terminfo/65/*")
 ;;                ("integration" "integration/*")
 ;;                (:exclude ".dir-locals.el" "*-tests.el"))))
-
-(use-package w3m
-  )
 
 (use-package wucuo
   :config
@@ -571,6 +563,10 @@
 (use-package rainbow-mode
   :config
   (add-hook 'emacs-lisp-mode-hook 'rainbow-mode))
+
+(use-package prism
+  )
+
 
 (use-package beacon
   :diminish
