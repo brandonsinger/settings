@@ -399,6 +399,11 @@
   (text-mode . wucuo-start)
   )
 
+(use-package wttrin
+  :config
+  (setq wttrin-default-cities '("48638"))
+  )
+
 (use-package vertico
   :init
   (vertico-mode 1)
@@ -483,6 +488,11 @@
 
 (winner-mode)
 
+(use-package zoom
+  :custom
+  (zoom-size '(0.618 . 0.618))
+  (zoom-mode t)
+  )
 
 (use-package buffer-move)
 

@@ -502,6 +502,15 @@ I like eww more than w3m
     )
 #+end_src
 
+** Weather
+#+begin_src emacs-lisp
+  (use-package wttrin
+    :config
+    (setq wttrin-default-cities '("48638"))
+    )
+#+end_src
+
+
 * Interface
 ** General
 #+begin_src emacs-lisp
@@ -596,6 +605,11 @@ I like eww more than w3m
 
   (winner-mode)
 
+  (use-package zoom
+    :custom
+    (zoom-size '(0.618 . 0.618))
+    (zoom-mode t)
+    )
 
   (use-package buffer-move)
 
