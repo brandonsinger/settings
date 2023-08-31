@@ -370,16 +370,6 @@
   ("C-h D" . devdocs-lookup)
   )
 
-;; (straight-use-package
-;;  '(eat :type git
-;;        :host codeberg
-;;        :repo "akib/emacs-eat"
-;;        :files ("*.el" ("term" "term/*.el") "*.texi"
-;;                "*.ti" ("terminfo/e" "terminfo/e/*")
-;;                ("terminfo/65" "terminfo/65/*")
-;;                ("integration" "integration/*")
-;;                (:exclude ".dir-locals.el" "*-tests.el"))))
-
 (use-package wucuo
   :config
   (setq ispell-program-name "aspell")
@@ -414,6 +404,20 @@
 (setq tramp-default-method "ssh")
 
 (setenv "PAGER" "cat")
+
+(use-package eat
+  :straight '(eat :type git
+       :host codeberg
+       :repo "akib/emacs-eat"
+       :files ("*.el" ("term" "term/*.el") "*.texi"
+               "*.ti" ("terminfo/e" "terminfo/e/*")
+               ("terminfo/65" "terminfo/65/*")
+               ("integration" "integration/*")
+               (:exclude ".dir-locals.el" "*-tests.el")))
+  :init
+  (add-hook 'eshell-load-hook #'eat-eshell-mode)
+  (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
+  )
 
 (use-package eshell
   :commands eshell
@@ -704,32 +708,6 @@
   :straight nil
   :diminish)
 
-(use-package modus-themes
-  :disabled
-  :demand t
-  :after (org)
-  :init
-  (setq modus-themes-mode-line '(accented borderless padded))
-  (setq modus-themes-region '(bg-only))
-  (setq modus-themes-completion 'opinionated)
-  (setq modus-themes-paren-match '(bold intense))
-  (setq modus-themes-syntax '(yellow-comments))
-  (setq modus-themes-bold-constructs t)
-  (setq modus-themes-italic-constructs t)
-  (setq modus-themes-headings
-        '((1 . (rainbow overline background 1.4))
-          (2 . (rainbow background 1.3))
-          (3 . (rainbow bold 1.2))
-          (t . (semilight 1.1))))
-  (setq modus-themes-scale-headings t)
-  (setq modus-themes-org-blocks 'gray-background)
-  (setq modus-themes-subtle-line-numbers t)
-  :config
-  (load-theme 'modus-vivendi t)
-  :bind
-  ("<f5>" . modus-themes-toggle)
-  )
-
 (use-package ef-themes
   :demand t
   :after (org)
@@ -769,6 +747,14 @@
   :bind
   ("<f5>" . ef-themes-toggle)
   )
+
+;; (use-package nerd-icons
+;;   )
+
+;; (use-package nerd-icons-dired
+;;   :after (nerd-icons)
+;;   :hook
+;;   (dired-mode . nerd-icons-dired-mode))
 
 (use-package rainbow-mode
   :config

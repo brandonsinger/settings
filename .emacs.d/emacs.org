@@ -6,14 +6,26 @@
 - machine.el
 - emacs-run-command
 - eat
-- olivetti?
 - org-modern?
-- ef-themes
 - scrolllock mode?
 - compile-multi
 - git-timemachine
 - pulsar
--
+- undo-tree
+- https://karthinks.com/software/simple-folding-with-hideshow/
+- https://github.com/alphapapa/dogears.el
+- 'shell' from https://sachachua.com/dotemacs/index.html
+- how to a scroll different window
+- use aggressive-indent-mode for lisp
+- rainbow-delimiters
+- clycheck-projectile
+- maybe term-projectile
+- http://yummymelon.com/devnull/surprise-and-e
+- content validation tools (xml and json)
+- viking-mode
+- company-mode
+- selected.el
+- https://www.masteringemacs.org/article/securely-generating-totp-tokens-emacs
 
 * Basic Config
 ** Some basic init
@@ -462,21 +474,7 @@ use ~magit-list-repositories~ to get a status list of all projects
     )
 #+end_src
 
-** eat
-Having trouble getting this to work
-#+begin_src emacs-lisp
-  ;; (straight-use-package
-  ;;  '(eat :type git
-  ;;        :host codeberg
-  ;;        :repo "akib/emacs-eat"
-  ;;        :files ("*.el" ("term" "term/*.el") "*.texi"
-  ;;                "*.ti" ("terminfo/e" "terminfo/e/*")
-  ;;                ("terminfo/65" "terminfo/65/*")
-  ;;                ("integration" "integration/*")
-  ;;                (:exclude ".dir-locals.el" "*-tests.el"))))
-#+end_src
-
-** Webbrowser
+** webbrowser
 I like eww more than w3m
 
 ** Spell Checking
@@ -484,31 +482,31 @@ I like eww more than w3m
 M-$ is ispell-word by default, should change it to something better..
 
 #+begin_src emacs-lisp
-    (use-package wucuo
-      :config
-      (setq ispell-program-name "aspell")
-      (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
-      (setq wucuo-spell-check-buffer-predicate
-            (lambda ()
-              (not (memq major-mode '(dired-mode
-                                      log-edit-mode
-                                      compilation-mode
-                                      help-mode
-                                      profiler-report-mode
-                                      speedbar-mode
-                                      gud-mode
-                                      calc-mode
-                                      Info-mode)))))
+  (use-package wucuo
+    :config
+    (setq ispell-program-name "aspell")
+    (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
+    (setq wucuo-spell-check-buffer-predicate
+          (lambda ()
+            (not (memq major-mode '(dired-mode
+                                    log-edit-mode
+                                    compilation-mode
+                                    help-mode
+                                    profiler-report-mode
+                                    speedbar-mode
+                                    gud-mode
+                                    calc-mode
+                                    Info-mode)))))
 
-      :hook
-      (prog-mode . wucuo-start)
-      (text-mode . wucuo-start)
-      )
+    :hook
+    (prog-mode . wucuo-start)
+    (text-mode . wucuo-start)
+    )
 
-    (use-package flyspell-correct
-      :after flyspell
-      :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper))
-      )
+  (use-package flyspell-correct
+    :after flyspell
+    :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper))
+    )
 #+end_src
 
 ** Weather
@@ -528,6 +526,25 @@ M-$ is ispell-word by default, should change it to something better..
 ** General
 #+begin_src emacs-lisp
   (setenv "PAGER" "cat")
+#+end_src
+
+** eat
+Having trouble getting this to work
+#+begin_src emacs-lisp
+  (use-package eat
+    :straight '(eat :type git
+         :host codeberg
+         :repo "akib/emacs-eat"
+         :files ("*.el" ("term" "term/*.el") "*.texi"
+                 "*.ti" ("terminfo/e" "terminfo/e/*")
+                 ("terminfo/65" "terminfo/65/*")
+                 ("integration" "integration/*")
+                 (:exclude ".dir-locals.el" "*-tests.el")))
+    :init
+    (add-hook 'eshell-load-hook #'eat-eshell-mode)
+    (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
+    )
+
 #+end_src
 
 ** Eshell
@@ -834,32 +851,6 @@ M-$ is ispell-word by default, should change it to something better..
   (use-package eldoc
     :straight nil
     :diminish)
-
-  (use-package modus-themes
-    :disabled
-    :demand t
-    :after (org)
-    :init
-    (setq modus-themes-mode-line '(accented borderless padded))
-    (setq modus-themes-region '(bg-only))
-    (setq modus-themes-completion 'opinionated)
-    (setq modus-themes-paren-match '(bold intense))
-    (setq modus-themes-syntax '(yellow-comments))
-    (setq modus-themes-bold-constructs t)
-    (setq modus-themes-italic-constructs t)
-    (setq modus-themes-headings
-          '((1 . (rainbow overline background 1.4))
-            (2 . (rainbow background 1.3))
-            (3 . (rainbow bold 1.2))
-            (t . (semilight 1.1))))
-    (setq modus-themes-scale-headings t)
-    (setq modus-themes-org-blocks 'gray-background)
-    (setq modus-themes-subtle-line-numbers t)
-    :config
-    (load-theme 'modus-vivendi t)
-    :bind
-    ("<f5>" . modus-themes-toggle)
-    )
 
   (use-package ef-themes
     :demand t
