@@ -120,6 +120,85 @@
 
 (use-package no-littering)
 
+(setq visible-bell t)
+
+(global-display-line-numbers-mode t)
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook)
+              )
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+(setq mode-line-format
+      '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
+
+(use-package eldoc
+  :straight nil
+  :diminish)
+
+(use-package ef-themes
+  :demand t
+  :after (org)
+  :init
+  (setq ef-themes-to-toggle '(ef-bio ef-duo-light))
+
+
+  (setq ef-themes-headings ; read the manual's entry or the doc string
+        '((0 . (variable-pitch light 1.9))
+          (1 . (variable-pitch light 1.8))
+          (2 . (variable-pitch regular 1.7))
+          (3 . (variable-pitch regular 1.6))
+          (4 . (variable-pitch regular 1.5))
+          (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
+          (6 . (variable-pitch 1.3))
+          (7 . (variable-pitch 1.2))
+          (t . (variable-pitch 1.1))))
+  ;; They are nil by default...
+  (setq ef-themes-mixed-fonts t
+        ef-themes-variable-pitch-ui t)
+
+  (setq ef-themes-region '(no-extend))
+
+  ;; not working, must be doing something wrong
+  (setq ef-bio-palette-overrides
+        '((cursor red)
+          (org-blocks green))
+        )
+
+
+  ;; Disable all other themes to avoid awkward blending:
+  (mapc #'disable-theme custom-enabled-themes)
+
+  ;; Load the theme of choice:
+  :config
+  (load-theme 'ef-bio :no-confirm)
+  :bind
+  ("<f5>" . ef-themes-toggle)
+  )
+
+;; (use-package nerd-icons
+;;   )
+
+;; (use-package nerd-icons-dired
+;;   :after (nerd-icons)
+;;   :hook
+;;   (dired-mode . nerd-icons-dired-mode))
+
+(use-package rainbow-mode
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-mode))
+
+;; (use-package prism
+;;   )
+
+
+(use-package beacon
+  :diminish
+  :config
+  (beacon-mode 1))
+
 (defun echo/org-mode-setup ()
   (org-indent-mode)
   (visual-line-mode 1)
@@ -261,6 +340,10 @@
          ("<home>" . mwim-beginning-of-code-or-line)
          ("<end>" . mwim-end-of-code-or-line))
   )
+
+(use-package viking-mode
+  :config
+  (viking-global-mode))
 
 (use-package ws-butler
   :hook ((text-mode . ws-butler-mode)
@@ -699,82 +782,3 @@
   ("q" nil)
   )
 (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
-
-(setq visible-bell t)
-
-(global-display-line-numbers-mode t)
-;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-                shell-mode-hook
-                eshell-mode-hook)
-              )
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-(setq mode-line-format
-      '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
-
-(use-package eldoc
-  :straight nil
-  :diminish)
-
-(use-package ef-themes
-  :demand t
-  :after (org)
-  :init
-  (setq ef-themes-to-toggle '(ef-bio ef-duo-light))
-
-
-  (setq ef-themes-headings ; read the manual's entry or the doc string
-        '((0 . (variable-pitch light 1.9))
-          (1 . (variable-pitch light 1.8))
-          (2 . (variable-pitch regular 1.7))
-          (3 . (variable-pitch regular 1.6))
-          (4 . (variable-pitch regular 1.5))
-          (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
-          (6 . (variable-pitch 1.3))
-          (7 . (variable-pitch 1.2))
-          (t . (variable-pitch 1.1))))
-  ;; They are nil by default...
-  (setq ef-themes-mixed-fonts t
-        ef-themes-variable-pitch-ui t)
-
-  (setq ef-themes-region '(no-extend))
-
-  ;; not working, must be doing something wrong
-  (setq ef-bio-palette-overrides
-        '((cursor red)
-          (org-blocks green))
-        )
-
-
-  ;; Disable all other themes to avoid awkward blending:
-  (mapc #'disable-theme custom-enabled-themes)
-
-  ;; Load the theme of choice:
-  :config
-  (load-theme 'ef-bio :no-confirm)
-  :bind
-  ("<f5>" . ef-themes-toggle)
-  )
-
-;; (use-package nerd-icons
-;;   )
-
-;; (use-package nerd-icons-dired
-;;   :after (nerd-icons)
-;;   :hook
-;;   (dired-mode . nerd-icons-dired-mode))
-
-(use-package rainbow-mode
-  :config
-  (add-hook 'emacs-lisp-mode-hook 'rainbow-mode))
-
-(use-package prism
-  )
-
-
-(use-package beacon
-  :diminish
-  :config
-  (beacon-mode 1))
