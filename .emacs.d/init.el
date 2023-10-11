@@ -64,6 +64,13 @@
 (customize-set-variable 'scroll-margin 0)
 (customize-set-variable 'scroll-preserve-screen-position t)
 
+;;(setq bookmark-save-flag 1)
+(setq sentence-end-double-space nil)
+(setq delete-selection-mode t)
+(setq global-auto-revert-mode t)
+(setq global-auto-revert-non-file-buffers t)
+(setq man-notify-method 'aggressive)
+
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "C-x <") 'org-insert-structure-template)
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -274,6 +281,7 @@
            ((:right-align t)
             (:help-echo "Local changes not in upstream")))
           ("Path"    99 magit-repolist-column-path ())))
+  (setq magit-save-repository-buffers 'dontask)
   )
 
 (use-package magit-todos
@@ -360,6 +368,8 @@
   :straight nil
   :custom
   (dired-listing-switches "-agho --group-directories-first")
+  :init
+  (setq dired-auto-revert-buffer t)
   )
 
 (use-package clipetty

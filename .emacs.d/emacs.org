@@ -20,7 +20,6 @@
 - rainbow-delimiters
 - clycheck-projectile
 - maybe term-projectile
-- http://yummymelon.com/devnull/surprise-and-e
 - content validation tools (xml and json)
 - viking-mode
 - company-mode
@@ -95,6 +94,16 @@
   (customize-set-variable 'scroll-conservatively 101)
   (customize-set-variable 'scroll-margin 0)
   (customize-set-variable 'scroll-preserve-screen-position t)
+#+end_src
+
+** Other stuff
+#+begin_src emacs-lisp
+  ;;(setq bookmark-save-flag 1)
+  (setq sentence-end-double-space nil)
+  (setq delete-selection-mode t)
+  (setq global-auto-revert-mode t)
+  (setq global-auto-revert-non-file-buffers t)
+  (setq man-notify-method 'aggressive)
 #+end_src
 
 ** Set some global keys
@@ -349,6 +358,7 @@ use ~magit-list-repositories~ to get a status list of all projects
              ((:right-align t)
               (:help-echo "Local changes not in upstream")))
             ("Path"    99 magit-repolist-column-path ())))
+    (setq magit-save-repository-buffers 'dontask)
     )
 
   (use-package magit-todos
@@ -457,6 +467,8 @@ use ~magit-list-repositories~ to get a status list of all projects
     :straight nil
     :custom
     (dired-listing-switches "-agho --group-directories-first")
+    :init
+    (setq dired-auto-revert-buffer t)
     )
 #+end_src
 
