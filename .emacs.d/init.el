@@ -361,7 +361,10 @@
   :hook
   (dired-mode . denote-dired-mode)
   :bind
-  ("C-c j" . denote-journal-extras-new-or-existing-entry)
+  ("C-c n n" . denote)
+  ("C-c n j" . denote-journal-extras-new-or-existing-entry)
+  ("C-c n r" . denote-rename-file)
+  ("C-c n R" . denote-rename-file-using-front-matter)
   )
 
 (use-package mwim
