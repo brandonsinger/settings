@@ -1,6 +1,6 @@
 #+title My emacs config
 #+PROPERTY: header-args:emacs-lisp :tangle ~/projects/settings/.emacs.d/init.el
-#+STARTUP: overview
+#+STARTUP: show2levels
 
 * Things to maybe add
 - corfu-terminal
@@ -21,10 +21,11 @@
 - clycheck-projectile
 - maybe term-projectile
 - content validation tools (xml and json)
-- company-mode
 - selected.el
 - https://www.masteringemacs.org/article/securely-generating-totp-tokens-emacs
 - hush
+- https://github.com/balloneij/selection-highlight-mode
+- persistent-scratch
 
 * Basic Config
 ** Some basic init
@@ -191,6 +192,7 @@
   (setq mode-line-format
         '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
 
+  ;; TODO: shouldnt eldoc be in a different section? and maybe I should actually use this
   (use-package eldoc
     :straight nil
     :diminish)
@@ -310,6 +312,7 @@
      (python . t)))
 
   (use-package org-journal
+    :disabled
     :after (org)
     :bind (("C-c C-j" . org-journal-new-entry)
            )
@@ -402,6 +405,39 @@
     )
 #+end_src
 
+* Writing
+** Denote
+#+begin_src emacs-lisp
+  (use-package denote
+    :init
+    (denote-rename-buffer-mode 1)
+    :config
+    (setq denote-directory (expand-file-name "~/projects/docs"))
+    (setq denote-known-keywords '("emacs" "food" "bible" "prayer" "encouragement"))
+    (setq denote-infer-keywords t)
+    (setq denote-sort-keywords t)
+    (setq denote-prompts '(title keywords)) ; subdirectory and date are avail
+    (setq denote-excluded-directories-regexp nil)
+    (setq denote-excluded-keywords-regexp nil)
+
+    ;; Pick dates, where relevant, with Org's advanced interface:
+    (setq denote-date-prompt-use-org-read-date t)
+
+    (setq denote-date-format nil)
+
+    (setq denote-backlinks-show-context t)
+
+    (require 'denote-journal-extras)
+    (setq denote-journal-extras-title-format 'day-date-month-year)
+
+    :hook
+    (dired-mode . denote-dired-mode)
+    :bind
+    ("C-c j" . denote-journal-extras-new-or-existing-entry)
+    )
+
+#+end_src
+
 * Tools
 ** Smart home/end
 #+begin_src emacs-lisp
@@ -414,9 +450,10 @@
 
 #+end_src
 
-** Viking
+** Viking (disabled)
 #+begin_src emacs-lisp
   (use-package viking-mode
+    :disabled
     :config
     (viking-global-mode))
 #+end_src
@@ -531,9 +568,10 @@ use ~magit-list-repositories~ to get a status list of all projects
 
 #+end_src
 
-** perspective
+** perspective (disabled)
 #+begin_src emacs-lisp
   (use-package perspective
+    :disabled
     :straight t
     :bind
     ("C-x k" . persp-kill-buffer*)
@@ -576,7 +614,12 @@ use ~magit-list-repositories~ to get a status list of all projects
 #+end_src
 
 ** webbrowser
-I like eww more than w3m
+#+begin_src emacs-lisp
+  (use-package eww
+    :bind
+    ("C-c w" . eww)
+    )
+#+end_src
 
 ** Spell Checking
 
@@ -621,6 +664,20 @@ M-$ is ispell-word by default, should change it to something better..
 ** Tramp
 #+begin_src emacs-lisp
   (setq tramp-default-method "ssh")
+#+end_src
+
+** Corfu
+#+begin_src emacs-lisp
+  (use-package corfu
+    :init
+    (global-corfu-mode)
+    )
+#+end_src
+
+** Key Help
+#+begin_src emacs-lisp
+  (use-package free-keys)
+  (use-package bind-key)
 #+end_src
 
 * Shell

@@ -134,6 +134,7 @@
 (setq mode-line-format
       '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
 
+;; TODO: shouldnt eldoc be in a different section? and maybe I should actually use this
 (use-package eldoc
   :straight nil
   :diminish)
@@ -249,6 +250,7 @@
    (python . t)))
 
 (use-package org-journal
+  :disabled
   :after (org)
   :bind (("C-c C-j" . org-journal-new-entry)
          )
@@ -334,6 +336,34 @@
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
   )
 
+(use-package denote
+  :init
+  (denote-rename-buffer-mode 1)
+  :config
+  (setq denote-directory (expand-file-name "~/projects/docs"))
+  (setq denote-known-keywords '("emacs" "food" "bible" "prayer" "encouragement"))
+  (setq denote-infer-keywords t)
+  (setq denote-sort-keywords t)
+  (setq denote-prompts '(title keywords)) ; subdirectory and date are avail
+  (setq denote-excluded-directories-regexp nil)
+  (setq denote-excluded-keywords-regexp nil)
+
+  ;; Pick dates, where relevant, with Org's advanced interface:
+  (setq denote-date-prompt-use-org-read-date t)
+
+  (setq denote-date-format nil)
+
+  (setq denote-backlinks-show-context t)
+
+  (require 'denote-journal-extras)
+  (setq denote-journal-extras-title-format 'day-date-month-year)
+
+  :hook
+  (dired-mode . denote-dired-mode)
+  :bind
+  ("C-c j" . denote-journal-extras-new-or-existing-entry)
+  )
+
 (use-package mwim
   :bind (("C-a" . mwim-beginning-of-code-or-line)
          ("C-e" . mwim-end-of-code-or-line)
@@ -342,6 +372,7 @@
   )
 
 (use-package viking-mode
+  :disabled
   :config
   (viking-global-mode))
 
@@ -432,6 +463,7 @@
 (use-package ripgrep)
 
 (use-package perspective
+  :disabled
   :straight t
   :bind
   ("C-x k" . persp-kill-buffer*)
@@ -461,6 +493,11 @@
 (use-package devdocs
   :bind
   ("C-h D" . devdocs-lookup)
+  )
+
+(use-package eww
+  :bind
+  ("C-c w" . eww)
   )
 
 (use-package wucuo
@@ -495,6 +532,14 @@
   )
 
 (setq tramp-default-method "ssh")
+
+(use-package corfu
+  :init
+  (global-corfu-mode)
+  )
+
+(use-package free-keys)
+(use-package bind-key)
 
 (setenv "PAGER" "cat")
 
