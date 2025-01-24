@@ -7,11 +7,12 @@
 - machine.el
 - emacs-run-command
 - org-modern?
+- org-tempo
 - scrolllock mode?
 - compile-multi
 - git-timemachine
 - pulsar
-- undo-tree
+- undo-tree or vundo?
 - https://karthinks.com/software/simple-folding-with-hideshow/
 - https://github.com/alphapapa/dogears.el
 - 'shell' from https://sachachua.com/dotemacs/index.html
@@ -26,6 +27,15 @@
 - hush
 - https://github.com/balloneij/selection-highlight-mode
 - persistent-scratch
+- https://github.com/alphapapa/activities.el
+- https://github.com/TxGVNN/project-tasks
+- spacious-padding?
+- dashboard? would probably want it be be different depending of the device
+- sql package?
+- midnight mode?
+- switch to project.el (and maybe use disproject with it?)
+- atomic-chrome
+- magit wip mode?
 
 * Basic Config
 ** Some basic init
@@ -105,6 +115,7 @@
   (setq global-auto-revert-mode t)
   (setq global-auto-revert-non-file-buffers t)
   (setq man-notify-method 'aggressive)
+  (setq confirm-kill-emacs #'y-or-n-p)
 #+end_src
 
 ** Set some global keys
@@ -191,6 +202,8 @@
 
   (setq mode-line-format
         '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
+  ;; (setq header-line-format ?
+  ;;       )
 
   ;; TODO: shouldnt eldoc be in a different section? and maybe I should actually use this
   (use-package eldoc
@@ -453,14 +466,6 @@
 
 #+end_src
 
-** Viking (disabled)
-#+begin_src emacs-lisp
-  (use-package viking-mode
-    :disabled
-    :config
-    (viking-global-mode))
-#+end_src
-
 ** Auto cleanup whitespace
 #+begin_src emacs-lisp
   (use-package ws-butler
@@ -479,7 +484,7 @@ use ~magit-list-repositories~ to get a status list of all projects
     (setq magit-repolist-columns
           '(("Name"    25 magit-repolist-column-ident ())
             ("Version" 25 magit-repolist-column-version ())
-            ("D"        1 magit-repolist-column-dirty ())
+            ("D"        1 magit-repolist-column-flag ())
             ("B<U"      3 magit-repolist-column-unpulled-from-upstream
              ((:right-align t)
               (:help-echo "Upstream changes not in branch")))
@@ -534,6 +539,42 @@ use ~magit-list-repositories~ to get a status list of all projects
 #+begin_src emacs-lisp
   (use-package python-pytest)
   (global-set-key (kbd "C-x T") 'python-pytest-dispatch)
+#+end_src
+
+** lsp
+Use M-x lsp-doctor to validate if your lsp-mode is properly configured.
+
+pip install ruff
+
+#+begin_src emacs-lisp
+  (defun echo-install-lsp-servers (server-list)
+    "Install specified LSP servers using lsp-install-server. SERVER-LIST is a list of server symbols, e.g. '(pyls tsserver gopls)"
+
+    (dolist (server server-list)
+      (if (fboundp 'lsp-install-server)
+          (let ((client (gethash server lsp-clients)))
+            (when client
+              (unless (lsp--server-binary-present? client)
+                (lsp-install-server nil server)
+                (message "Installed LSP server: %s" server))))
+        (error "lsp-install-server function not found. Is lsp-mode installed?")))
+    (message "Finished installing LSP servers"))
+
+  (use-package lsp-mode
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
+    :hook (
+           (prog-mode-hook . lsp)
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp
+    :config
+    (echo-install-lsp-servers `(ansible-ls html-ls ts-ls json-ls css-ls iph))
+    )
+
+  ;; optionally
+  (use-package lsp-ui :commands lsp-ui-mode)
+
 #+end_src
 
 ** which-key
@@ -628,6 +669,8 @@ use ~magit-list-repositories~ to get a status list of all projects
 
 M-$ is ispell-word by default, should change it to something better..
 
+Make sure aspell is installed and setup. (install aspell and aspell-us)
+
 #+begin_src emacs-lisp
   (use-package wucuo
     :config
@@ -652,7 +695,9 @@ M-$ is ispell-word by default, should change it to something better..
 
   (use-package flyspell-correct
     :after flyspell
-    :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper))
+    :bind
+    ;;("?" . flyspell-correct-at-point)
+    (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper))
     )
 #+end_src
 
@@ -681,6 +726,19 @@ M-$ is ispell-word by default, should change it to something better..
 #+begin_src emacs-lisp
   (use-package free-keys)
   (use-package bind-key)
+#+end_src
+** AI
+#+begin_src emacs-lisp
+    (use-package shell-maker
+      :straight (:type git :host github :repo "xenodium/shell-maker" :files ("shell-maker*.el")))
+
+    (use-package chatgpt-shell
+      :straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell*.el"))
+      ;;:custom
+      ;; ((chatgpt-shell-anthropic-key
+      ;;   (lambda ()
+      ;;     (auth-source-pass-get 'secret "openai-key"))))
+      )
 #+end_src
 
 * Shell
@@ -896,7 +954,8 @@ Having trouble getting this to work
      consult--source-buffer :hidden t :default nil)
 
     (setq consult-project-root-function #'projectile-project-root)
-    (add-to-list 'consult-buffer-sources persp-consult-source))
+    ;;(add-to-list 'consult-buffer-sources persp-consult-source)
+    )
 
 
   (use-package embark

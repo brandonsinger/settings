@@ -70,6 +70,7 @@
 (setq global-auto-revert-mode t)
 (setq global-auto-revert-non-file-buffers t)
 (setq man-notify-method 'aggressive)
+(setq confirm-kill-emacs #'y-or-n-p)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "C-x <") 'org-insert-structure-template)
@@ -133,6 +134,8 @@
 
 (setq mode-line-format
       '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
+;; (setq header-line-format ?
+;;       )
 
 ;; TODO: shouldnt eldoc be in a different section? and maybe I should actually use this
 (use-package eldoc
@@ -374,11 +377,6 @@
          ("<end>" . mwim-end-of-code-or-line))
   )
 
-(use-package viking-mode
-  :disabled
-  :config
-  (viking-global-mode))
-
 (use-package ws-butler
   :hook ((text-mode . ws-butler-mode)
          (prog-mode . ws-butler-mode)))
@@ -390,7 +388,7 @@
   (setq magit-repolist-columns
         '(("Name"    25 magit-repolist-column-ident ())
           ("Version" 25 magit-repolist-column-version ())
-          ("D"        1 magit-repolist-column-dirty ())
+          ("D"        1 magit-repolist-column-flag ())
           ("B<U"      3 magit-repolist-column-unpulled-from-upstream
            ((:right-align t)
             (:help-echo "Upstream changes not in branch")))
@@ -440,6 +438,34 @@
 (use-package python-pytest)
 (global-set-key (kbd "C-x T") 'python-pytest-dispatch)
 
+(defun echo-install-lsp-servers (server-list)
+  "Install specified LSP servers using lsp-install-server. SERVER-LIST is a list of server symbols, e.g. '(pyls tsserver gopls)"
+
+  (dolist (server server-list)
+    (if (fboundp 'lsp-install-server)
+        (let ((client (gethash server lsp-clients)))
+          (when client
+            (unless (lsp--server-binary-present? client)
+              (lsp-install-server nil server)
+              (message "Installed LSP server: %s" server))))
+      (error "lsp-install-server function not found. Is lsp-mode installed?")))
+  (message "Finished installing LSP servers"))
+
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (
+         (prog-mode-hook . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp
+  :config
+  (echo-install-lsp-servers `(ansible-ls html-ls ts-ls json-ls css-ls iph))
+  )
+
+;; optionally
+(use-package lsp-ui :commands lsp-ui-mode)
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
@@ -465,21 +491,9 @@
 
 (use-package ripgrep)
 
-(use-package perspective
+(use-package project.el
   :disabled
   :straight t
-  :bind
-  ("C-x k" . persp-kill-buffer*)
-  ("C-x b" . persp-switch-to-buffer*)
-  ("C-x C-b" . persp-switch-to-buffer*)
-  :custom
-  (persp-mode-prefix-key (kbd "M-p"))
-  (persp-state-default-file (expand-file-name ".persp" user-emacs-directory))
-  (persp-sort 'created)
-  :init
-  (persp-mode)
-  (persp-state-load persp-state-default-file)
-  (add-hook 'kill-emacs-hook #'persp-state-save)
   )
 
 (use-package dired
@@ -526,7 +540,9 @@
 
 (use-package flyspell-correct
   :after flyspell
-  :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper))
+  :bind
+  ;;("?" . flyspell-correct-at-point)
+  (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper))
   )
 
 (use-package wttrin
@@ -543,6 +559,17 @@
 
 (use-package free-keys)
 (use-package bind-key)
+
+(use-package shell-maker
+  :straight (:type git :host github :repo "xenodium/shell-maker" :files ("shell-maker*.el")))
+
+(use-package chatgpt-shell
+  :straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell*.el"))
+  ;;:custom
+  ;; ((chatgpt-shell-anthropic-key
+  ;;   (lambda ()
+  ;;     (auth-source-pass-get 'secret "openai-key"))))
+  )
 
 (setenv "PAGER" "cat")
 
@@ -742,7 +769,8 @@
    consult--source-buffer :hidden t :default nil)
 
   (setq consult-project-root-function #'projectile-project-root)
-  (add-to-list 'consult-buffer-sources persp-consult-source))
+  ;;(add-to-list 'consult-buffer-sources persp-consult-source)
+  )
 
 
 (use-package embark
