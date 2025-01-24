@@ -27,4 +27,4 @@ fi
 
 # Put your fun stuff here.
 
-
+export PATH="$PATH:/home/echo/.local/bin" #for pipx
