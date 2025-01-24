@@ -36,6 +36,7 @@
 - switch to project.el (and maybe use disproject with it?)
 - atomic-chrome
 - magit wip mode?
+- treemacs
 
 * Basic Config
 ** Some basic init
@@ -563,10 +564,14 @@ pip install ruff
 
   (use-package lsp-mode
     :init
+    ;; lsp-enable-file-watchers and lsp-file-watch-threshold
     ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-keymap-prefix "C-c l"
+          lsp-file-watch-threshold 5000)
     :hook (
            (prog-mode-hook . lsp)
+           (web-mode . lsp)
+           (css-mode . lsp)
            (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp
     :config
@@ -576,6 +581,23 @@ pip install ruff
   ;; optionally
   (use-package lsp-ui :commands lsp-ui-mode)
 
+#+end_src
+
+** company-mode
+#+begin_src emacs-lisp
+  (use-package company
+    :config
+    (setq company-minimum-prefix-length 1
+          company-idle-delay 0.0)
+    (global-company-mode t)
+    ;;:bind
+#+end_src
+
+** flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :config
+    (add-hook 'after-init-hook #'global-flycheck-mode))
 #+end_src
 
 ** which-key
@@ -716,6 +738,7 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
   (use-package free-keys)
   (use-package bind-key)
 #+end_src
+
 ** AI
 #+begin_src emacs-lisp
     (use-package shell-maker

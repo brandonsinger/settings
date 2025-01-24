@@ -454,10 +454,14 @@
 
 (use-package lsp-mode
   :init
+  ;; lsp-enable-file-watchers and lsp-file-watch-threshold
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-keymap-prefix "C-c l"
+        lsp-file-watch-threshold 5000)
   :hook (
          (prog-mode-hook . lsp)
+         (web-mode . lsp)
+         (css-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
   :config
@@ -466,6 +470,17 @@
 
 ;; optionally
 (use-package lsp-ui :commands lsp-ui-mode)
+
+(use-package company
+  :config
+  (setq company-minimum-prefix-length 1
+        company-idle-delay 0.0)
+  (global-company-mode t)
+  ;;:bind
+
+(use-package flycheck
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 (use-package which-key
   :init (which-key-mode)
