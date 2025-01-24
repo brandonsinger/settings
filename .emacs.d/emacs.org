@@ -591,6 +591,7 @@ pip install ruff
           company-idle-delay 0.0)
     (global-company-mode t)
     ;;:bind
+    )
 #+end_src
 
 ** flycheck

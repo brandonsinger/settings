@@ -477,6 +477,7 @@
         company-idle-delay 0.0)
   (global-company-mode t)
   ;;:bind
+  )
 
 (use-package flycheck
   :config
