@@ -397,6 +397,7 @@
             (:help-echo "Local changes not in upstream")))
           ("Path"    99 magit-repolist-column-path ())))
   (setq magit-save-repository-buffers 'dontask)
+  (setq magit-log-margin '(t "%Y-%m-%d" magit-log-margin-width t 18))
   )
 
 (use-package magit-todos
@@ -421,7 +422,6 @@
   (python-shell-interperter "python")
   )
 
-;; Todo
 (require 'web-mode)
 (setq web-mode-enable-auto-indentation nil)
 (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
@@ -431,6 +431,7 @@
 
 (setq web-mode-engines-alist
       '(
+        ("django" . "/home/echo/projects/website/templates/.*\\.twig.html\\'")
         ("smarty" . "/home/echo/projects/website/templates/.*\\.html\\'")
         )
       )

@@ -521,7 +521,6 @@ use ~magit-list-repositories~ to get a status list of all projects
     (python-shell-interperter "python")
     )
 
-  ;; Todo
   (require 'web-mode)
   (setq web-mode-enable-auto-indentation nil)
   (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
@@ -614,23 +613,11 @@ pip install ruff
 
 #+end_src
 
-** perspective (disabled)
+** project.el
 #+begin_src emacs-lisp
-  (use-package perspective
+  (use-package project.el
     :disabled
     :straight t
-    :bind
-    ("C-x k" . persp-kill-buffer*)
-    ("C-x b" . persp-switch-to-buffer*)
-    ("C-x C-b" . persp-switch-to-buffer*)
-    :custom
-    (persp-mode-prefix-key (kbd "M-p"))
-    (persp-state-default-file (expand-file-name ".persp" user-emacs-directory))
-    (persp-sort 'created)
-    :init
-    (persp-mode)
-    (persp-state-load persp-state-default-file)
-    (add-hook 'kill-emacs-hook #'persp-state-save)
     )
 #+end_src
 
