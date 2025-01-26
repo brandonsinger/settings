@@ -570,11 +570,25 @@ The DWIM behaviour of this command is as follows:
 
 (use-package dired
   :straight nil
+  :commands (dired)
+  :hook
+  (dired-mode . hl-line-mode)
   :custom
   (dired-listing-switches "-agho --group-directories-first")
   :init
   (setq dired-auto-revert-buffer t)
   )
+(use-package dired-subtree
+  :ensure t
+  :after dired
+  :bind
+  ( :map dired-mode-map
+    ("<tab>" . dired-subtree-toggle)
+    ("TAB" . dired-subtree-toggle)
+    ("<backtab>" . dired-subtree-remove)
+    ("S-TAB" . dired-subtree-remove))
+  :config
+  (setq dired-subtree-use-backgrounds nil))
 
 (use-package clipetty
   :hook (after-init . global-clipetty-mode))
@@ -844,7 +858,6 @@ The DWIM behaviour of this command is as follows:
   ;;(add-to-list 'consult-buffer-sources persp-consult-source)
   )
 
-
 (use-package embark
   :bind
   (("C-\\" . embark-act)         ;; pick some comfortable binding
@@ -865,9 +878,23 @@ The DWIM behaviour of this command is as follows:
   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package corfu
-  :init
-  (global-corfu-mode)
-  )
+  :ensure t
+  :hook
+  (after-init . global-corfu-mode)
+  :bind
+  (:map corfu-map ("<tab>" . corfu-complete))
+  :config
+  (setq tab-always-indent 'complete)
+  (setq corfu-preview-current nil)
+  (setq corfu-min-width 20)
+
+  (setq corfu-popupinfo-delay '(1.25 . 0.5))
+  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+
+  ;; Sort by input history (no need to modify `corfu-sort-function').
+  (with-eval-after-load 'savehist
+    (corfu-history-mode 1)
+    (add-to-list 'savehist-additional-variables 'corfu-history)))
 
 (use-package bm
   :bind
