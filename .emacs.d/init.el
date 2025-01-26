@@ -30,6 +30,10 @@
 (global-auto-revert-mode 1)
 (setq global-auto-revert-non-file-buffers t)
 
+;; Emacs 28 and newer: Hide commands in M-x which do not work in the current
+;; mode.  Vertico commands are hidden in normal buffers. This setting is
+;; useful beyond Vertico.
+(setq read-extended-command-predicate #'command-completion-default-include-p)
 
 (when (featurep 'native-compile)
   ;; Silence compiler warnings as they can be pretty disruptive
@@ -120,6 +124,24 @@
   )
 
 (use-package no-littering)
+
+(use-package activities
+  :init
+  (activities-mode)
+  (activities-tabs-mode)
+  ;; Prevent `edebug' default bindings from interfering.
+  (setq edebug-inhibit-emacs-lisp-mode-bindings t)
+
+  :bind
+  (("C-x C-a C-n" . activities-new)
+   ("C-x C-a C-d" . activities-define)
+   ("C-x C-a C-a" . activities-resume)
+   ("C-x C-a C-s" . activities-suspend)
+   ("C-x C-a C-k" . activities-kill)
+   ("C-x C-a RET" . activities-switch)
+   ("C-x C-a b" . activities-switch-buffer)
+   ("C-x C-a g" . activities-revert)
+   ("C-x C-a l" . activities-list)))
 
 (setq visible-bell t)
 
@@ -507,11 +529,6 @@
   )
 
 (use-package ripgrep)
-
-(use-package project.el
-  :disabled
-  :straight t
-  )
 
 (use-package dired
   :straight nil
