@@ -447,6 +447,10 @@ The DWIM behaviour of this command is as follows:
   :hook ((text-mode . ws-butler-mode)
          (prog-mode . ws-butler-mode)))
 
+(use-package aggressive-indent
+  :hook ((emacs-lisp-mode-hook . aggressive-indent-mode)
+         (css-mode-hook . aggressive-indent-mode)))
+
 (use-package magit
   :config
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)

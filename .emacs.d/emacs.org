@@ -17,7 +17,6 @@
 - https://github.com/alphapapa/dogears.el
 - 'shell' from https://sachachua.com/dotemacs/index.html
 - how to a scroll different window
-- use aggressive-indent-mode for lisp
 - rainbow-delimiters
 - clycheck-projectile
 - maybe term-projectile
@@ -543,7 +542,15 @@
            (prog-mode . ws-butler-mode)))
 #+end_src
 
-** git
+** aggressive-indent
+TODO: figure out how to have that work on lisp code in an org file
+#+begin_src emacs-lisp
+  (use-package aggressive-indent
+    :hook ((emacs-lisp-mode-hook . aggressive-indent-mode)
+           (css-mode-hook . aggressive-indent-mode)))
+#+end_src
+
+** magit
 use ~magit-list-repositories~ to get a status list of all projects
 
 #+begin_src emacs-lisp
