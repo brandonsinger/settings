@@ -192,6 +192,9 @@ The DWIM behaviour of this command is as follows:
 ;; (setq header-line-format ?
 ;;       )
 
+(setq tab-bar-close-button-show nil
+      tab-bar-new-button-show nil)
+
 ;; TODO: shouldnt eldoc be in a different section? and maybe I should actually use this
 (use-package eldoc
   :straight nil
