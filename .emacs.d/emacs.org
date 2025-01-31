@@ -36,6 +36,8 @@
 - magit wip mode?
 - treemacs
 - might want to go through https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-emacs.org again
+- magit-gptcommit
+- consult has many more feature that I dont use
 
 * early-init.el
 #+begin_src emacs-lisp :tangle "early-init.el"
@@ -224,6 +226,16 @@
     )
 #+end_src
 
+* Server
+#+begin_src emacs-lisp
+  (use-package server
+    :ensure nil
+    :defer 1
+    :config
+    (setq server-client-instructions nil)
+    (unless (server-running-p)
+      (server-start)))
+#+end_src
 * Setup
 #+begin_src emacs-lisp
   (use-package no-littering)
@@ -265,7 +277,7 @@
                   eshell-mode-hook)
                 )
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
-  
+
   ;; (setq header-line-format ?
   ;;       )
 
@@ -322,19 +334,26 @@
     )
 
   (use-package nerd-icons-completion
+    :if (display-graphic-p)
     :after marginalia
+    ;; FIXME 2024-09-01: For some reason this stopped working because it
+    ;; macroexpands to `marginalia-mode' instead of
+    ;; `marginalia-mode-hook'.  What is more puzzling is that this does
+    ;; not happen in the next :hook...
+    ;; :hook (marginalia-mode . nerd-icons-completion-marginalia-setup))
     :config
     (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
   (use-package nerd-icons-corfu
+    :if (display-graphic-p)
     :after corfu
     :config
     (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
   (use-package nerd-icons-dired
+    :if (display-graphic-p)
     :hook
     (dired-mode . nerd-icons-dired-mode))
-
 
   (use-package rainbow-mode
     :config
@@ -770,7 +789,7 @@ pip install ruff
     :hook
     (dired-mode . hl-line-mode)
     :custom
-    (dired-listing-switches "-agho --group-directories-first")
+    (dired-listing-switches "-agho --group-directories-first --time-style=long-iso")
     :init
     (setq dired-auto-revert-buffer t)
     )
@@ -883,7 +902,16 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
 ** Mode Line
 #+begin_src emacs-lisp
   (setq mode-line-format
-        '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
+        '("%e"
+          mode-line-client
+          mode-line-modified
+          " "
+          mode-line-buffer-identification
+          mode-line-position
+          (vc-mode vc-mode)
+          mode-line-modes
+          mode-line-misc-info
+          mode-line-end-spaces))
 
   (use-package time
     :ensure nil
@@ -924,6 +952,13 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
                                       dashboard-insert-newline))
     ;;(setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
     )
+#+end_src
+
+** Kitty Keyboard Protocol
+#+begin_src emacs-lisp
+  (use-package kkp
+    :config
+    (global-kkp-mode 1))
 #+end_src
 
 * Shell
@@ -1126,6 +1161,7 @@ Having trouble getting this to work
     (marginalia-mode 1))
 
   (use-package consult
+    :hook (completion-list-mode . consult-preview-at-point-mode)
     :bind
     (
      ;;("C-x b" . consult-buffer)

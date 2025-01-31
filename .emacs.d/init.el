@@ -139,6 +139,14 @@ The DWIM behaviour of this command is as follows:
   (auto-package-update-maybe)
   )
 
+(use-package server
+  :ensure nil
+  :defer 1
+  :config
+  (setq server-client-instructions nil)
+  (unless (server-running-p)
+    (server-start)))
+
 (use-package no-littering)
 
 (use-package activities
@@ -228,19 +236,26 @@ The DWIM behaviour of this command is as follows:
   )
 
 (use-package nerd-icons-completion
+  :if (display-graphic-p)
   :after marginalia
+  ;; FIXME 2024-09-01: For some reason this stopped working because it
+  ;; macroexpands to `marginalia-mode' instead of
+  ;; `marginalia-mode-hook'.  What is more puzzling is that this does
+  ;; not happen in the next :hook...
+  ;; :hook (marginalia-mode . nerd-icons-completion-marginalia-setup))
   :config
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
 (use-package nerd-icons-corfu
+  :if (display-graphic-p)
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package nerd-icons-dired
+  :if (display-graphic-p)
   :hook
   (dired-mode . nerd-icons-dired-mode))
-
 
 (use-package rainbow-mode
   :config
@@ -607,7 +622,7 @@ The DWIM behaviour of this command is as follows:
   :hook
   (dired-mode . hl-line-mode)
   :custom
-  (dired-listing-switches "-agho --group-directories-first")
+  (dired-listing-switches "-agho --group-directories-first --time-style=long-iso")
   :init
   (setq dired-auto-revert-buffer t)
   )
@@ -685,7 +700,16 @@ The DWIM behaviour of this command is as follows:
   )
 
 (setq mode-line-format
-      '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
+      '("%e"
+        mode-line-client
+        mode-line-modified
+        " "
+        mode-line-buffer-identification
+        mode-line-position
+        (vc-mode vc-mode)
+        mode-line-modes
+        mode-line-misc-info
+        mode-line-end-spaces))
 
 (use-package time
   :ensure nil
@@ -723,6 +747,10 @@ The DWIM behaviour of this command is as follows:
                                     dashboard-insert-newline))
   ;;(setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
   )
+
+(use-package kkp
+  :config
+  (global-kkp-mode 1))
 
 (setenv "PAGER" "cat")
 
@@ -909,6 +937,7 @@ The DWIM behaviour of this command is as follows:
   (marginalia-mode 1))
 
 (use-package consult
+  :hook (completion-list-mode . consult-preview-at-point-mode)
   :bind
   (
    ;;("C-x b" . consult-buffer)
