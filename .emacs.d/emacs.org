@@ -1,5 +1,5 @@
 #+title My emacs config
-#+PROPERTY: header-args:emacs-lisp :tangle ~/projects/settings/.emacs.d/init.el
+#+PROPERTY: header-args:emacs-lisp :tangle "init.el"
 #+STARTUP: show2levels
 
 * Things to maybe add
@@ -36,28 +36,34 @@
 - atomic-chrome
 - magit wip mode?
 - treemacs
+- might want to go through https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-emacs.org again
+
+* early-init.el
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (setq inhibit-startup-message t)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+
+  (setq package-enable-at-startup nil)
+
+  (setq gc-cons-threshold most-positive-fixnum
+        gc-cons-percentage 0.5)
+
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (setq gc-cons-threshold (* 1000 1000 8)
+                    gc-cons-percentage 0.1)
+              (message "*** Emacs loaded in %s seconds with %d garbage collections."
+                       (emacs-init-time "%.2f")
+                       gcs-done))
+            )
+#+end_src
 
 * Basic Config
 ** Some basic init
 #+begin_src emacs-lisp
   ;; -*- lexical-binding: t; -*-
-
-  ;; The default is 800 kilobytes.  Measured in bytes.
-  (setq gc-cons-threshold (* 50 1000 1000))
-
-  ;; Profile emacs startup
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (message "*** Emacs loaded in %s seconds with %d garbage collections."
-                       (emacs-init-time "%.2f")
-                       gcs-done)))
-
-  (setq package-enable-at-startup nil)
-
-  (setq inhibit-startup-message t)
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
 
   (setq-default indent-tabs-mode nil)
 
@@ -226,6 +232,7 @@
 
 * activities
 #+begin_src emacs-lisp
+  (desktop-save-mode 1)
   (use-package activities
     :init
     (activities-mode)
@@ -242,7 +249,10 @@
      ("C-x C-a RET" . activities-switch)
      ("C-x C-a b" . activities-switch-buffer)
      ("C-x C-a g" . activities-revert)
-     ("C-x C-a l" . activities-list)))
+     ("C-x C-a l" . activities-list)
+     ("C-x b" . activities-switch-buffer)
+     ))
+
 #+end_src
 
 * Visual Setup
@@ -257,9 +267,7 @@
                   eshell-mode-hook)
                 )
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-  (setq mode-line-format
-        '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
+  
   ;; (setq header-line-format ?
   ;;       )
 
@@ -337,24 +345,30 @@
   ;; (use-package prism
   ;;   )
 
-
   (use-package beacon
     :diminish
     :config
     (beacon-mode 1))
+
+  (use-package lin
+    :hook
+    (after-init . lin-global-mode)
+    :config
+    (setq lin-face 'lin-blue))
+
 #+end_src
 
 * Org Config
 ** Setup
 #+begin_src emacs-lisp
-  (defun echo/org-mode-setup ()
-    (org-indent-mode)
-    (visual-line-mode 1)
-    )
   (use-package org
     :delight
-    :hook (org-mode . echo/org-mode-setup)
     :config
+    (setq org-startup-indented t)
+    (with-eval-after-load 'org-indent
+      (require 'diminish)
+      (diminish 'org-indent-mode))
+
     (setq org-ellipsis " ▾")
     (setq org-agenda-files '("~/projects/gtd/inbox.org"
                              "~/projects/gtd/gtd.org"
@@ -541,6 +555,7 @@
 ** Auto cleanup whitespace
 #+begin_src emacs-lisp
   (use-package ws-butler
+    :diminish
     :hook ((text-mode . ws-butler-mode)
            (prog-mode . ws-butler-mode)))
 #+end_src
@@ -648,6 +663,7 @@ use ~magit-list-repositories~ to get a status list of all projects
     (global-treesit-auto-mode))
 
   (use-package tree-sitter
+    :diminish
     :init
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
     (global-tree-sitter-mode))
@@ -697,6 +713,7 @@ pip install ruff
 ** company-mode
 #+begin_src emacs-lisp
   (use-package company
+    :diminish
     :config
     (setq company-minimum-prefix-length 1
           company-idle-delay 0.0)
@@ -775,6 +792,7 @@ pip install ruff
 ** clipetty
 #+begin_src emacs-lisp
   (use-package clipetty
+    :diminish
     :hook (after-init . global-clipetty-mode))
 #+end_src
 
@@ -821,13 +839,6 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
     (prog-mode . wucuo-start)
     (text-mode . wucuo-start)
     )
-
-  (use-package flyspell-correct
-    :after flyspell
-    :bind
-    ;;("?" . flyspell-correct-at-point)
-    (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper))
-    )
 #+end_src
 
 ** Weather
@@ -859,16 +870,31 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
 
 ** AI
 #+begin_src emacs-lisp
-    (use-package shell-maker
-      :straight (:type git :host github :repo "xenodium/shell-maker" :files ("shell-maker*.el")))
+  (use-package shell-maker
+    :straight (:type git :host github :repo "xenodium/shell-maker" :files ("shell-maker*.el")))
 
-    (use-package chatgpt-shell
-      :straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell*.el"))
-      ;;:custom
-      ;; ((chatgpt-shell-anthropic-key
-      ;;   (lambda ()
-      ;;     (auth-source-pass-get 'secret "openai-key"))))
-      )
+  (use-package chatgpt-shell
+    :straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell*.el"))
+    ;;:custom
+    ;; ((chatgpt-shell-anthropic-key
+    ;;   (lambda ()
+    ;;     (auth-source-pass-get 'secret "openai-key"))))
+    )
+#+end_src
+
+** Mode Line
+#+begin_src emacs-lisp
+  (setq mode-line-format
+        '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
+
+  (use-package time
+    :ensure nil
+    :hook
+    (after-init . display-time-mode)
+    :config
+    (setq display-time-interval 60)
+    (setq display-time-default-load-average nil)
+    )
 #+end_src
 
 * Shell
@@ -1072,7 +1098,8 @@ Having trouble getting this to work
 
   (use-package consult
     :bind
-    (("C-x b" . consult-buffer)
+    (
+     ;;("C-x b" . consult-buffer)
      ("C-x C-b" . consult-buffer)
      ("M-g M-g" . consult-goto-line)
      ("C-s" . consult-line)
@@ -1083,7 +1110,7 @@ Having trouble getting this to work
      consult-line :prompt "Search: " :preview-key 'any
      consult--source-buffer :hidden t :default nil)
 
-    (setq consult-project-root-function #'projectile-project-root)
+    ;;(setq consult-project-root-function #'projectile-project-root)
     ;;(add-to-list 'consult-buffer-sources persp-consult-source)
     )
 

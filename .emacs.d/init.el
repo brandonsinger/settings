@@ -1,22 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 
-;; The default is 800 kilobytes.  Measured in bytes.
-(setq gc-cons-threshold (* 50 1000 1000))
-
-;; Profile emacs startup
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "*** Emacs loaded in %s seconds with %d garbage collections."
-                     (emacs-init-time "%.2f")
-                     gcs-done)))
-
-(setq package-enable-at-startup nil)
-
-(setq inhibit-startup-message t)
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-
 (setq-default indent-tabs-mode nil)
 
 (show-paren-mode 1)
@@ -158,6 +141,7 @@ The DWIM behaviour of this command is as follows:
 
 (use-package no-littering)
 
+(desktop-save-mode 1)
 (use-package activities
   :init
   (activities-mode)
@@ -174,7 +158,9 @@ The DWIM behaviour of this command is as follows:
    ("C-x C-a RET" . activities-switch)
    ("C-x C-a b" . activities-switch-buffer)
    ("C-x C-a g" . activities-revert)
-   ("C-x C-a l" . activities-list)))
+   ("C-x C-a l" . activities-list)
+   ("C-x b" . activities-switch-buffer)
+   ))
 
 (setq visible-bell t)
 
@@ -187,8 +173,6 @@ The DWIM behaviour of this command is as follows:
               )
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-(setq mode-line-format
-      '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
 ;; (setq header-line-format ?
 ;;       )
 
@@ -266,20 +250,25 @@ The DWIM behaviour of this command is as follows:
 ;; (use-package prism
 ;;   )
 
-
 (use-package beacon
   :diminish
   :config
   (beacon-mode 1))
 
-(defun echo/org-mode-setup ()
-  (org-indent-mode)
-  (visual-line-mode 1)
-  )
+(use-package lin
+  :hook
+  (after-init . lin-global-mode)
+  :config
+  (setq lin-face 'lin-blue))
+
 (use-package org
   :delight
-  :hook (org-mode . echo/org-mode-setup)
   :config
+  (setq org-startup-indented t)
+  (with-eval-after-load 'org-indent
+    (require 'diminish)
+    (diminish 'org-indent-mode))
+
   (setq org-ellipsis " ▾")
   (setq org-agenda-files '("~/projects/gtd/inbox.org"
                            "~/projects/gtd/gtd.org"
@@ -447,6 +436,7 @@ The DWIM behaviour of this command is as follows:
   )
 
 (use-package ws-butler
+  :diminish
   :hook ((text-mode . ws-butler-mode)
          (prog-mode . ws-butler-mode)))
 
@@ -536,6 +526,7 @@ The DWIM behaviour of this command is as follows:
   (global-treesit-auto-mode))
 
 (use-package tree-sitter
+  :diminish
   :init
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
   (global-tree-sitter-mode))
@@ -574,6 +565,7 @@ The DWIM behaviour of this command is as follows:
 (use-package lsp-ui :commands lsp-ui-mode)
 
 (use-package company
+  :diminish
   :config
   (setq company-minimum-prefix-length 1
         company-idle-delay 0.0)
@@ -633,6 +625,7 @@ The DWIM behaviour of this command is as follows:
   (setq dired-subtree-use-backgrounds nil))
 
 (use-package clipetty
+  :diminish
   :hook (after-init . global-clipetty-mode))
 
 (use-package devdocs
@@ -666,13 +659,6 @@ The DWIM behaviour of this command is as follows:
   (text-mode . wucuo-start)
   )
 
-(use-package flyspell-correct
-  :after flyspell
-  :bind
-  ;;("?" . flyspell-correct-at-point)
-  (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper))
-  )
-
 (use-package wttrin
   :config
   (setq wttrin-default-cities '("48638"))
@@ -697,6 +683,18 @@ The DWIM behaviour of this command is as follows:
   ;; ((chatgpt-shell-anthropic-key
   ;;   (lambda ()
   ;;     (auth-source-pass-get 'secret "openai-key"))))
+  )
+
+(setq mode-line-format
+      '("%e" mode-line-client mode-line-modified " " mode-line-buffer-identification  mode-line-position (vc-mode vc-mode) mode-line-modes mode-line-misc-info mode-line-end-spaces))
+
+(use-package time
+  :ensure nil
+  :hook
+  (after-init . display-time-mode)
+  :config
+  (setq display-time-interval 60)
+  (setq display-time-default-load-average nil)
   )
 
 (setenv "PAGER" "cat")
@@ -885,7 +883,8 @@ The DWIM behaviour of this command is as follows:
 
 (use-package consult
   :bind
-  (("C-x b" . consult-buffer)
+  (
+   ;;("C-x b" . consult-buffer)
    ("C-x C-b" . consult-buffer)
    ("M-g M-g" . consult-goto-line)
    ("C-s" . consult-line)
@@ -896,7 +895,7 @@ The DWIM behaviour of this command is as follows:
    consult-line :prompt "Search: " :preview-key 'any
    consult--source-buffer :hidden t :default nil)
 
-  (setq consult-project-root-function #'projectile-project-root)
+  ;;(setq consult-project-root-function #'projectile-project-root)
   ;;(add-to-list 'consult-buffer-sources persp-consult-source)
   )
 
