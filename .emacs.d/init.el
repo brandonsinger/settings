@@ -141,7 +141,6 @@ The DWIM behaviour of this command is as follows:
 
 (use-package no-littering)
 
-(desktop-save-mode 1)
 (use-package activities
   :init
   (activities-mode)
