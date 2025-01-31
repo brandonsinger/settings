@@ -29,7 +29,6 @@
 - https://github.com/alphapapa/activities.el
 - https://github.com/TxGVNN/project-tasks
 - spacious-padding?
-- dashboard? would probably want it be be different depending of the device
 - sql package?
 - midnight mode?
 - switch to project.el (and maybe use disproject with it?)
@@ -238,7 +237,7 @@
     (activities-tabs-mode)
     ;; Prevent `edebug' default bindings from interfering.
     (setq edebug-inhibit-emacs-lisp-mode-bindings t)
-
+    (setq activities-bookmark-store t)
     :bind
     (("C-x C-a C-n" . activities-new)
      ("C-x C-a C-d" . activities-define)
@@ -893,6 +892,37 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
     :config
     (setq display-time-interval 60)
     (setq display-time-default-load-average nil)
+    )
+#+end_src
+
+** dashboard
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :after nerd-icons
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
+    (setq dashboard-startup-banner 'logo)
+    (setq dashboard-projects-backend 'projectile)
+    (setq dashboard-items '((recents   . 5)
+                            (bookmarks . 5)
+                            (projects  . 5)
+                            (agenda    . 5)
+                            (registers . 5)))
+    (setq dashboard-display-icons-p t)
+    (setq dashboard-icon-type 'nerd-icons)
+    (setq dashboard-set-file-icons t)
+    (setq dashboard-startupify-list '(dashboard-insert-banner
+                                      dashboard-insert-newline
+                                      dashboard-insert-banner-title
+                                      dashboard-insert-newline
+                                      dashboard-insert-navigator
+                                      dashboard-insert-newline
+                                      dashboard-insert-init-info
+                                      dashboard-insert-items
+                                      dashboard-insert-newline))
+    ;;(setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
     )
 #+end_src
 
