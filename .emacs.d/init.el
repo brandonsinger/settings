@@ -717,15 +717,18 @@ The DWIM behaviour of this command is as follows:
         (vc-mode vc-mode)
         mode-line-modes
         mode-line-misc-info
-        mode-line-end-spaces))
+        mode-line-format-right-align))
 
 (use-package time
   :ensure nil
-  :hook
-  (after-init . display-time-mode)
   :config
   (setq display-time-interval 60)
   (setq display-time-default-load-average nil)
+  (display-time)
+  (setq global-mode-string (remove 'display-time-string global-mode-string))
+  (setq mode-line-end-spaces (list (propertize " "
+                                               'display '(space :align-to (- right 6)))
+                                   'display-time-string))
   )
 
 (use-package dashboard
