@@ -1090,7 +1090,7 @@ We limit the search to just top 10 lines so as to only check the header."
   (setenv "ANSIBLE_VAULT_PASSWORD_FILE" "lpass_vault.sh")
   (setenv "ANSIBLE_PIPELINING" nil)
   (setenv "LPASS_DISABLE_PINENTRY" nil)
-  (setent "LPASS_PINENTRY" "~/tools/pinentry-emacs") ;; need to manually install pinentry-emacs
+  (setenv "LPASS_PINENTRY" "~/tools/pinentry-emacs") ;; need to manually install pinentry-emacs
 
   ;;
   (defun pinentry-emacs (desc prompt ok error)
