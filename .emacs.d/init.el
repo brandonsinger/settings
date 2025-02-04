@@ -1086,7 +1086,8 @@ We limit the search to just top 10 lines so as to only check the header."
 (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
 
 (when (string= (system-name) "officedev")
-  (setq projectile-indexing-method 'native)
+  ;; eww, works but is too slow
+  ;; (setq projectile-indexing-method 'native)
   (message "'Work' system changes loaded")
   )
 

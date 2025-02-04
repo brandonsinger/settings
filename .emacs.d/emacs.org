@@ -1317,7 +1317,8 @@ Having trouble getting this to work
 ** Work
 #+begin_src emacs-lisp
   (when (string= (system-name) "officedev")
-    (setq projectile-indexing-method 'native)
+    ;; eww, works but is too slow
+    ;; (setq projectile-indexing-method 'native)
     (message "'Work' system changes loaded")
     )
 #+end_src
