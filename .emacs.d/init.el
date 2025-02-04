@@ -709,15 +709,17 @@ The DWIM behaviour of this command is as follows:
 
 (setq mode-line-format
       '("%e"
-        mode-line-client
-        mode-line-modified
+        (:propertize
+         ("" mode-line-mule-info mode-line-client mode-line-modified
+          mode-line-remote)
+         display (min-width (5.0)))
         " "
         mode-line-buffer-identification
         mode-line-position
         (vc-mode vc-mode)
         mode-line-modes
         mode-line-misc-info
-        mode-line-format-right-align))
+        ))
 
 (use-package time
   :ensure nil
