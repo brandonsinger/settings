@@ -115,6 +115,22 @@ The DWIM behaviour of this command is as follows:
 
 ;;todo: use instead? (setq auto-save-file-name-transforms '((".*" "~/.config/emacs/auto-save-list/" t)))
 
+(use-package emacs
+  :config
+  (defun meain/set-read-only-if-do-not-edit ()
+    "Set the buffer to read-only if buffer contents has 'DO NOT EDIT' in it.
+We limit the search to just top 10 lines so as to only check the header."
+    (save-excursion
+      (goto-char (point-min))
+      (let ((content
+             (buffer-substring (point)
+                               (save-excursion (forward-line 10) (point)))))
+        (when (and (not buffer-read-only)
+                   (string-match "DO NOT EDIT" content))
+          (read-only-mode 1)
+          (message "Buffer seems to be generated. Set to read-only mode.")))))
+  (add-hook 'find-file-hook 'meain/set-read-only-if-do-not-edit))
+
 ;; Bootsrap straight.el
 (setq straight-repository-branch "master")
 (setq straight-use-package-by-default t)
