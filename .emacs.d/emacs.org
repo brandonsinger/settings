@@ -264,6 +264,7 @@
      ("C-x C-a b" . activities-switch-buffer)
      ("C-x C-a g" . activities-revert)
      ("C-x C-a l" . activities-list)
+     ("C-X C-a <DELETE>" . activities-discard)
      ("C-x b" . activities-switch-buffer)
      ))
 
