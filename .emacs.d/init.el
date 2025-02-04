@@ -57,6 +57,12 @@
 (customize-set-variable 'scroll-margin 0)
 (customize-set-variable 'scroll-preserve-screen-position t)
 
+(setopt enable-recursive-minibuffers t)
+(setopt completion-auto-help 'always)
+(setopt completions-max-height 20)
+(setopt completions-format 'one-column)
+(setopt completion-auto-select 'second-tab)
+
 ;;(setq bookmark-save-flag 1)
 (setq sentence-end-double-space nil)
 (setq delete-selection-mode t)
@@ -578,15 +584,6 @@ The DWIM behaviour of this command is as follows:
 ;; optionally
 (use-package lsp-ui :commands lsp-ui-mode)
 
-(use-package company
-  :diminish
-  :config
-  (setq company-minimum-prefix-length 1
-        company-idle-delay 0.0)
-  (global-company-mode t)
-  ;;:bind
-  )
-
 (use-package flycheck
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
@@ -684,6 +681,17 @@ The DWIM behaviour of this command is as follows:
   :init
   (global-corfu-mode)
   )
+(use-package corfu-terminal
+  :config
+  (unless (display-graphic-p)
+    (corfu-terminal-mode +1))
+  )
+
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package free-keys)
 (use-package bind-key)

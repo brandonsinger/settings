@@ -3,7 +3,6 @@
 #+STARTUP: show2levels
 
 * Things to maybe add
-- corfu-terminal
 - machine.el
 - emacs-run-command
 - org-modern?
@@ -18,20 +17,18 @@
 - 'shell' from https://sachachua.com/dotemacs/index.html
 - how to a scroll different window
 - rainbow-delimiters
-- clycheck-projectile
+- flycheck-projectile
 - maybe term-projectile
-- content validation tools (xml and json)
 - selected.el
 - https://www.masteringemacs.org/article/securely-generating-totp-tokens-emacs
 - hush
 - https://github.com/balloneij/selection-highlight-mode
 - persistent-scratch
-- https://github.com/alphapapa/activities.el
 - https://github.com/TxGVNN/project-tasks
 - spacious-padding?
 - sql package?
 - midnight mode?
-- switch to project.el (and maybe use disproject with it?)
+- switch to project.el? (and maybe use disproject with it?)
 - atomic-chrome
 - magit wip mode?
 - treemacs
@@ -122,6 +119,13 @@
   (customize-set-variable 'scroll-conservatively 101)
   (customize-set-variable 'scroll-margin 0)
   (customize-set-variable 'scroll-preserve-screen-position t)
+
+  (setopt enable-recursive-minibuffers t)
+  (setopt completion-auto-help 'always)
+  (setopt completions-max-height 20)
+  (setopt completions-format 'one-column)
+  (setopt completion-auto-select 'second-tab)
+
 #+end_src
 
 ** Other stuff
@@ -727,18 +731,6 @@ pip install ruff
 
 #+end_src
 
-** company-mode
-#+begin_src emacs-lisp
-  (use-package company
-    :diminish
-    :config
-    (setq company-minimum-prefix-length 1
-          company-idle-delay 0.0)
-    (global-company-mode t)
-    ;;:bind
-    )
-#+end_src
-
 ** flycheck
 #+begin_src emacs-lisp
   (use-package flycheck
@@ -877,8 +869,18 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
     :init
     (global-corfu-mode)
     )
-#+end_src
+  (use-package corfu-terminal
+    :config
+    (unless (display-graphic-p)
+      (corfu-terminal-mode +1))
+    )
 
+  (use-package kind-icon
+    :ensure t
+    :after corfu
+    :config
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+#+end_src
 ** Key Help
 #+begin_src emacs-lisp
   (use-package free-keys)
