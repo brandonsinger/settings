@@ -1084,3 +1084,28 @@ We limit the search to just top 10 lines so as to only check the header."
   ("q" nil)
   )
 (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
+
+(when (string= (system-name) "officedev")
+  (setq projectile-indexing-method 'native)
+  (message "'Work' system changes loaded")
+  )
+
+(when (string= (system-name) "echo-bedroom")
+  ;; not working:
+  ;; (setq projectile-mode-line-function '(lambda () (format " Proj[%s]" (projectile-project-name))))
+  ;; (setq mode-line-format
+  ;;     '("%e"
+  ;;       (:propertize
+  ;;        ("" mode-line-mule-info mode-line-client mode-line-modified
+  ;;         mode-line-remote)
+  ;;        display (min-width (5.0)))
+  ;;       " "
+  ;;       mode-line-buffer-identification
+  ;;       mode-line-position
+  ;;       projectile-default-mode-line
+  ;;       (vc-mode vc-mode)
+  ;;       mode-line-modes
+  ;;       mode-line-misc-info
+  ;;       ))
+  (message "'Home desktop' system changes loaded")
+  )
