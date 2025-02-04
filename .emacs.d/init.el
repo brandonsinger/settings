@@ -782,6 +782,10 @@ We limit the search to just top 10 lines so as to only check the header."
   :config
   (global-kkp-mode 1))
 
+(defun pinentry-emacs (desc prompt ok error)
+      (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
+        str))
+
 (setenv "PAGER" "cat")
 
 (use-package eat
@@ -1091,12 +1095,7 @@ We limit the search to just top 10 lines so as to only check the header."
   (setenv "ANSIBLE_PIPELINING" nil)
   (setenv "LPASS_DISABLE_PINENTRY" nil)
   (setenv "LPASS_PINENTRY" "~/tools/pinentry-emacs") ;; need to manually install pinentry-emacs
-
-  ;;
-  (defun pinentry-emacs (desc prompt ok error)
-    (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
-      str))
-
+  
   ;; eww, works but is too slow
   ;; (setq projectile-indexing-method 'native)
   (message "'Work' system changes loaded")

@@ -988,6 +988,14 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
     (global-kkp-mode 1))
 #+end_src
 
+** Pinentry
+https://github.com/ecraven/pinentry-emacs
+#+begin_src emacs-lisp
+  (defun pinentry-emacs (desc prompt ok error)
+        (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
+          str))
+#+end_src
+
 * Shell
 ** General
 #+begin_src emacs-lisp
@@ -1322,12 +1330,7 @@ Having trouble getting this to work
     (setenv "ANSIBLE_PIPELINING" nil)
     (setenv "LPASS_DISABLE_PINENTRY" nil)
     (setenv "LPASS_PINENTRY" "~/tools/pinentry-emacs") ;; need to manually install pinentry-emacs
-
-    ;;
-    (defun pinentry-emacs (desc prompt ok error)
-      (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
-        str))
-
+    
     ;; eww, works but is too slow
     ;; (setq projectile-indexing-method 'native)
     (message "'Work' system changes loaded")
