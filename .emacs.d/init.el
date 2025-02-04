@@ -307,32 +307,32 @@ We limit the search to just top 10 lines so as to only check the header."
     (diminish 'org-indent-mode))
 
   (setq org-ellipsis " ▾")
-  (setq org-agenda-files '("~/projects/gtd/inbox.org"
-                           "~/projects/gtd/gtd.org"
-                           "~/projects/gtd/tickler.org"))
-  (setq org-capture-templates
-        '(
-          ("t" "Todo [inbox]" entry
-           (file+headline "~/projects/gtd/inbox.org" "Tasks")
-           "* TODO %i%?")
-          ("T" "Tickler" entry
-           (file+headline "~/projects/gtd/tickler.org" "Tickler")
-           "* %i%? \n %U")
-          ))
-  (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
-                             ("~/projects/gtd/someday.org" :level . 1)
-                             ("~/projects/gtd/tickler.org" :maxlevel . 2)))
-  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
-  (setq-default org-enforce-todo-dependencies t)
-  (setq org-refile-use-outline-path 'file)
-  (setq org-outline-path-complete-in-steps nil)
-  (setq org-tag-alist '((:startgroup . nil)
-                        ("@work" . ?w)
-                        ("@home" . ?h)
-                        ("@computer" . ?c)
-                        (:endgroup . nil)
-                        ("emacs" . ?e)
-                        ))
+  ;; (setq org-agenda-files '("~/projects/gtd/inbox.org"
+  ;;                          "~/projects/gtd/gtd.org"
+  ;;                          "~/projects/gtd/tickler.org"))
+  ;; (setq org-capture-templates
+  ;;       '(
+  ;;         ("t" "Todo [inbox]" entry
+  ;;          (file+headline "~/projects/gtd/inbox.org" "Tasks")
+  ;;          "* TODO %i%?")
+  ;;         ("T" "Tickler" entry
+  ;;          (file+headline "~/projects/gtd/tickler.org" "Tickler")
+  ;;          "* %i%? \n %U")
+  ;;         ))
+  ;; (setq org-refile-targets '(("~/projects/gtd/gtd.org" :maxlevel . 3)
+  ;;                            ("~/projects/gtd/someday.org" :level . 1)
+  ;;                            ("~/projects/gtd/tickler.org" :maxlevel . 2)))
+  ;; (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+  ;; (setq-default org-enforce-todo-dependencies t)
+  ;; (setq org-refile-use-outline-path 'file)
+  ;; (setq org-outline-path-complete-in-steps nil)
+  ;; (setq org-tag-alist '((:startgroup . nil)
+  ;;                       ("@work" . ?w)
+  ;;                       ("@home" . ?h)
+  ;;                       ("@computer" . ?c)
+  ;;                       (:endgroup . nil)
+  ;;                       ("emacs" . ?e)
+  ;;                       ))
   )
 
 (defun echo/org-mode-visual-fill ()
@@ -1086,6 +1086,10 @@ We limit the search to just top 10 lines so as to only check the header."
 (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
 
 (when (string= (system-name) "officedev")
+  ;; set the same env as activate_env.sh
+  (setenv "ANSIBLE_VAULT_PASSWORD_FILE" "lpass_vault.sh")
+  (setenv "ANSIBLE_PIPELINING" false)
+
   ;; eww, works but is too slow
   ;; (setq projectile-indexing-method 'native)
   (message "'Work' system changes loaded")
