@@ -1088,7 +1088,7 @@ We limit the search to just top 10 lines so as to only check the header."
 (when (string= (system-name) "officedev")
   ;; set the same env as activate_env.sh
   (setenv "ANSIBLE_VAULT_PASSWORD_FILE" "lpass_vault.sh")
-  (setenv "ANSIBLE_PIPELINING" false)
+  (setenv "ANSIBLE_PIPELINING" nil)
 
   ;; eww, works but is too slow
   ;; (setq projectile-indexing-method 'native)
