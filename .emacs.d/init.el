@@ -131,35 +131,52 @@ We limit the search to just top 10 lines so as to only check the header."
           (message "Buffer seems to be generated. Set to read-only mode.")))))
   (add-hook 'find-file-hook 'meain/set-read-only-if-do-not-edit))
 
-;; Bootsrap straight.el
-(setq straight-repository-branch "master")
-(setq straight-use-package-by-default t)
+(defvar elpaca-installer-version 0.10)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil :depth 1 :inherit ignore
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (<= emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (load "./elpaca-autoloads")))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
 
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+(elpaca elpaca-use-package
+        (elpaca-use-package-mode))
+(setq use-package-always-ensure t)
+(use-package diminish :ensure (:wait t) :demand t)
+(use-package delight :ensure (:wait t) :demand t)
 
-(straight-use-package 'use-package)
-(setq use-package-compute-statistics t) ;; invoke use-package-report
 
-(use-package diminish)
-
-(use-package auto-package-update
-  :config
-  (setq auto-package-update-prompt-before-update t)
-  (setq auto-package-update-delete-old-versions t)
-  (setq auto-package-update-hide-results t)
-  (auto-package-update-maybe)
-  )
 
 (use-package server
   :ensure nil
@@ -189,7 +206,7 @@ We limit the search to just top 10 lines so as to only check the header."
    ("C-x C-a g" . activities-revert)
    ("C-x C-a l" . activities-list)
    ("C-X C-a <DELETE>" . activities-discard)
-   ("C-x b" . activities-switch-buffer)
+   ;;("C-x b" . activities-switch-buffer)
    ))
 
 (setq visible-bell t)
@@ -203,16 +220,16 @@ We limit the search to just top 10 lines so as to only check the header."
               )
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-;; (setq header-line-format ?
-;;       )
+(global-hl-line-mode 1)
 
 (setq tab-bar-close-button-show nil
       tab-bar-new-button-show nil)
 
 ;; TODO: shouldnt eldoc be in a different section? and maybe I should actually use this
 (use-package eldoc
-  :straight nil
-  :diminish)
+  :ensure nil
+  :diminish
+  )
 
 (use-package ef-themes
   :demand t
@@ -287,19 +304,15 @@ We limit the search to just top 10 lines so as to only check the header."
 ;; (use-package prism
 ;;   )
 
-(use-package beacon
-  :diminish
-  :config
-  (beacon-mode 1))
-
 (use-package lin
   :hook
-  (after-init . lin-global-mode)
+  (elpaca-after-init . lin-global-mode)
   :config
   (setq lin-face 'lin-blue))
 
 (use-package org
-  :delight
+  :ensure nil
+  ;; :delight
   :config
   (setq org-startup-indented t)
   (with-eval-after-load 'org-indent
@@ -481,7 +494,10 @@ We limit the search to just top 10 lines so as to only check the header."
   :hook ((emacs-lisp-mode-hook . aggressive-indent-mode)
          (css-mode-hook . aggressive-indent-mode)))
 
+(use-package transient)
+
 (use-package magit
+  :after (nerd-icons,transient)
   :config
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
   (setq magit-repository-directories '(("~/projects" . 1)))
@@ -498,6 +514,8 @@ We limit the search to just top 10 lines so as to only check the header."
           ("Path"    99 magit-repolist-column-path ())))
   (setq magit-save-repository-buffers 'dontask)
   (setq magit-log-margin '(t "%Y-%m-%d" magit-log-margin-width t 18))
+  :custom
+  (magit-format-file-function #'magit-format-file-nerd-icons)
   )
 
 (use-package magit-todos
@@ -508,6 +526,11 @@ We limit the search to just top 10 lines so as to only check the header."
 ;;(use-package git-timemachine)
 
 (use-package web-mode
+  :mode
+  (("\\.php\\'" . web-mode)
+   ("\\.php[s34]?\\'" . web-mode)
+   ("\\.html?\\'" . web-mode)
+   ("\\.html.j2\\'" . web-mode))
   :config
   (setq web-mode-enable-auto-indentation nil)
   )
@@ -516,19 +539,6 @@ We limit the search to just top 10 lines so as to only check the header."
   :mode ("\\.yaml\\'" "\\.yml\\'")
   )
 
-(use-package python-mode
-  :ensure nil
-  :custom
-  (python-shell-interperter "python")
-  )
-
-(require 'web-mode)
-(setq web-mode-enable-auto-indentation nil)
-(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.php[s34]?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html.j2\\'" . web-mode))
-
 (setq web-mode-engines-alist
       '(
         ("django" . "/home/echo/projects/website/templates/.*\\.twig.html\\'")
@@ -536,11 +546,20 @@ We limit the search to just top 10 lines so as to only check the header."
         )
       )
 
+(use-package rust-mode
+  :init
+  ;;(setq rust-mode-treesitter-derive t)
+  :mode ("\\.rs\\'" . rust-mode))
+(use-package rustic
+  :after (rust-mode)
+  :config
+  (setq rustic-format-on-save t))
+
 (use-package python-pytest)
 (global-set-key (kbd "C-x T") 'python-pytest-dispatch)
 
 (use-package treesit-auto
-  :hook (after-init . global-treesit-auto-mode)
+  :hook (elpaca-after-init . global-treesit-auto-mode)
   :custom
   (treesit-font-lock-level 5)
   (treesit-auto-install 'prompt)
@@ -557,8 +576,9 @@ We limit the search to just top 10 lines so as to only check the header."
      (python "https://github.com/tree-sitter/tree-sitter-python")
      (toml "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+     (rust "https://github.com/tree-sitter/tree-sitter-rust")
      ))
-  (treesit-auto-langs '(javascript yaml json html css elisp php))
+  (treesit-auto-langs '(javascript yaml json html css elisp php rust))
   :config
   (global-treesit-auto-mode))
 
@@ -603,7 +623,7 @@ We limit the search to just top 10 lines so as to only check the header."
 
 (use-package flycheck
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  (add-hook 'elpaca-after-init-hook #'global-flycheck-mode))
 
 (use-package which-key
   :init (which-key-mode)
@@ -618,7 +638,7 @@ We limit the search to just top 10 lines so as to only check the header."
   )
 
 (use-package projectile
-  :diminish projectile-mode
+  :diminish projectile-mode ;;TODO: might want to change this
   :config
   (projectile-mode)
   :bind
@@ -631,7 +651,7 @@ We limit the search to just top 10 lines so as to only check the header."
 (use-package ripgrep)
 
 (use-package dired
-  :straight nil
+  :ensure nil
   :commands (dired)
   :hook
   (dired-mode . hl-line-mode)
@@ -641,7 +661,6 @@ We limit the search to just top 10 lines so as to only check the header."
   (setq dired-auto-revert-buffer t)
   )
 (use-package dired-subtree
-  :ensure t
   :after dired
   :bind
   ( :map dired-mode-map
@@ -654,7 +673,7 @@ We limit the search to just top 10 lines so as to only check the header."
 
 (use-package clipetty
   :diminish
-  :hook (after-init . global-clipetty-mode))
+  :hook (elpaca-after-init . global-clipetty-mode))
 
 (use-package devdocs
   :bind
@@ -662,6 +681,7 @@ We limit the search to just top 10 lines so as to only check the header."
   )
 
 (use-package eww
+  :ensure nil
   :bind
   ("C-c w" . eww)
   )
@@ -694,10 +714,10 @@ We limit the search to just top 10 lines so as to only check the header."
 
 (setq tramp-default-method "ssh")
 
-(use-package corfu
-  :init
-  (global-corfu-mode)
-  )
+;; (use-package corfu
+;;   :init
+;;   (global-corfu-mode)
+;;   )
 (use-package corfu-terminal
   :config
   (unless (display-graphic-p)
@@ -705,19 +725,19 @@ We limit the search to just top 10 lines so as to only check the header."
   )
 
 (use-package kind-icon
-  :ensure t
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package free-keys)
-(use-package bind-key)
+;; (use-package bind-key)
 
 (use-package shell-maker
-  :straight (:type git :host github :repo "xenodium/shell-maker" :files ("shell-maker*.el")))
+  ;;:straight (:type git :host github :repo "xenodium/shell-maker" :files ("shell-maker*.el"))
+  )
 
 (use-package chatgpt-shell
-  :straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell*.el"))
+  ;;:straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell*.el"))
   ;;:custom
   ;; ((chatgpt-shell-anthropic-key
   ;;   (lambda ()
@@ -738,6 +758,7 @@ We limit the search to just top 10 lines so as to only check the header."
         mode-line-misc-info
         ))
 
+;;use mode-line-format-right-align, new in 30.1
 (use-package time
   :ensure nil
   :config
@@ -752,7 +773,6 @@ We limit the search to just top 10 lines so as to only check the header."
 
 (use-package dashboard
   :after nerd-icons
-  :ensure t
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
@@ -789,20 +809,13 @@ We limit the search to just top 10 lines so as to only check the header."
 (setenv "PAGER" "cat")
 
 (use-package eat
-  :straight '(eat :type git
-       :host codeberg
-       :repo "akib/emacs-eat"
-       :files ("*.el" ("term" "term/*.el") "*.texi"
-               "*.ti" ("terminfo/e" "terminfo/e/*")
-               ("terminfo/65" "terminfo/65/*")
-               ("integration" "integration/*")
-               (:exclude ".dir-locals.el" "*-tests.el")))
   :init
   (add-hook 'eshell-load-hook #'eat-eshell-mode)
   (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
   )
 
 (use-package eshell
+  :ensure nil
   :commands eshell
   :init
   (setq ;; eshell-directory-name (concat cpm-local-dir "eshell/")
@@ -955,7 +968,7 @@ We limit the search to just top 10 lines so as to only check the header."
   (setq vertico-cycle t))
 
 (use-package savehist
-  :straight nil
+  :ensure nil
   :init
   (savehist-mode 1))
 
@@ -974,7 +987,7 @@ We limit the search to just top 10 lines so as to only check the header."
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :bind
   (
-   ;;("C-x b" . consult-buffer)
+   ("C-x b" . consult-buffer)
    ("C-x C-b" . consult-buffer)
    ("M-g M-g" . consult-goto-line)
    ("C-s" . consult-line)
@@ -1009,9 +1022,8 @@ We limit the search to just top 10 lines so as to only check the header."
   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package corfu
-  :ensure t
   :hook
-  (after-init . global-corfu-mode)
+  (elpaca-after-init . global-corfu-mode)
   :bind
   (:map corfu-map ("<tab>" . corfu-complete))
   :config
@@ -1058,36 +1070,64 @@ We limit the search to just top 10 lines so as to only check the header."
 
 (use-package buffer-move)
 
-(use-package hydra)
-(defhydra hydra-mywindow ()
-  "
-  ^Change Window^   ^Buffer Move^      ^Window^         ^Resize Window^
-  -------------------------------------------
-      ↑     	        C-↑             Split _v_ertical    _<prior>_ Enlarge Horizontally
-      ↓     	        C-↓             Split _h_orizontal  _<next>_ Shrink Horizontally
-      ←     	        C-←             _k_ill              _<deletechar>_ Shrink Vertically
-      →               C-→             _u_ndo
-  _SPC_ cancel
-  "
-  ("<up>" windmove-up)
-  ("<down>" windmove-down)
-  ("<left>" windmove-left)
-  ("<right>" windmove-right)
-  ("C-<up>" buf-move-up)
-  ("C-<down>" buf-move-down)
-  ("C-<left>" buf-move-left)
-  ("C-<right>" buf-move-right)
-  ("v" split-window-right)
-  ("h" split-window-below)
-  ("k" delete-window)
-  ("u" winner-undo)
-  ("<prior>" enlarge-window-horizontally)
-  ("<next>" shrink-window-horizontally)
-  ("<deletechar>" shrink-window)
-  ("SPC" nil)
-  ("q" nil)
-  )
-(global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
+;; (use-package hydra)
+;; (defhydra hydra-mywindow ()
+;;   "
+;;   ^Change Window^   ^Buffer Move^      ^Window^         ^Resize Window^
+;;   -------------------------------------------
+;;       ↑     	        C-↑             Split _v_ertical    _<prior>_ Enlarge Horizontally
+;;       ↓     	        C-↓             Split _h_orizontal  _<next>_ Shrink Horizontally
+;;       ←     	        C-←             _k_ill              _<deletechar>_ Shrink Vertically
+;;       →               C-→             _u_ndo
+;;   _SPC_ cancel
+;;   "
+;;   ("<up>" windmove-up)
+;;   ("<down>" windmove-down)
+;;   ("<left>" windmove-left)
+;;   ("<right>" windmove-right)
+;;   ("C-<up>" buf-move-up)
+;;   ("C-<down>" buf-move-down)
+;;   ("C-<left>" buf-move-left)
+;;   ("C-<right>" buf-move-right)
+;;   ("v" split-window-right)
+;;   ("h" split-window-below)
+;;   ("k" delete-window)
+;;   ("u" winner-undo)
+;;   ("<prior>" enlarge-window-horizontally)
+;;   ("<next>" shrink-window-horizontally)
+;;   ("<deletechar>" shrink-window)
+;;   ("SPC" nil)
+;;   ("q" nil)
+;;   )
+;; (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
+;; (defhydra hydra-straight-helper (:hint nil)
+;;   "
+;; _c_heck all       |_f_etch all     |_m_erge all      |_n_ormalize all   |p_u_sh all
+;; _C_heck package   |_F_etch package |_M_erge package  |_N_ormlize package|p_U_sh package
+;;  ----------------^^+--------------^^+---------------^^+----------------^^+------------||_q_uit||
+;; _r_ebuild all     |_p_ull all      |_v_ersions freeze|_w_atcher start   |_g_et recipe
+;; _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_ build"
+;;   ("c" straight-check-all)
+;;   ("C" straight-check-package)
+;;   ("r" straight-rebuild-all)
+;;   ("R" straight-rebuild-package)
+;;   ("f" straight-fetch-all)
+;;   ("F" straight-fetch-package)
+;;   ("p" straight-pull-all)
+;;   ("P" straight-pull-package)
+;;   ("m" straight-merge-all)
+;;   ("M" straight-merge-package)
+;;   ("n" straight-normalize-all)
+;;   ("N" straight-normalize-package)
+;;   ("u" straight-push-all)
+;;   ("U" straight-push-package)
+;;   ("v" straight-freeze-versions)
+;;   ("V" straight-thaw-versions)
+;;   ("w" straight-watcher-start)
+;;   ("W" straight-watcher-quit)
+;;   ("g" straight-get-recipe)
+;;   ("e" straight-prune-build)
+;;   ("q" nil))
 
 (when (string= (system-name) "officedev")
   ;; set the same env as activate_env.sh
@@ -1118,5 +1158,26 @@ We limit the search to just top 10 lines so as to only check the header."
   ;;       mode-line-modes
   ;;       mode-line-misc-info
   ;;       ))
+
+
+  (setq browse-url-browser-function 'eww-browse-url)
+  (use-package elfeed
+    :bind ("C-c f" . elfeed)
+    :commands elfeed
+    :config
+    (setq elfeed-feeds
+          '(
+            ("https://sachachua.com/blog/category/emacs-news/feed/index.xml" emacs)
+            ("https://archlinux.org/feeds/news/" linux)
+            ("http://rss.slashdot.org/Slashdot/slashdotLinux")
+          ))
+    )
+
+  (use-package mastodon
+    :config
+    (setq mastodon-instance-url "https://techhub.social"
+          mastodon-active-user "oshecho")
+    )
+
   (message "'Home desktop' system changes loaded")
   )

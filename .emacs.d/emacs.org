@@ -209,52 +209,68 @@
     (add-hook 'find-file-hook 'meain/set-read-only-if-do-not-edit))
 #+end_src
 
-* Setup straight.el
+* Setup Elpaca
 ** Bootstrap
-*Note*: if this doesnt work, will need to clone straight.el manually
 #+begin_src emacs-lisp
-  ;; Bootsrap straight.el
-  (setq straight-repository-branch "master")
-  (setq straight-use-package-by-default t)
-
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
+  (defvar elpaca-installer-version 0.10)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                                :ref nil :depth 1 :inherit ignore
+                                :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                                :build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (<= emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+          (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                    ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                    ,@(when-let* ((depth (plist-get order :depth)))
+                                                        (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                    ,(plist-get order :repo) ,repo))))
+                    ((zerop (call-process "git" nil buffer t "checkout"
+                                          (or (plist-get order :ref) "--"))))
+                    (emacs (concat invocation-directory invocation-name))
+                    ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                          "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                    ((require 'elpaca))
+                    ((elpaca-generate-autoloads "elpaca" repo)))
+              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+            (error "%s" (with-current-buffer buffer (buffer-string))))
+        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
 #+end_src
 
 ** Setup
 #+begin_src emacs-lisp
-  (straight-use-package 'use-package)
-  (setq use-package-compute-statistics t) ;; invoke use-package-report
-
-  (use-package diminish)
-  (use-package delight)
+  (elpaca elpaca-use-package
+          (elpaca-use-package-mode))
+  (setq use-package-always-ensure t)
+  (use-package diminish :ensure (:wait t) :demand t)
+  (use-package delight :ensure (:wait t) :demand t)
 #+end_src
 
 ** Enable auto update
+?
 #+begin_src emacs-lisp
-  (use-package auto-package-update
-    :config
-    (setq auto-package-update-prompt-before-update t)
-    (setq auto-package-update-delete-old-versions t)
-    (setq auto-package-update-hide-results t)
-    (auto-package-update-maybe)
-    )
+  
 #+end_src
 
 * Server
 #+begin_src emacs-lisp
   (use-package server
-    ;;:ensure nil
+    :ensure nil
     :defer 1
     :config
     (setq server-client-instructions nil)
@@ -311,8 +327,8 @@
 
   ;; TODO: shouldnt eldoc be in a different section? and maybe I should actually use this
   (use-package eldoc
-    :straight nil
-    ;;:diminish
+    :ensure nil
+    :diminish
     )
 
   (use-package ef-themes
@@ -390,7 +406,7 @@
 
   (use-package lin
     :hook
-    (after-init . lin-global-mode)
+    (elpaca-after-init . lin-global-mode)
     :config
     (setq lin-face 'lin-blue))
 
@@ -400,7 +416,7 @@
 ** Setup
 #+begin_src emacs-lisp
   (use-package org
-    ;;:type build-in
+    :ensure nil
     ;; :delight
     :config
     (setq org-startup-indented t)
@@ -594,7 +610,7 @@
 ** Auto cleanup whitespace
 #+begin_src emacs-lisp
   (use-package ws-butler
-    ;;:diminish
+    :diminish
     :hook ((text-mode . ws-butler-mode)
            (prog-mode . ws-butler-mode)))
 #+end_src
@@ -611,8 +627,10 @@ TODO: figure out how to have that work on lisp code in an org file
 use ~magit-list-repositories~ to get a status list of all projects
 
 #+begin_src emacs-lisp
+  (use-package transient)
+
   (use-package magit
-    :after nerd-icons
+    :after (nerd-icons,transient)
     :config
     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
     (setq magit-repository-directories '(("~/projects" . 1)))
@@ -644,6 +662,11 @@ use ~magit-list-repositories~ to get a status list of all projects
 ** modes
 #+begin_src emacs-lisp
   (use-package web-mode
+    :mode
+    (("\\.php\\'" . web-mode)
+     ("\\.php[s34]?\\'" . web-mode)
+     ("\\.html?\\'" . web-mode)
+     ("\\.html.j2\\'" . web-mode))
     :config
     (setq web-mode-enable-auto-indentation nil)
     )
@@ -651,19 +674,6 @@ use ~magit-list-repositories~ to get a status list of all projects
   (use-package yaml-mode
     :mode ("\\.yaml\\'" "\\.yml\\'")
     )
-
-  (use-package python-mode
-    ;;:ensure nil
-    :custom
-    (python-shell-interperter "python")
-    )
-
-  (require 'web-mode)
-  (setq web-mode-enable-auto-indentation nil)
-  (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.php[s34]?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html.j2\\'" . web-mode))
 
   (setq web-mode-engines-alist
         '(
@@ -692,7 +702,7 @@ use ~magit-list-repositories~ to get a status list of all projects
 ** treesitter
 #+begin_src emacs-lisp
   (use-package treesit-auto
-    :hook (after-init . global-treesit-auto-mode)
+    :hook (elpaca-after-init . global-treesit-auto-mode)
     :custom
     (treesit-font-lock-level 5)
     (treesit-auto-install 'prompt)
@@ -716,7 +726,7 @@ use ~magit-list-repositories~ to get a status list of all projects
     (global-treesit-auto-mode))
 
   (use-package tree-sitter
-    ;;:diminish
+    :diminish
     :init
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
     (global-tree-sitter-mode))
@@ -767,14 +777,14 @@ pip install ruff
 #+begin_src emacs-lisp
   (use-package flycheck
     :config
-    (add-hook 'after-init-hook #'global-flycheck-mode))
+    (add-hook 'elpaca-after-init-hook #'global-flycheck-mode))
 #+end_src
 
 ** which-key
 #+begin_src emacs-lisp
   (use-package which-key
     :init (which-key-mode)
-    ;;:diminish which-key-mode
+    :diminish which-key-mode
     :config
     (setq which-key-idle-delay 0.5)
     )
@@ -791,7 +801,7 @@ pip install ruff
 ** projectile
 #+begin_src emacs-lisp
   (use-package projectile
-    ;;:diminish projectile-mode
+    :diminish projectile-mode ;;TODO: might want to change this
     :config
     (projectile-mode)
     :bind
@@ -808,7 +818,7 @@ pip install ruff
 ** dired
 #+begin_src emacs-lisp
   (use-package dired
-    :straight nil
+    :ensure nil
     :commands (dired)
     :hook
     (dired-mode . hl-line-mode)
@@ -818,7 +828,6 @@ pip install ruff
     (setq dired-auto-revert-buffer t)
     )
   (use-package dired-subtree
-    ;;:ensure t
     :after dired
     :bind
     ( :map dired-mode-map
@@ -833,8 +842,8 @@ pip install ruff
 ** clipetty
 #+begin_src emacs-lisp
   (use-package clipetty
-    ;;:diminish
-    :hook (after-init . global-clipetty-mode))
+    :diminish
+    :hook (elpaca-after-init . global-clipetty-mode))
 #+end_src
 
 ** devdocs
@@ -848,6 +857,7 @@ pip install ruff
 ** webbrowser
 #+begin_src emacs-lisp
   (use-package eww
+    :ensure nil
     :bind
     ("C-c w" . eww)
     )
@@ -897,10 +907,10 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
 
 ** Corfu
 #+begin_src emacs-lisp
-  (use-package corfu
-    :init
-    (global-corfu-mode)
-    )
+  ;; (use-package corfu
+  ;;   :init
+  ;;   (global-corfu-mode)
+  ;;   )
   (use-package corfu-terminal
     :config
     (unless (display-graphic-p)
@@ -915,16 +925,17 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
 ** Key Help
 #+begin_src emacs-lisp
   (use-package free-keys)
-  (use-package bind-key)
+  ;; (use-package bind-key)
 #+end_src
 
 ** AI
 #+begin_src emacs-lisp
   (use-package shell-maker
-    :straight (:type git :host github :repo "xenodium/shell-maker" :files ("shell-maker*.el")))
+    ;;:straight (:type git :host github :repo "xenodium/shell-maker" :files ("shell-maker*.el"))
+    )
 
   (use-package chatgpt-shell
-    :straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell*.el"))
+    ;;:straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell*.el"))
     ;;:custom
     ;; ((chatgpt-shell-anthropic-key
     ;;   (lambda ()
@@ -950,7 +961,7 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
 
   ;;use mode-line-format-right-align, new in 30.1
   (use-package time
-    ;;:ensure nil
+    :ensure nil
     :config
     (setq display-time-interval 60)
     (setq display-time-default-load-average nil)
@@ -966,7 +977,6 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
 #+begin_src emacs-lisp
   (use-package dashboard
     :after nerd-icons
-    ;;:ensure t
     :config
     (dashboard-setup-startup-hook)
     (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
@@ -1018,14 +1028,6 @@ https://github.com/ecraven/pinentry-emacs
 Having trouble getting this to work
 #+begin_src emacs-lisp
   (use-package eat
-    :straight '(eat :type git
-         :host codeberg
-         :repo "akib/emacs-eat"
-         :files ("*.el" ("term" "term/*.el") "*.texi"
-                 "*.ti" ("terminfo/e" "terminfo/e/*")
-                 ("terminfo/65" "terminfo/65/*")
-                 ("integration" "integration/*")
-                 (:exclude ".dir-locals.el" "*-tests.el")))
     :init
     (add-hook 'eshell-load-hook #'eat-eshell-mode)
     (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
@@ -1036,6 +1038,7 @@ Having trouble getting this to work
 ** Eshell
 #+begin_src emacs-lisp
   (use-package eshell
+    :ensure nil
     :commands eshell
     :init
     (setq ;; eshell-directory-name (concat cpm-local-dir "eshell/")
@@ -1192,7 +1195,7 @@ Having trouble getting this to work
     (setq vertico-cycle t))
 
   (use-package savehist
-    :straight nil
+    :ensure nil
     :init
     (savehist-mode 1))
 
@@ -1247,7 +1250,7 @@ Having trouble getting this to work
 
   (use-package corfu
     :hook
-    (after-init . global-corfu-mode)
+    (elpaca-after-init . global-corfu-mode)
     :bind
     (:map corfu-map ("<tab>" . corfu-complete))
     :config
@@ -1292,7 +1295,7 @@ Having trouble getting this to work
   (winner-mode)
 
   (use-package zoom
-    ;;:diminish
+    :diminish
     :custom
     (zoom-size '(0.618 . 0.618))
     (zoom-mode t)
@@ -1300,64 +1303,64 @@ Having trouble getting this to work
 
   (use-package buffer-move)
 
-  (use-package hydra)
-  (defhydra hydra-mywindow ()
-    "
-    ^Change Window^   ^Buffer Move^      ^Window^         ^Resize Window^
-    -------------------------------------------
-        ↑     	        C-↑             Split _v_ertical    _<prior>_ Enlarge Horizontally
-        ↓     	        C-↓             Split _h_orizontal  _<next>_ Shrink Horizontally
-        ←     	        C-←             _k_ill              _<deletechar>_ Shrink Vertically
-        →               C-→             _u_ndo
-    _SPC_ cancel
-    "
-    ("<up>" windmove-up)
-    ("<down>" windmove-down)
-    ("<left>" windmove-left)
-    ("<right>" windmove-right)
-    ("C-<up>" buf-move-up)
-    ("C-<down>" buf-move-down)
-    ("C-<left>" buf-move-left)
-    ("C-<right>" buf-move-right)
-    ("v" split-window-right)
-    ("h" split-window-below)
-    ("k" delete-window)
-    ("u" winner-undo)
-    ("<prior>" enlarge-window-horizontally)
-    ("<next>" shrink-window-horizontally)
-    ("<deletechar>" shrink-window)
-    ("SPC" nil)
-    ("q" nil)
-    )
-  (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
-  (defhydra hydra-straight-helper (:hint nil)
-    "
-  _c_heck all       |_f_etch all     |_m_erge all      |_n_ormalize all   |p_u_sh all
-  _C_heck package   |_F_etch package |_M_erge package  |_N_ormlize package|p_U_sh package
-   ----------------^^+--------------^^+---------------^^+----------------^^+------------||_q_uit||
-  _r_ebuild all     |_p_ull all      |_v_ersions freeze|_w_atcher start   |_g_et recipe
-  _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_ build"
-    ("c" straight-check-all)
-    ("C" straight-check-package)
-    ("r" straight-rebuild-all)
-    ("R" straight-rebuild-package)
-    ("f" straight-fetch-all)
-    ("F" straight-fetch-package)
-    ("p" straight-pull-all)
-    ("P" straight-pull-package)
-    ("m" straight-merge-all)
-    ("M" straight-merge-package)
-    ("n" straight-normalize-all)
-    ("N" straight-normalize-package)
-    ("u" straight-push-all)
-    ("U" straight-push-package)
-    ("v" straight-freeze-versions)
-    ("V" straight-thaw-versions)
-    ("w" straight-watcher-start)
-    ("W" straight-watcher-quit)
-    ("g" straight-get-recipe)
-    ("e" straight-prune-build)
-    ("q" nil))
+  ;; (use-package hydra)
+  ;; (defhydra hydra-mywindow ()
+  ;;   "
+  ;;   ^Change Window^   ^Buffer Move^      ^Window^         ^Resize Window^
+  ;;   -------------------------------------------
+  ;;       ↑     	        C-↑             Split _v_ertical    _<prior>_ Enlarge Horizontally
+  ;;       ↓     	        C-↓             Split _h_orizontal  _<next>_ Shrink Horizontally
+  ;;       ←     	        C-←             _k_ill              _<deletechar>_ Shrink Vertically
+  ;;       →               C-→             _u_ndo
+  ;;   _SPC_ cancel
+  ;;   "
+  ;;   ("<up>" windmove-up)
+  ;;   ("<down>" windmove-down)
+  ;;   ("<left>" windmove-left)
+  ;;   ("<right>" windmove-right)
+  ;;   ("C-<up>" buf-move-up)
+  ;;   ("C-<down>" buf-move-down)
+  ;;   ("C-<left>" buf-move-left)
+  ;;   ("C-<right>" buf-move-right)
+  ;;   ("v" split-window-right)
+  ;;   ("h" split-window-below)
+  ;;   ("k" delete-window)
+  ;;   ("u" winner-undo)
+  ;;   ("<prior>" enlarge-window-horizontally)
+  ;;   ("<next>" shrink-window-horizontally)
+  ;;   ("<deletechar>" shrink-window)
+  ;;   ("SPC" nil)
+  ;;   ("q" nil)
+  ;;   )
+  ;; (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
+  ;; (defhydra hydra-straight-helper (:hint nil)
+  ;;   "
+  ;; _c_heck all       |_f_etch all     |_m_erge all      |_n_ormalize all   |p_u_sh all
+  ;; _C_heck package   |_F_etch package |_M_erge package  |_N_ormlize package|p_U_sh package
+  ;;  ----------------^^+--------------^^+---------------^^+----------------^^+------------||_q_uit||
+  ;; _r_ebuild all     |_p_ull all      |_v_ersions freeze|_w_atcher start   |_g_et recipe
+  ;; _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_ build"
+  ;;   ("c" straight-check-all)
+  ;;   ("C" straight-check-package)
+  ;;   ("r" straight-rebuild-all)
+  ;;   ("R" straight-rebuild-package)
+  ;;   ("f" straight-fetch-all)
+  ;;   ("F" straight-fetch-package)
+  ;;   ("p" straight-pull-all)
+  ;;   ("P" straight-pull-package)
+  ;;   ("m" straight-merge-all)
+  ;;   ("M" straight-merge-package)
+  ;;   ("n" straight-normalize-all)
+  ;;   ("N" straight-normalize-package)
+  ;;   ("u" straight-push-all)
+  ;;   ("U" straight-push-package)
+  ;;   ("v" straight-freeze-versions)
+  ;;   ("V" straight-thaw-versions)
+  ;;   ("w" straight-watcher-start)
+  ;;   ("W" straight-watcher-quit)
+  ;;   ("g" straight-get-recipe)
+  ;;   ("e" straight-prune-build)
+  ;;   ("q" nil))
 #+end_src
 
 * Customization by system-name
