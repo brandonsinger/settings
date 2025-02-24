@@ -35,6 +35,7 @@
 - might want to go through https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-emacs.org again
 - magit-gptcommit
 - consult has many more feature that I dont use
+- dwim-shell-command
 
 * early-init.el
 #+begin_src emacs-lisp :tangle "early-init.el"
@@ -236,6 +237,7 @@
   (setq use-package-compute-statistics t) ;; invoke use-package-report
 
   (use-package diminish)
+  (use-package delight)
 #+end_src
 
 ** Enable auto update
@@ -252,7 +254,7 @@
 * Server
 #+begin_src emacs-lisp
   (use-package server
-    :ensure nil
+    ;;:ensure nil
     :defer 1
     :config
     (setq server-client-instructions nil)
@@ -284,7 +286,7 @@
      ("C-x C-a g" . activities-revert)
      ("C-x C-a l" . activities-list)
      ("C-X C-a <DELETE>" . activities-discard)
-     ("C-x b" . activities-switch-buffer)
+     ;;("C-x b" . activities-switch-buffer)
      ))
 
 #+end_src
@@ -302,8 +304,7 @@
                 )
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-  ;; (setq header-line-format ?
-  ;;       )
+  (global-hl-line-mode 1)
 
   (setq tab-bar-close-button-show nil
         tab-bar-new-button-show nil)
@@ -311,7 +312,8 @@
   ;; TODO: shouldnt eldoc be in a different section? and maybe I should actually use this
   (use-package eldoc
     :straight nil
-    :diminish)
+    ;;:diminish
+    )
 
   (use-package ef-themes
     :demand t
@@ -386,11 +388,6 @@
   ;; (use-package prism
   ;;   )
 
-  (use-package beacon
-    :diminish
-    :config
-    (beacon-mode 1))
-
   (use-package lin
     :hook
     (after-init . lin-global-mode)
@@ -403,7 +400,8 @@
 ** Setup
 #+begin_src emacs-lisp
   (use-package org
-    :delight
+    ;;:type build-in
+    ;; :delight
     :config
     (setq org-startup-indented t)
     (with-eval-after-load 'org-indent
@@ -596,7 +594,7 @@
 ** Auto cleanup whitespace
 #+begin_src emacs-lisp
   (use-package ws-butler
-    :diminish
+    ;;:diminish
     :hook ((text-mode . ws-butler-mode)
            (prog-mode . ws-butler-mode)))
 #+end_src
@@ -614,6 +612,7 @@ use ~magit-list-repositories~ to get a status list of all projects
 
 #+begin_src emacs-lisp
   (use-package magit
+    :after nerd-icons
     :config
     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
     (setq magit-repository-directories '(("~/projects" . 1)))
@@ -630,6 +629,8 @@ use ~magit-list-repositories~ to get a status list of all projects
             ("Path"    99 magit-repolist-column-path ())))
     (setq magit-save-repository-buffers 'dontask)
     (setq magit-log-margin '(t "%Y-%m-%d" magit-log-margin-width t 18))
+    :custom
+    (magit-format-file-function #'magit-format-file-nerd-icons)
     )
 
   (use-package magit-todos
@@ -652,7 +653,7 @@ use ~magit-list-repositories~ to get a status list of all projects
     )
 
   (use-package python-mode
-    :ensure nil
+    ;;:ensure nil
     :custom
     (python-shell-interperter "python")
     )
@@ -670,6 +671,16 @@ use ~magit-list-repositories~ to get a status list of all projects
           ("smarty" . "/home/echo/projects/website/templates/.*\\.html\\'")
           )
         )
+
+  (use-package rust-mode
+    :init
+    ;;(setq rust-mode-treesitter-derive t)
+    :mode ("\\.rs\\'" . rust-mode))
+  (use-package rustic
+    :after (rust-mode)
+    :config
+    (setq rustic-format-on-save t))
+
 #+end_src
 
 ** pytest
@@ -698,13 +709,14 @@ use ~magit-list-repositories~ to get a status list of all projects
        (python "https://github.com/tree-sitter/tree-sitter-python")
        (toml "https://github.com/tree-sitter/tree-sitter-toml")
        (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+       (rust "https://github.com/tree-sitter/tree-sitter-rust")
        ))
-    (treesit-auto-langs '(javascript yaml json html css elisp php))
+    (treesit-auto-langs '(javascript yaml json html css elisp php rust))
     :config
     (global-treesit-auto-mode))
 
   (use-package tree-sitter
-    :diminish
+    ;;:diminish
     :init
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
     (global-tree-sitter-mode))
@@ -762,7 +774,7 @@ pip install ruff
 #+begin_src emacs-lisp
   (use-package which-key
     :init (which-key-mode)
-    :diminish which-key-mode
+    ;;:diminish which-key-mode
     :config
     (setq which-key-idle-delay 0.5)
     )
@@ -779,7 +791,7 @@ pip install ruff
 ** projectile
 #+begin_src emacs-lisp
   (use-package projectile
-    :diminish projectile-mode
+    ;;:diminish projectile-mode
     :config
     (projectile-mode)
     :bind
@@ -806,7 +818,7 @@ pip install ruff
     (setq dired-auto-revert-buffer t)
     )
   (use-package dired-subtree
-    :ensure t
+    ;;:ensure t
     :after dired
     :bind
     ( :map dired-mode-map
@@ -821,7 +833,7 @@ pip install ruff
 ** clipetty
 #+begin_src emacs-lisp
   (use-package clipetty
-    :diminish
+    ;;:diminish
     :hook (after-init . global-clipetty-mode))
 #+end_src
 
@@ -896,7 +908,6 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
     )
 
   (use-package kind-icon
-    :ensure t
     :after corfu
     :config
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
@@ -937,8 +948,9 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
           mode-line-misc-info
           ))
 
+  ;;use mode-line-format-right-align, new in 30.1
   (use-package time
-    :ensure nil
+    ;;:ensure nil
     :config
     (setq display-time-interval 60)
     (setq display-time-default-load-average nil)
@@ -954,7 +966,7 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
 #+begin_src emacs-lisp
   (use-package dashboard
     :after nerd-icons
-    :ensure t
+    ;;:ensure t
     :config
     (dashboard-setup-startup-hook)
     (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
@@ -1199,7 +1211,7 @@ Having trouble getting this to work
     :hook (completion-list-mode . consult-preview-at-point-mode)
     :bind
     (
-     ;;("C-x b" . consult-buffer)
+     ("C-x b" . consult-buffer)
      ("C-x C-b" . consult-buffer)
      ("M-g M-g" . consult-goto-line)
      ("C-s" . consult-line)
@@ -1234,7 +1246,6 @@ Having trouble getting this to work
     (embark-collect-mode . consult-preview-at-point-mode))
 
   (use-package corfu
-    :ensure t
     :hook
     (after-init . global-corfu-mode)
     :bind
@@ -1281,7 +1292,7 @@ Having trouble getting this to work
   (winner-mode)
 
   (use-package zoom
-    :diminish
+    ;;:diminish
     :custom
     (zoom-size '(0.618 . 0.618))
     (zoom-mode t)
@@ -1319,6 +1330,34 @@ Having trouble getting this to work
     ("q" nil)
     )
   (global-set-key (kbd "C-M-w") 'hydra-mywindow/body)
+  (defhydra hydra-straight-helper (:hint nil)
+    "
+  _c_heck all       |_f_etch all     |_m_erge all      |_n_ormalize all   |p_u_sh all
+  _C_heck package   |_F_etch package |_M_erge package  |_N_ormlize package|p_U_sh package
+   ----------------^^+--------------^^+---------------^^+----------------^^+------------||_q_uit||
+  _r_ebuild all     |_p_ull all      |_v_ersions freeze|_w_atcher start   |_g_et recipe
+  _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_ build"
+    ("c" straight-check-all)
+    ("C" straight-check-package)
+    ("r" straight-rebuild-all)
+    ("R" straight-rebuild-package)
+    ("f" straight-fetch-all)
+    ("F" straight-fetch-package)
+    ("p" straight-pull-all)
+    ("P" straight-pull-package)
+    ("m" straight-merge-all)
+    ("M" straight-merge-package)
+    ("n" straight-normalize-all)
+    ("N" straight-normalize-package)
+    ("u" straight-push-all)
+    ("U" straight-push-package)
+    ("v" straight-freeze-versions)
+    ("V" straight-thaw-versions)
+    ("w" straight-watcher-start)
+    ("W" straight-watcher-quit)
+    ("g" straight-get-recipe)
+    ("e" straight-prune-build)
+    ("q" nil))
 #+end_src
 
 * Customization by system-name
@@ -1356,6 +1395,27 @@ Having trouble getting this to work
     ;;       mode-line-modes
     ;;       mode-line-misc-info
     ;;       ))
+
+
+    (setq browse-url-browser-function 'eww-browse-url)
+    (use-package elfeed
+      :bind ("C-c f" . elfeed)
+      :commands elfeed
+      :config
+      (setq elfeed-feeds
+            '(
+              ("https://sachachua.com/blog/category/emacs-news/feed/index.xml" emacs)
+              ("https://archlinux.org/feeds/news/" linux)
+              ("http://rss.slashdot.org/Slashdot/slashdotLinux")
+            ))
+      )
+
+    (use-package mastodon
+      :config
+      (setq mastodon-instance-url "https://techhub.social"
+            mastodon-active-user "oshecho")
+      )
+
     (message "'Home desktop' system changes loaded")
     )
 #+end_src
