@@ -39,12 +39,12 @@
 
 * early-init.el
 #+begin_src emacs-lisp :tangle "early-init.el"
+  (setq package-enable-at-startup nil)
+
   (setq inhibit-startup-message t)
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
-
-  (setq package-enable-at-startup nil)
 
   (setq gc-cons-threshold most-positive-fixnum
         gc-cons-percentage 0.5)
@@ -255,16 +255,11 @@
 ** Setup
 #+begin_src emacs-lisp
   (elpaca elpaca-use-package
-          (elpaca-use-package-mode))
-  (setq use-package-always-ensure t)
+          (elpaca-use-package-mode)
+          (setq use-package-always-ensure t)
+          )
   (use-package diminish :ensure (:wait t) :demand t)
   (use-package delight :ensure (:wait t) :demand t)
-#+end_src
-
-** Enable auto update
-?
-#+begin_src emacs-lisp
-  
 #+end_src
 
 * Server

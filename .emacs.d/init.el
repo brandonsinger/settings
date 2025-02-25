@@ -171,12 +171,11 @@ We limit the search to just top 10 lines so as to only check the header."
 (elpaca `(,@elpaca-order))
 
 (elpaca elpaca-use-package
-        (elpaca-use-package-mode))
-(setq use-package-always-ensure t)
+        (elpaca-use-package-mode)
+        (setq use-package-always-ensure t)
+        )
 (use-package diminish :ensure (:wait t) :demand t)
 (use-package delight :ensure (:wait t) :demand t)
-
-
 
 (use-package server
   :ensure nil
