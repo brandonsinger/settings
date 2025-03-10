@@ -617,8 +617,9 @@ We limit the search to just top 10 lines so as to only check the header."
   (echo-install-lsp-servers echo-install-lsp-servers-list)
   )
 
-;; optionally
-(use-package lsp-ui :commands lsp-ui-mode)
+;; TODO: Play around with this to figure out how I want to customize it.
+(use-package lsp-ui
+  :commands lsp-ui-mode)
 
 (use-package flycheck
   :config
@@ -1043,13 +1044,16 @@ We limit the search to just top 10 lines so as to only check the header."
   (setq corfu-preview-current nil)
   (setq corfu-min-width 20)
 
-  (setq corfu-popupinfo-delay '(1.25 . 0.5))
+  (setq corfu-popupinfo-delay '(5 . 1))
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
   ;; Sort by input history (no need to modify `corfu-sort-function').
   (with-eval-after-load 'savehist
     (corfu-history-mode 1)
-    (add-to-list 'savehist-additional-variables 'corfu-history)))
+    (add-to-list 'savehist-additional-variables 'corfu-history))
+  :custom
+  (corfu-cycle t)
+  )
 
 (use-package bm
   :bind
