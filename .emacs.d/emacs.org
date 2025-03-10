@@ -37,6 +37,40 @@
 - consult has many more feature that I dont use
 - dwim-shell-command
 
+- might want to tweak it first?
+(require 'notifications)
+
+(defun stand-up ()
+  (notifications-notify
+   :title "stand-up"
+   :body "time to stand-up!"
+   :actions '("Confirm" "yess")))
+
+(defun stand-up--schedule ()
+  (let*
+      ((time (decode-time (current-time)))
+       (time-m (nth 1 time))
+       (time-h (nth 2 time))
+       (scheduled-at
+        (if (>= time-m 50)
+            (format "%d:%d" (+ 1 time-h) 50)
+          (format "%d:%d" time-h 50))))
+    (message (format "Scheduling a stand-up notification at %s" scheduled-at))
+    (run-at-time scheduled-at nil 'stand-up--notify)))
+
+(defun stand-up--notify-p ()
+  (let ((idle-time (current-idle-time)))
+    (if idle-time
+        (<= (time-to-seconds idle-time) 600)
+      t)))
+
+(defun stand-up--notify ()
+  (when (stand-up--notify-p)
+    (stand-up))
+  (stand-up--schedule))
+
+(stand-up--schedule)
+
 * early-init.el
 #+begin_src emacs-lisp :tangle "early-init.el"
   (setq package-enable-at-startup nil)
@@ -297,7 +331,6 @@
      ("C-x C-a g" . activities-revert)
      ("C-x C-a l" . activities-list)
      ("C-X C-a <DELETE>" . activities-discard)
-     ;;("C-x b" . activities-switch-buffer)
      ))
 
 #+end_src
@@ -754,13 +787,14 @@ pip install ruff
     (setq lsp-keymap-prefix "C-c l"
           lsp-file-watch-threshold 5000)
     :hook (
-           (prog-mode-hook . lsp)
            (web-mode . lsp)
            (css-mode . lsp)
+           (python-mode . lsp)
+           (rust-mode . lsp)
            (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp
     :config
-    (echo-install-lsp-servers `(ansible-ls html-ls ts-ls json-ls css-ls iph))
+    (echo-install-lsp-servers echo-install-lsp-servers-list)
     )
 
   ;; optionally
@@ -1206,6 +1240,11 @@ Having trouble getting this to work
     (marginalia-mode 1))
 
   (use-package consult
+    :after projectile
+    :init
+    (recentf-mode 1)
+    (setq recentf-max-menu-items 25)
+    (setq recentf-max-saved-items 25)
     :hook (completion-list-mode . consult-preview-at-point-mode)
     :bind
     (
@@ -1214,14 +1253,22 @@ Having trouble getting this to work
      ("M-g M-g" . consult-goto-line)
      ("C-s" . consult-line)
      ("C-f" . consult-imenu))
+    ;; maybe bind consult-project-buffer to something too?
     :config
     (consult-customize
      consult-theme :preview-key 'any
      consult-line :prompt "Search: " :preview-key 'any
      consult--source-buffer :hidden t :default nil)
+    (setq consult-project-root-function #'projectile-project-root)
 
-    ;;(setq consult-project-root-function #'projectile-project-root)
-    ;;(add-to-list 'consult-buffer-sources persp-consult-source)
+    ;; Configure initial narrowing per command
+    (defvar consult-initial-narrow-config
+      '((consult-buffer . ?p)))
+    ;; Add initial narrowing hook
+    (defun consult-initial-narrow ()
+      (when-let (key (alist-get this-command consult-initial-narrow-config))
+        (setq unread-command-events (append unread-command-events (list key 32)))))
+    (add-hook 'minibuffer-setup-hook #'consult-initial-narrow)
     )
 
   (use-package embark
@@ -1367,9 +1414,13 @@ Having trouble getting this to work
     (setenv "ANSIBLE_PIPELINING" nil)
     (setenv "LPASS_DISABLE_PINENTRY" nil)
     (setenv "LPASS_PINENTRY" "~/tools/pinentry-emacs") ;; need to manually install pinentry-emacs
-    
+
     ;; eww, works but is too slow
     ;; (setq projectile-indexing-method 'native)
+
+
+    (setq echo-install-lsp-servers-list `(ansible-ls html-ls ts-ls json-ls css-ls iph))
+
     (message "'Work' system changes loaded")
     )
 #+end_src
@@ -1413,6 +1464,8 @@ Having trouble getting this to work
       (setq mastodon-instance-url "https://techhub.social"
             mastodon-active-user "oshecho")
       )
+
+    (setq echo-install-lsp-servers-list `(html-ls ts-ls json-ls css-ls python-ls rs-ls))
 
     (message "'Home desktop' system changes loaded")
     )

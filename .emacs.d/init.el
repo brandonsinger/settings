@@ -205,7 +205,6 @@ We limit the search to just top 10 lines so as to only check the header."
    ("C-x C-a g" . activities-revert)
    ("C-x C-a l" . activities-list)
    ("C-X C-a <DELETE>" . activities-discard)
-   ;;("C-x b" . activities-switch-buffer)
    ))
 
 (setq visible-bell t)
@@ -608,13 +607,14 @@ We limit the search to just top 10 lines so as to only check the header."
   (setq lsp-keymap-prefix "C-c l"
         lsp-file-watch-threshold 5000)
   :hook (
-         (prog-mode-hook . lsp)
          (web-mode . lsp)
          (css-mode . lsp)
+         (python-mode . lsp)
+         (rust-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
   :config
-  (echo-install-lsp-servers `(ansible-ls html-ls ts-ls json-ls css-ls iph))
+  (echo-install-lsp-servers echo-install-lsp-servers-list)
   )
 
 ;; optionally
@@ -983,6 +983,11 @@ We limit the search to just top 10 lines so as to only check the header."
   (marginalia-mode 1))
 
 (use-package consult
+  :after projectile
+  :init
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 25)
+  (setq recentf-max-saved-items 25)
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :bind
   (
@@ -991,14 +996,22 @@ We limit the search to just top 10 lines so as to only check the header."
    ("M-g M-g" . consult-goto-line)
    ("C-s" . consult-line)
    ("C-f" . consult-imenu))
+  ;; maybe bind consult-project-buffer to something too?
   :config
   (consult-customize
    consult-theme :preview-key 'any
    consult-line :prompt "Search: " :preview-key 'any
    consult--source-buffer :hidden t :default nil)
+  (setq consult-project-root-function #'projectile-project-root)
 
-  ;;(setq consult-project-root-function #'projectile-project-root)
-  ;;(add-to-list 'consult-buffer-sources persp-consult-source)
+  ;; Configure initial narrowing per command
+  (defvar consult-initial-narrow-config
+    '((consult-buffer . ?p)))
+  ;; Add initial narrowing hook
+  (defun consult-initial-narrow ()
+    (when-let (key (alist-get this-command consult-initial-narrow-config))
+      (setq unread-command-events (append unread-command-events (list key 32)))))
+  (add-hook 'minibuffer-setup-hook #'consult-initial-narrow)
   )
 
 (use-package embark
@@ -1134,9 +1147,13 @@ We limit the search to just top 10 lines so as to only check the header."
   (setenv "ANSIBLE_PIPELINING" nil)
   (setenv "LPASS_DISABLE_PINENTRY" nil)
   (setenv "LPASS_PINENTRY" "~/tools/pinentry-emacs") ;; need to manually install pinentry-emacs
-  
+
   ;; eww, works but is too slow
   ;; (setq projectile-indexing-method 'native)
+
+
+  (setq echo-install-lsp-servers-list `(ansible-ls html-ls ts-ls json-ls css-ls iph))
+
   (message "'Work' system changes loaded")
   )
 
@@ -1177,6 +1194,8 @@ We limit the search to just top 10 lines so as to only check the header."
     (setq mastodon-instance-url "https://techhub.social"
           mastodon-active-user "oshecho")
     )
+
+  (setq echo-install-lsp-servers-list `(html-ls ts-ls json-ls css-ls python-ls rs-ls))
 
   (message "'Home desktop' system changes loaded")
   )
