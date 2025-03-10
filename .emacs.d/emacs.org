@@ -363,42 +363,9 @@
                                            'keymap tab-line-left-map
                                            'mouse-face 'tab-line-highlight
                                            'help-echo "Click to scroll left"))
-    ;; (let ((bg (face-attribute 'mode-line :background))
-  ;;         (fg (face-attribute 'default :foreground))
-  ;;         (hg (face-attribute 'default :background))
-  ;;         (base (face-attribute 'mode-line :background))
-  ;;         (box-width (/ (line-pixel-height) 4)))
-  ;;     (set-face-attribute 'tab-line nil
-  ;;   		                :background base
-  ;;   		                :foreground fg
-  ;;   		                :height 2.0
-  ;;   		                :inherit nil
-  ;;   		                :box (list :line-width -1 :color base)
-  ;;   		                )
-  ;;     (set-face-attribute 'tab-line-tab nil
-  ;;   		                :foreground fg
-  ;;   		                :background bg
-  ;;   		                :weight 'normal
-  ;;   		                :inherit nil
-  ;;   		                :box (list :line-width box-width :color bg))
-  ;;     (set-face-attribute 'tab-line-tab-inactive nil
-  ;;   		                :foreground fg
-  ;;   		                :background base
-  ;;   		                :weight 'normal
-  ;;   		                :inherit nil
-  ;;   		                :box (list :line-width box-width :color base))
-  ;;     (set-face-attribute 'tab-line-highlight nil
-  ;;   		                :foreground fg
-  ;;   		                :background hg
-  ;;   		                :weight 'normal
-  ;;   		                :inherit nil
-  ;;   		                :box (list :line-width box-width :color hg))
-  ;;     (set-face-attribute 'tab-line-tab-current nil
-  ;;   		                :foreground fg
-  ;;   		                :background hg
-  ;;   		                :weight 'normal
-  ;;   		                :inherit nil
-  ;;   		                :box (list :line-width box-width :color hg)))
+    :custom-face
+    (activities-tabs ((t (:height 1.2))))
+    (mode-line ((t (:height 1.1))))
     )
 
   (when (member "Roboto Mono" (font-family-list))
