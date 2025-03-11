@@ -185,7 +185,7 @@ We limit the search to just top 10 lines so as to only check the header."
   (unless (server-running-p)
     (server-start)))
 
-(use-package no-littering)
+(use-package no-littering :ensure (:wait t) :demand t)
 
 (use-package activities
   :init
@@ -576,6 +576,7 @@ We limit the search to just top 10 lines so as to only check the header."
   :mode ("\\.rs\\'" . rust-mode))
 (use-package rustic
   :after (rust-mode)
+  :diminish
   :config
   (setq rustic-format-on-save t))
 

@@ -308,7 +308,7 @@
 #+end_src
 * Setup
 #+begin_src emacs-lisp
-  (use-package no-littering)
+  (use-package no-littering :ensure (:wait t) :demand t)
 #+end_src
 
 * activities
@@ -742,6 +742,7 @@ use ~magit-list-repositories~ to get a status list of all projects
     :mode ("\\.rs\\'" . rust-mode))
   (use-package rustic
     :after (rust-mode)
+    :diminish
     :config
     (setq rustic-format-on-save t))
 
