@@ -36,6 +36,9 @@
 - magit-gptcommit
 - consult has many more feature that I dont use
 - dwim-shell-command
+- maybe https://github.com/progfolio/elpaca/wiki/Automatic-Rebuilding-of-Packages-on-Restart
+
+- use occur, make note somewhere?
 
 - might want to tweak it first?
 (require 'notifications)
@@ -70,6 +73,7 @@
   (stand-up--schedule))
 
 (stand-up--schedule)
+
 
 * early-init.el
 #+begin_src emacs-lisp :tangle "early-init.el"
@@ -1055,9 +1059,18 @@ Make sure aspell is installed and setup. (install aspell and aspell-us)
                                       dashboard-insert-newline
                                       dashboard-insert-init-info
                                       dashboard-insert-items
-                                      dashboard-insert-newline))
+                                      dashboard-insert-newline
+                                      dashboard-insert-footer))
     ;;(setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
     )
+
+  (use-package votd
+    :ensure(:host github :repo "brandonsinger/votd")
+    :after dashboard
+    :config
+    (setq dashboard-footer-messages (list (get-votd)))
+    :custom
+    (votd-bible-version "AMP"))
 #+end_src
 
 ** Kitty Keyboard Protocol
@@ -1073,6 +1086,20 @@ https://github.com/ecraven/pinentry-emacs
   (defun pinentry-emacs (desc prompt ok error)
         (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
           str))
+#+end_src
+
+** Treemacs
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :defer t
+    :commands (treemacs))
+  (use-package treemacs-projectile
+    :after treemacs)
+  (use-package treemacs-tab-bar
+    :after treemacs
+    :config (treemacs-set-scope-type 'Tabs))
+  ;; (use-package treemacs-icons-dired
+  ;;   :after treemacs)
 #+end_src
 
 * Shell

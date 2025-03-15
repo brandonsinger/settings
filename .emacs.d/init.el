@@ -821,9 +821,18 @@ We limit the search to just top 10 lines so as to only check the header."
                                     dashboard-insert-newline
                                     dashboard-insert-init-info
                                     dashboard-insert-items
-                                    dashboard-insert-newline))
+                                    dashboard-insert-newline
+                                    dashboard-insert-footer))
   ;;(setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
   )
+
+(use-package votd
+  :ensure(:host github :repo "brandonsinger/votd")
+  :after dashboard
+  :config
+  (setq dashboard-footer-messages (list (get-votd)))
+  :custom
+  (votd-bible-version "AMP"))
 
 (use-package kkp
   :config
@@ -832,6 +841,17 @@ We limit the search to just top 10 lines so as to only check the header."
 (defun pinentry-emacs (desc prompt ok error)
       (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
         str))
+
+(use-package treemacs
+  :defer t
+  :commands (treemacs))
+(use-package treemacs-projectile
+  :after treemacs)
+(use-package treemacs-tab-bar
+  :after treemacs
+  :config (treemacs-set-scope-type 'Tabs))
+;; (use-package treemacs-icons-dired
+;;   :after treemacs)
 
 (setenv "PAGER" "cat")
 
