@@ -72,8 +72,14 @@
   (dired-mode . nerd-icons-dired-mode))
 
 (use-package rainbow-mode
-  :config
-  (add-hook 'emacs-lisp-mode-hook 'rainbow-mode))
+  :hook
+  (web-mode-hook . rainbow-mode)
+  (css-mode-hook . rainbow-mode)
+  (html-mode-hook . rainbow-mode))
+
+(use-package rainbow-delimiters
+  :hook
+  (prog-mode-hook . rainbow-delimiters-mode))
 
 (provide 'init-visuals)
 ;;; init-visuals.el ends here
