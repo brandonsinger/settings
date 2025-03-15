@@ -6,7 +6,7 @@
 (use-package transient)
 
 (use-package magit
-  :after (nerd-icons,transient)
+  :after (transient)
   :config
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
   (setq magit-repository-directories '(("~/projects" . 1)))
