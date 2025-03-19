@@ -120,5 +120,15 @@
           (message "Buffer seems to be generated. Set to read-only mode.")))))
   (add-hook 'find-file-hook 'meain/set-read-only-if-do-not-edit))
 
+(use-package hideshow
+  :hook ((prog-mode . hs-minor-mode)))
+
+;; TODO: bind key to toggle-fold
+(defun toggle-fold ()
+  (interactive)
+  (save-excursion
+    (end-of-line)
+    (hs-toggle-hiding)))
+
 (provide 'init-basic)
 ;;; init-basic.el ends here

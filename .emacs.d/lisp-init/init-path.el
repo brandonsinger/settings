@@ -6,10 +6,10 @@
 (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
       url-history-file (expand-file-name "url/history" user-emacs-directory))
 
-;; bugged: (setq auto-save-file-name-transforms '((".*" (expand-file-name "auto-save-list" user-emacs-directory) t))) 
+;; bugged: (setq auto-save-file-name-transforms '((".*" (expand-file-name "auto-save-list" user-emacs-directory) t)))
 
 ;; Set backup directory and backup settings
-(setq backup-directory-alist `(("." . (expand-file-name "backup" user-emacs-directory))))
+(setq backup-directory-alist `(("." . ,(expand-file-name "backup" user-emacs-directory))))
 (setq backup-by-copying t)
 (setq delete-old-versions t
       kept-new-versions 6

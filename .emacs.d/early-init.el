@@ -5,6 +5,13 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+;; Ensure Emacs loads the most recent byte-compiled files.
+(setq load-prefer-newer t)
+
+;; Ensure JIT compilation is enabled for improved performance by
+;; native-compiling loaded .elc files asynchronously
+(setq native-comp-jit-compilation t)
+
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.5)
 
