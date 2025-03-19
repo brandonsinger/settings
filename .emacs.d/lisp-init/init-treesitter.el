@@ -9,7 +9,6 @@
   (treesit-auto-install 'prompt)
   (treesit-language-source-alist
    '(
-     (bash "https://github.com/tree-sitter/tree-sitter-bash")
      (cmake "https://github.com/uyha/tree-sitter-cmake")
      (css "https://github.com/tree-sitter/tree-sitter-css")
      (elisp "https://github.com/Wilfred/tree-sitter-elisp")
@@ -21,8 +20,9 @@
      (rust "https://github.com/tree-sitter/tree-sitter-rust")
      (toml "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+     (bash "https://github.com/tree-sitter/tree-sitter-bash")
      ))
-  (treesit-auto-langs '(javascript yaml json html css elisp php rust toml))
+  (treesit-auto-langs '(javascript yaml json html css js elisp php rust toml))
   :config
   (global-treesit-auto-mode))
 

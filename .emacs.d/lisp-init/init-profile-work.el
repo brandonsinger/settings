@@ -12,7 +12,7 @@
 ;; (setq projectile-indexing-method 'native)
 
 
-(setq echo-install-lsp-servers-list `(ansible-ls html-ls ts-ls json-ls css-ls iph))
+(setq echo-install-lsp-servers-list `(ansible-ls html-ls js-ls json-ls css-ls iph))
 
 (message "'Work' system changes loaded")
 

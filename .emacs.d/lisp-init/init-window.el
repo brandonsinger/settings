@@ -13,7 +13,7 @@
   (setq switch-window-minibuffer-shortcut ?z)
   (setq switch-window-shortcut-appearance 'asciiart)
   )
-                                        ; maybe use winmode instead of switch-window?
+;; maybe use windmode instead of switch-window? or ace-window
 
 (winner-mode)
 

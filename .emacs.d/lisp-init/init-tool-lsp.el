@@ -21,13 +21,12 @@
 
 (use-package lsp-mode
   :init
-  ;; lsp-enable-file-watchers and lsp-file-watch-threshold
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l"
         lsp-file-watch-threshold 5000)
   :hook (
          (web-mode . lsp)
          (css-mode . lsp)
+         (js-mode . lsp)
          (python-mode . lsp)
          (rust-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
@@ -38,7 +37,10 @@
 
 ;; TODO: Play around with this to figure out how I want to customize it.
 (use-package lsp-ui
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :bind
+  ("<f1>" . lsp-ui-doc-mode)
+  )
 
 (provide 'init-tool-lsp)
 ;;; init-tool-lsp.el ends here

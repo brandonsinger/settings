@@ -34,6 +34,10 @@
   (setq rustic-format-on-save t))
 
 
+(use-package csv-mode
+  :mode ("\\.csv$" . csv-mode))
+
+
 ;; (use-package python-pytest)
 ;; (global-set-key (kbd "C-x T") 'python-pytest-dispatch)
 

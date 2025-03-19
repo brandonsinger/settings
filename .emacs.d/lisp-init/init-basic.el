@@ -98,8 +98,8 @@
    (t
     (keyboard-quit))))
 
-(define-key global-map (kbd "C-g") #'prot/keyboard-quit-dwim)
-(global-set-key (kbd "<escape>") 'prot/keyboard-escape-quit)
+(keymap-global-set (kbd "C-g") #'prot/keyboard-quit-dwim)
+(keymap-global-set (kbd "<escape>") 'prot/keyboard-escape-quit)
 
 (save-place-mode 1)
 (setq save-place-forget-unreadable-files nil)

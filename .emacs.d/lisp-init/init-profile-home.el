@@ -70,7 +70,7 @@
   ("C-c n R" . denote-rename-file-using-front-matter)
   )
 
-(setq echo-install-lsp-servers-list `(html-ls ts-ls json-ls css-ls python-ls rs-ls))
+(setq echo-install-lsp-servers-list `(html-ls js-ls json-ls css-ls python-ls rs-ls))
 
 (message "'Home desktop' system changes loaded")
 

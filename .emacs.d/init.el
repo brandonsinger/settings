@@ -14,7 +14,6 @@
 ;; - https://github.com/alphapapa/dogears.el
 ;; - 'shell' from https://sachachua.com/dotemacs/index.html
 ;; - how to a scroll different window
-;; - rainbow-delimiters
 ;; - flycheck-projectile
 ;; - maybe term-projectile
 ;; - selected.el
