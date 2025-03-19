@@ -19,8 +19,9 @@
 
 (use-package zoom
   :diminish
-  :init  
+  :init
   (zoom-mode t)
+  :custom
   (zoom-size '(0.618 . 0.618)))
 
 (use-package buffer-move)
