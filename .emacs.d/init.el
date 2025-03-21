@@ -1,4 +1,5 @@
-;; -*- lexical-binding: t; -*-
+;;; init.el --- -*- lexical-binding: t; -*-
+;;; Commentary:
 
 ;;; Things to maybe add
 ;; - machine.el

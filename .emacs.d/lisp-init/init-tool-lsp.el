@@ -22,7 +22,8 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l"
-        lsp-file-watch-threshold 5000)
+        lsp-file-watch-threshold 5000
+        lsp-use-plists t)
   :hook (
          (web-mode . lsp)
          (css-mode . lsp)
@@ -37,10 +38,15 @@
 
 ;; TODO: Play around with this to figure out how I want to customize it.
 (use-package lsp-ui
+  :after lsp-mode
   :commands lsp-ui-mode
   :bind
   ("<f1>" . lsp-ui-doc-mode)
   )
+
+(use-package yasnippet
+  :init
+  (yas-global-mode))
 
 (provide 'init-tool-lsp)
 ;;; init-tool-lsp.el ends here

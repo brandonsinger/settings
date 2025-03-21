@@ -1,3 +1,9 @@
+;;; early-init.el --- -*- lexical-binding: t; -*-
+;;; Commentary:
+;;; Code:
+
+(setenv "LSP_USE_PLISTS" "true") ; improves LSP performance
+
 (setq package-enable-at-startup nil)
 
 (setq inhibit-startup-message t)
@@ -23,3 +29,5 @@
                      (emacs-init-time "%.2f")
                      gcs-done))
           )
+
+;;; early-init.el ends here
