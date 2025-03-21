@@ -37,6 +37,13 @@
 (use-package csv-mode
   :mode ("\\.csv$" . csv-mode))
 
+(use-package prettier
+  :ensure t
+  :hook ((css-mode
+          js2-mode
+          html-mode
+          json-mode
+          typescript-mode) . prettier-mode))
 
 ;; (use-package python-pytest)
 ;; (global-set-key (kbd "C-x T") 'python-pytest-dispatch)
