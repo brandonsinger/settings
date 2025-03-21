@@ -5,4 +5,5 @@
                             (kill-line 0)
                             (indent-according-to-mode)))
 
+(provide 'init-keybinds)
 ;;; init-keybinds.el ends here
