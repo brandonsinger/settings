@@ -1,4 +1,5 @@
-;;; -*- lexical-binding: t; -*-
+;;; init-basic --- Some basic settings and configuration of builtins -*- lexical-binding: t; -*-
+;;; Commentary
 ;;; Code:
 
 ;; load a basic theme for now to prevent blinding white

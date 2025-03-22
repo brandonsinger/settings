@@ -1,4 +1,4 @@
-;;; init-tool-lsp.el --- Sets up LSP stuff -*- lexical-binding: t; -*-
+;;; init-tool-lsp.el --- Sets up LSP stuff and related -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;; Use M-x lsp-doctor to validate if your lsp-mode is properly configured.
@@ -47,6 +47,17 @@
 (use-package yasnippet
   :init
   (yas-global-mode))
+
+(use-package flymake
+  :ensure nil
+  :defer t
+  :hook (prod-mode . flymake-mode)
+  :custom
+  (flymake-margin-indicators-string
+   `((error "!" compilation-error)      ;; Alternatives: », E, W, i, !, ?)
+     (warning "?" compilation-warning)
+     (note "i" compilation-info)))
+  )
 
 (provide 'init-tool-lsp)
 ;;; init-tool-lsp.el ends here

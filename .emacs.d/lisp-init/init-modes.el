@@ -37,6 +37,12 @@
 (use-package csv-mode
   :mode ("\\.csv$" . csv-mode))
 
+(use-package conf-mode
+  :ensure nil
+  :mode ("\\.env\\..*\\'" "\\.env\\'")
+  :init
+  (add-to-list 'auto-mode-alist '("\\.env\\'" . conf-mode)))
+
 (use-package prettier
   :ensure t
   :hook ((css-mode
