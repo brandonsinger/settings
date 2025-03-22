@@ -24,11 +24,11 @@
 
   (setq ef-themes-region '(no-extend))
 
-  ;; not working, must be doing something wrong
-  (setq ef-bio-palette-overrides
-        '((cursor red)
-          (org-blocks green))
-        )
+  ;; ;; not working, must be doing something wrong
+  ;; (setq ef-bio-palette-overrides
+  ;;       '((cursor red)
+  ;;         (org-blocks green))
+  ;;       )
 
 
   ;; Disable all other themes to avoid awkward blending:
