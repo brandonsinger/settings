@@ -13,6 +13,12 @@
     (setq projectile-project-search-path '("~/projects")))
   )
 
+(use-package consult-projectile
+  :after (projectile consult)
+  :bind
+  (:map projectile-command-map
+        ("f" . consult-projectile)))
+
 (use-package ripgrep)
 
 (use-package treemacs
