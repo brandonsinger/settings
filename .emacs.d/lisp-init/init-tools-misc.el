@@ -43,7 +43,8 @@
   :ensure nil
   :bind
   ("C-c w" . eww)
-  )
+  :custom
+  (eww-auto-rename-buffer "title"))
 
 
 ;;; Need package 'enchant' and ('nuspell' or 'hunspell' or 'aspell')

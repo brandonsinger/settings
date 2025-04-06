@@ -1,6 +1,10 @@
 ;;; init.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 
+;;; Good to read
+;; https://www2.lib.uchicago.edu/keith/emacs/
+;; https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-emacs.org
+
 ;;; Things to maybe add
 ;; - emacs-run-command
 ;; - compile-multi
@@ -17,11 +21,8 @@
 ;; - https://github.com/TxGVNN/project-tasks
 ;; - spacious-padding?
 ;; - sql package?
-;; - midnight mode?
-;; - switch to project.el? (and maybe use disproject with it?)
 ;; - atomic-chrome
 ;; - magit wip mode?
-;; - might want to go through https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-emacs.org again
 ;; - magit-gptcommit
 ;; - consult has many more feature that I dont use
 ;; - dwim-shell-command
