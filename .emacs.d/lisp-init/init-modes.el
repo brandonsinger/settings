@@ -43,6 +43,7 @@
   :init
   (add-to-list 'auto-mode-alist '("\\.env\\'" . conf-mode)))
 
+;; need 'prettier' package
 (use-package prettier
   :ensure t
   :hook ((css-mode
