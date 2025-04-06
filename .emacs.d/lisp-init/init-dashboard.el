@@ -31,7 +31,7 @@
   )
 
 (use-package votd
-  :ensure(:host github :repo "brandonsinger/votd")
+  :ensure(:host github :repo "kristjoc/votd")
   :after dashboard
   :config
   (setq dashboard-footer-messages (list (get-votd)))
