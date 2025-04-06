@@ -40,6 +40,7 @@
   )
 
 (use-package denote
+  :disabled
   :init
   (denote-rename-buffer-mode 1)
   :config
