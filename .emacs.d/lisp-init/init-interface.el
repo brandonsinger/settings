@@ -5,7 +5,11 @@
 (use-package vertico
   :init
   (vertico-mode 1)
-  (setq vertico-cycle t))
+  (setq vertico-cycle t)
+  :bind
+  (:map vertico-map
+        ("<prior>" . vertico-scroll-down)
+        ("<next>" . vertico-scroll-up)))
 
 (use-package savehist
   :ensure nil
