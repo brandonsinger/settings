@@ -5,7 +5,7 @@
 (use-package ef-themes
   :demand t
   :init
-  (setq ef-themes-to-toggle '(ef-bio ef-duo-eagle))
+  (setq ef-themes-to-toggle '(ef-bio ef-eagle))
 
   (setq ef-themes-headings ; read the manual's entry or the doc string
         '((0 . (variable-pitch light 1.9))
