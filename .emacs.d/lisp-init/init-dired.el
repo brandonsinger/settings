@@ -8,7 +8,7 @@
   :hook
   (dired-mode . hl-line-mode)
   :custom
-  (dired-listing-switches "-al --group-directories-first --time-style=long-iso")
+  (dired-listing-switches "-alh --group-directories-first --time-style=long-iso")
   :init
   (setq dired-auto-revert-buffer t)
   )
