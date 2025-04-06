@@ -8,6 +8,7 @@
          (prog-mode . ws-butler-mode)))
 
 (use-package aggressive-indent
+  :diminish
   :hook ((emacs-lisp-mode-hook . aggressive-indent-mode)
          (css-mode-hook . aggressive-indent-mode)))
 
