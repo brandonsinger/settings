@@ -7,7 +7,14 @@
                             (kill-line 0)
                             (indent-according-to-mode)))
 
-;; (bind-key "????" dabbrev-completion) what should i use?
+(use-package selected
+  :bind (:map selected-keymap
+              ("l" . sort-lines)
+              ("w" . count-words-region))
+  :config
+  (selected-global-mode 1))
+
+;; TODO: (bind-key "????" dabbrev-completion) what should i use?
 
 ;; TODO: something(s) for changing current tab
 

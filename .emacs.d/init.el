@@ -11,7 +11,6 @@
 ;; - how to a scroll different window
 ;; - flycheck-projectile
 ;; - maybe term-projectile
-;; - selected.el
 ;; - https://www.masteringemacs.org/article/securely-generating-totp-tokens-emacs
 ;; - hush
 ;; - persistent-scratch
