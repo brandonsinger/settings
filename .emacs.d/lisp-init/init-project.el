@@ -7,7 +7,8 @@
   :config
   (projectile-mode)
   :bind
-  ("C-p" . projectile-command-map)
+  ("C-c p" . projectile-command-map)
+  ("s-p" . projectile-command-map)
   :init
   (when (file-directory-p "~/projects")
     (setq projectile-project-search-path '("~/projects")))
