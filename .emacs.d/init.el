@@ -2,14 +2,9 @@
 ;;; Commentary:
 
 ;;; Things to maybe add
-;; - machine.el
 ;; - emacs-run-command
-;; - org-modern?
-;; - org-tempo
-;; - scrolllock mode?
 ;; - compile-multi
 ;; - pulsar
-;; - undo-tree or vundo?
 ;; - https://karthinks.com/software/simple-folding-with-hideshow/
 ;; - https://github.com/alphapapa/dogears.el
 ;; - 'shell' from https://sachachua.com/dotemacs/index.html
@@ -19,7 +14,6 @@
 ;; - selected.el
 ;; - https://www.masteringemacs.org/article/securely-generating-totp-tokens-emacs
 ;; - hush
-;; - https://github.com/balloneij/selection-highlight-mode
 ;; - persistent-scratch
 ;; - https://github.com/TxGVNN/project-tasks
 ;; - spacious-padding?

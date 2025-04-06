@@ -72,5 +72,8 @@
 (use-package git-timemachine
   :commands (git-timemachine))
 
+(use-package vundo
+  :commands (vundo))
+
 (provide 'init-tools-misc)
 ;;; init-tools-misc.el ends here
