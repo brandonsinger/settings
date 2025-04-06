@@ -44,28 +44,22 @@
   ("C-c w" . eww)
   )
 
-;; M-$ is ispell-word by default, should change it to something better..?
-;; Make sure aspell is installed and setup. (install aspell and aspell-us)
-(use-package wucuo
-  :config
-  (setq ispell-program-name "aspell")
-  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
-  (setq wucuo-spell-check-buffer-predicate
-        (lambda ()
-          (not (memq major-mode '(dired-mode
-                                  log-edit-mode
-                                  compilation-mode
-                                  help-mode
-                                  profiler-report-mode
-                                  speedbar-mode
-                                  gud-mode
-                                  calc-mode
-                                  Info-mode)))))
 
+;;; Need package 'enchant' and ('nuspell' or 'hunspell' or 'aspell')
+(use-package jinx
+  :after (vertico)
   :hook
-  (prog-mode . wucuo-start)
-  (text-mode . wucuo-start)
-  )
+  (text-mode-hook . jinx-mode)
+  (prog-mode-hook . jinx-mode)
+  (conf-mode-hook . jinx-mode)
+  :bind
+  ("M-$" . jinx-correct)
+  ("C-M-$" . jinx-languages)
+  :config
+  ;; not quite sure that this multiform thing actually does, but its recommended
+  (setq vertico-multiform-commands
+        '((jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))))
+  (vertico-multiform-mode 1))
 
 (use-package free-keys)
 
