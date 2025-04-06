@@ -14,7 +14,7 @@
   )
 
 (use-package consult-projectile
-  :after (projectile consult)
+  :after (projectile)
   :bind
   (:map projectile-command-map
         ("f" . consult-projectile)))
