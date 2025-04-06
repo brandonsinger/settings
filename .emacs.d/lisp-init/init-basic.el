@@ -121,12 +121,11 @@
           (message "Buffer seems to be generated. Set to read-only mode.")))))
   (add-hook 'find-file-hook 'meain/set-read-only-if-do-not-edit))
 
-;; TODO: play around with this more
 (use-package hideshow
   :hook ((prog-mode . hs-minor-mode))
   :bind
-  ("C-<tab>" . toggle-fold)
-  ("C-S-<tab>" . hs-global-cycle))
+  ("C-<return>" . toggle-fold)
+  ("C-M-<return>" . hs-global-cycle))
 
 (defun hs-cycle (&optional level)
   (interactive "p")
