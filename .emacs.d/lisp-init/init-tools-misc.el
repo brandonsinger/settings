@@ -48,6 +48,7 @@
 ;;; Need package 'enchant' and ('nuspell' or 'hunspell' or 'aspell')
 (use-package jinx
   :after (vertico)
+  :diminish
   :hook
   (text-mode-hook . jinx-mode)
   (prog-mode-hook . jinx-mode)
