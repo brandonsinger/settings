@@ -61,7 +61,7 @@
 (setopt completion-auto-help 'always)
 (setopt completions-max-height 20)
 (setopt completions-format 'one-column)
-(setopt completion-auto-select 'second-tab)
+(setopt completion-auto-select nil)
 
 ;;(setq bookmark-save-flag 1)
 (setq sentence-end-double-space nil)
