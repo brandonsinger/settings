@@ -5,6 +5,7 @@
 
 (setq tramp-default-method "ssh")
 
+(midnight-mode +1)
 
 (use-package mwim
   :bind (("C-a" . mwim-beginning-of-code-or-line)

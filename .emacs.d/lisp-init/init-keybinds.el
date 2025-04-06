@@ -8,6 +8,7 @@
                             (indent-according-to-mode)))
 
 (use-package selected
+  :diminish
   :bind (:map selected-keymap
               ("l" . sort-lines)
               ("w" . count-words-region))
