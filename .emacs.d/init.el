@@ -8,7 +8,6 @@
 ;; - org-tempo
 ;; - scrolllock mode?
 ;; - compile-multi
-;; - git-timemachine
 ;; - pulsar
 ;; - undo-tree or vundo?
 ;; - https://karthinks.com/software/simple-folding-with-hideshow/

@@ -68,5 +68,8 @@
   :diminish
   )
 
+(use-package git-timemachine
+  :commands (git-timemachine))
+
 (provide 'init-tools-misc)
 ;;; init-tools-misc.el ends here
