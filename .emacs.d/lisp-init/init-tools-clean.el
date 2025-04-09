@@ -2,10 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package ws-butler
-  :diminish
-  :hook ((text-mode . ws-butler-mode)
-         (prog-mode . ws-butler-mode)))
+(use-package whitespace-cleanup-mode
+  :config
+  (global-whitespace-cleanup-mode t))
 
 (use-package aggressive-indent
   :diminish
