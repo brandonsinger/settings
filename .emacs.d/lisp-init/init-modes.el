@@ -55,5 +55,11 @@
 ;; (use-package python-pytest)
 ;; (global-set-key (kbd "C-x T") 'python-pytest-dispatch)
 
-(provide 'init-modes)
+
+;; would be nice to wrap this in a use-package somehow...
+(autoload 'visual-basic-mode "visual-basic-mode" "Visual Basic mode." t)
+(push '("\\.\\(?:frm\\|\\(?:ba\\|cl\\|vb\\)s\\)\\'" . visual-basic-mode)
+      auto-mode-alist)
+
+      (provide 'init-modes)
 ;;; init-modes.el ends here
