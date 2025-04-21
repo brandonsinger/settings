@@ -4,7 +4,9 @@
 (use-package org
   :ensure nil
   ;; :delight
+  :mode ("\\.org\\'" . org-mode)
   :config
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   (setq org-startup-indented t)
   (with-eval-after-load 'org-indent
     (require 'diminish)
