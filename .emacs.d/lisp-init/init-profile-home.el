@@ -73,7 +73,9 @@
 
 (setq echo-install-lsp-servers-list `(html-ls js-ls json-ls css-ls python-ls rs-ls))
 
-(message "'Home desktop' system changes loaded")
+(setopt chatgpt-shell-ollama-api-url-base "http://127.0.0.1:11434")
+(setopt chatgpt-shell-model-version "qwen2.5-coder:7b")
 
+(message "'Home desktop' system changes loaded")
 (provide 'init-profile-home)
 ;;; init-profile-home.el ends here

@@ -9,7 +9,6 @@
 ;; - emacs-run-command
 ;; - compile-multi
 ;; - pulsar
-;; - https://karthinks.com/software/simple-folding-with-hideshow/
 ;; - https://github.com/alphapapa/dogears.el
 ;; - 'shell' from https://sachachua.com/dotemacs/index.html
 ;; - how to a scroll different window

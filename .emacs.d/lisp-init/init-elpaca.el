@@ -44,14 +44,12 @@
 ;; setup some use-package stuff
 (elpaca elpaca-use-package
   (elpaca-use-package-mode)
-  (setq use-package-always-ensure t)
+  (setopt use-package-always-ensure t)
   )
 (use-package diminish :ensure (:wait t) :demand t)
 (use-package delight :ensure (:wait t) :demand t)
 
-
 (use-package no-littering :ensure (:wait t) :demand t)
-
 
 (provide 'init-elpaca)
 ;;; init-elpaca.el ends here

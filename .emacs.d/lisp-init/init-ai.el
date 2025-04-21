@@ -2,16 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package shell-maker
-  ;;:straight (:type git :host github :repo "xenodium/shell-maker" :files ("shell-maker*.el"))
-  )
-
 (use-package chatgpt-shell
-  ;;:straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell*.el"))
-  ;;:custom
-  ;; ((chatgpt-shell-anthropic-key
-  ;;   (lambda ()
-  ;;     (auth-source-pass-get 'secret "openai-key"))))
+  :commands
+  (chatgpt-shell chatgpt-shell-prompt-compose)
+  :bind
+  ("C-c C-a" . chatgpt-shell-prompt-compose)
+  ("C-c a" . chatgpt-shell)
+  :config
+  (chatgpt-shell-ollama-load-models)
   )
 
 (provide 'init-ai)
