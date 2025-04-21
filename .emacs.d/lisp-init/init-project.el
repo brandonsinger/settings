@@ -8,6 +8,7 @@
   (projectile-mode)
   :bind
   ("C-c p" . projectile-command-map)
+  ("C-x p" . projectile-command-map)
   ("s-p" . projectile-command-map)
   :init
   (when (file-directory-p "~/projects")
