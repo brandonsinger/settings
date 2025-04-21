@@ -55,7 +55,7 @@
   :hook (prod-mode . flymake-mode)
   :custom
   (flymake-margin-indicators-string
-   `((error "!" compilation-error)      ;; Alternatives: », E, W, i, !, ?)
+   `((error "!" compilation-error)
      (warning "?" compilation-warning)
      (note "i" compilation-info)))
   )

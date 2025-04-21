@@ -59,6 +59,9 @@
   (add-hook 'minibuffer-setup-hook #'consult-initial-narrow)
   )
 
+(use-package consult-todo
+  :after (consult))
+
 (use-package embark
   :bind
   (("C-\\" . embark-act)         ;; pick some comfortable binding

@@ -31,6 +31,8 @@
 (use-package treemacs-tab-bar
   :after treemacs
   :config (treemacs-set-scope-type 'Tabs))
+(use-package treemacs-nerd-icons
+  :after (treemacs nerd-icons))
 
 (provide 'init-project)
 ;;; init-project.el ends here

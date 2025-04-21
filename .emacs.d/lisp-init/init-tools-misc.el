@@ -88,6 +88,10 @@
     (pulse-momentary-highlight-region (mark) (point))))
 (advice-add #'kill-ring-save :before #'my/pulse-current-region)
 
+(use-package su
+  :config
+  (su-mode +1))
+
 
 (provide 'init-tools-misc)
 ;;; init-tools-misc.el ends here
