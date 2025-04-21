@@ -18,27 +18,26 @@
 
 (column-number-mode)
 
-(setq use-dialog-box nil)
+(setopt use-dialog-box nil)
 
 (global-auto-revert-mode 1)
-(setq global-auto-revert-non-file-buffers t)
+(setopt global-auto-revert-non-file-buffers t)
 
 ;; Emacs 28 and newer: Hide commands in M-x which do not work in the current
 ;; mode.  Vertico commands are hidden in normal buffers. This setting is
 ;; useful beyond Vertico.
-(setq read-extended-command-predicate #'command-completion-default-include-p)
+(setopt read-extended-command-predicate #'command-completion-default-include-p)
 
-(setq load-prefer-newer t)
+(setopt load-prefer-newer t)
 
 (when (featurep 'native-compile)
   ;; Silence compiler warnings as they can be pretty disruptive
-  (setq native-comp-async-report-warnings-errors nil)
+  (setopt native-comp-async-report-warnings-errors nil)
   ;; Set the right directory to store the native comp cache
   (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
   ;; Ensure JIT compilation is enabled for improved performance by
   ;; native-compiling loaded .elc files asynchronously
   (setq native-comp-jit-compilation t)
-  (setq native-comp-deferred-compilation t) ; Deprecated in Emacs > 29.1
   )
 
 
@@ -63,13 +62,12 @@
 (setopt completions-format 'one-column)
 (setopt completion-auto-select nil)
 
-;;(setq bookmark-save-flag 1)
-(setq sentence-end-double-space nil)
-(setq delete-selection-mode t)
-(setq global-auto-revert-mode t)
-(setq global-auto-revert-non-file-buffers t)
-(setq man-notify-method 'aggressive)
-(setq confirm-kill-emacs #'y-or-n-p)
+;;(setopt bookmark-save-flag 1)
+(setopt sentence-end-double-space nil)
+(setopt delete-selection-mode t)
+(setopt global-auto-revert-mode t)
+(setopt global-auto-revert-non-file-buffers t)
+(setopt confirm-kill-emacs #'y-or-n-p)
 
 
 
@@ -103,7 +101,7 @@
 (define-key global-map (kbd "<escape>") 'prot/keyboard-escape-quit)
 
 (save-place-mode 1)
-(setq save-place-forget-unreadable-files nil)
+(setopt save-place-forget-unreadable-files nil)
 
 (use-package emacs
   :config

@@ -6,28 +6,28 @@
   :after nerd-icons
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
-  (setq dashboard-startup-banner 'logo)
-  (setq dashboard-projects-backend 'projectile)
-  (setq dashboard-items '((recents   . 5)
-                          (bookmarks . 5)
-                          (projects  . 5)
-                          (agenda    . 5)
-                          (registers . 5)))
-  (setq dashboard-display-icons-p t)
-  (setq dashboard-icon-type 'nerd-icons)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-startupify-list '(dashboard-insert-banner
-                                    dashboard-insert-newline
-                                    dashboard-insert-banner-title
-                                    dashboard-insert-newline
-                                    dashboard-insert-navigator
-                                    dashboard-insert-newline
-                                    dashboard-insert-init-info
-                                    dashboard-insert-items
-                                    dashboard-insert-newline
-                                    dashboard-insert-footer))
-  ;;(setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+  (setopt dashboard-banner-logo-title "Welcome to Emacs Dashboard")
+  (setopt dashboard-startup-banner 'logo)
+  (setopt dashboard-projects-backend 'projectile)
+  (setopt dashboard-items '((recents   . 5)
+                            (bookmarks . 5)
+                            (projects  . 5)
+                            (agenda    . 5)
+                            (registers . 5)))
+  (setopt dashboard-display-icons-p t)
+  (setopt dashboard-icon-type 'nerd-icons)
+  (setopt dashboard-set-file-icons t)
+  (setopt dashboard-startupify-list '(dashboard-insert-banner
+                                      dashboard-insert-newline
+                                      dashboard-insert-banner-title
+                                      dashboard-insert-newline
+                                      dashboard-insert-navigator
+                                      dashboard-insert-newline
+                                      dashboard-insert-init-info
+                                      dashboard-insert-items
+                                      dashboard-insert-newline
+                                      dashboard-insert-footer))
+  ;;(setopt dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
   )
 
 (use-package votd

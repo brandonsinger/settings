@@ -5,7 +5,7 @@
 (use-package vertico
   :init
   (vertico-mode 1)
-  (setq vertico-cycle t)
+  (setopt vertico-cycle t)
   :bind
   (:map vertico-map
         ("<prior>" . vertico-scroll-down)
@@ -18,9 +18,9 @@
 
 (use-package orderless
   :init
-  (setq completion-styles '(orderless)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
+  (setopt completion-styles '(orderless)
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles . (partial-completion))))))
 
 (use-package marginalia
   :after vertico
@@ -31,8 +31,8 @@
   :after projectile
   :init
   (recentf-mode 1)
-  (setq recentf-max-menu-items 25)
-  (setq recentf-max-saved-items 250)
+  (setopt recentf-max-menu-items 25)
+  (setopt recentf-max-saved-items 250)
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :bind
   (
@@ -84,11 +84,11 @@
   :bind
   (:map corfu-map ("<tab>" . corfu-complete))
   :config
-  (setq tab-always-indent 'complete)
-  (setq corfu-preview-current nil)
-  (setq corfu-min-width 20)
+  (setopt tab-always-indent 'complete)
+  (setopt corfu-preview-current nil)
+  (setopt corfu-min-width 20)
 
-  (setq corfu-popupinfo-delay '(5 . 1))
+  (setopt corfu-popupinfo-delay '(5 . 1))
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
   ;; Sort by input history (no need to modify `corfu-sort-function').

@@ -9,7 +9,7 @@
    ("\\.html?\\'" . web-mode)
    ("\\.html.j2\\'" . web-mode))
   :config
-  (setq web-mode-enable-auto-indentation nil)
+  (setopt web-mode-enable-auto-indentation nil)
   )
 
 (use-package yaml-mode

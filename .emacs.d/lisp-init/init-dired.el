@@ -10,7 +10,7 @@
   :custom
   (dired-listing-switches "-alh --group-directories-first --time-style=long-iso")
   :init
-  (setq dired-auto-revert-buffer t)
+  (setopt dired-auto-revert-buffer t)
   )
 (use-package dired-subtree
   :after dired
@@ -21,7 +21,7 @@
     ("<backtab>" . dired-subtree-remove)
     ("S-TAB" . dired-subtree-remove))
   :config
-  (setq dired-subtree-use-backgrounds nil))
+  (setopt dired-subtree-use-backgrounds nil))
 
 (provide 'init-dired)
 ;;; init-dired.el ends here
