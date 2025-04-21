@@ -27,5 +27,10 @@
    ;; Child and parent headings are seperated by a /.
    org-sticky-header-outline-path-separator " / "))
 
+(use-package verb
+  :custom
+  (verb-auto-kill-response-buffers t)
+  )
+
 (provide 'init-org)
 ;;; init-org.el ends here
