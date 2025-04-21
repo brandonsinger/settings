@@ -19,6 +19,11 @@
 ;;       mode-line-misc-info
 ;;       ))
 
+(setq initial-frame-alist
+      '((width . 130)
+        (height . 42)
+        (left . 1.0)
+        (top . 50)))
 
 (setq browse-url-browser-function 'eww-browse-url)
 (use-package elfeed
