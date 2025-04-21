@@ -45,6 +45,7 @@
   )
 
 (use-package yasnippet
+  :diminish
   :init
   (yas-global-mode))
 

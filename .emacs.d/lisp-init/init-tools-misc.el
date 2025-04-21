@@ -77,5 +77,17 @@
 (use-package vundo
   :commands (vundo))
 
+(use-package goggles
+  :hook ((prog-mode text-mode) . goggles-mode)
+  :config
+  (setq-default goggles-pulse t)) ;; set to nil to disable pulsing
+(defun my/pulse-current-region (&rest _)
+  "Pulse the current implicit or active region."
+  (if mark-active
+      (pulse-momentary-highlight-region (region-beginning) (region-end))
+    (pulse-momentary-highlight-region (mark) (point))))
+(advice-add #'kill-ring-save :before #'my/pulse-current-region)
+
+
 (provide 'init-tools-misc)
 ;;; init-tools-misc.el ends here
