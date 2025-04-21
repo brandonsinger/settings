@@ -27,6 +27,7 @@
   ;; Load the theme of choice:
   :config
   (load-theme 'ef-bio :no-confirm)
+  (setq scroll-margin 5)
   :bind
   ("<f5>" . ef-themes-toggle))
 

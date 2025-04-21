@@ -3,7 +3,7 @@
 ;;; Code:
 
 ;; load a basic theme for now to prevent blinding white
-(load-theme 'modus-vivendi)
+(load-theme 'modus-vivendi-tinted)
 
 
 
@@ -70,6 +70,8 @@
 (setopt confirm-kill-emacs #'y-or-n-p)
 
 
+(setopt scroll-step 1)
+(setopt scroll-margin 5)
 
 
 ;; From https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration/
