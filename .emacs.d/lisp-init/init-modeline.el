@@ -10,8 +10,10 @@
            display (min-width (5.0)))
           " "
           mode-line-buffer-identification
+          " "
           mode-line-position
           (vc-mode vc-mode)
+          " "
           mode-line-modes
           mode-line-misc-info
           ))
