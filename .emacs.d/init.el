@@ -51,7 +51,7 @@
   (with-demoted-errors "Error: %S" (require 'init-org))
   (with-demoted-errors "Error: %S" (require 'init-project))
   (with-demoted-errors "Error: %S" (require 'init-shell))
-  (with-demoted-errors "Error: %S" (require 'init-tool-lsp))
+  (with-demoted-errors "Error: %S" (require 'init-tools-ide))
   (with-demoted-errors "Error: %S" (require 'init-tool-magit))
   (with-demoted-errors "Error: %S" (require 'init-tools-clean))
   (with-demoted-errors "Error: %S" (require 'init-tools-misc))
