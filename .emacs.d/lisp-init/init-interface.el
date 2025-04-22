@@ -62,6 +62,12 @@
 (use-package consult-todo
   :after (consult))
 
+(use-package consult-lsp
+  :after (consult))
+
+(use-package consult-flycheck
+  :after (consult))
+
 (use-package embark
   :bind
   (("C-\\" . embark-act)         ;; pick some comfortable binding

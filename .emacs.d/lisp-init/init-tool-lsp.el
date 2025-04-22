@@ -49,16 +49,20 @@
   :init
   (yas-global-mode))
 
-(use-package flymake
-  :ensure nil
-  :defer t
-  :hook (prod-mode . flymake-mode)
-  :custom
-  (flymake-margin-indicators-string
-   `((error "!" compilation-error)
-     (warning "?" compilation-warning)
-     (note "i" compilation-info)))
-  )
+(use-package company
+  :diminish)
+
+(use-package company-ansible
+  :after (company)
+  :config
+  (add-to-list 'company-backends 'company-ansible))
+
+(use-package company-web
+  :after (company)
+  :config
+  (add-hook 'web-mode-hook (lambda ()
+                             (set (make-local-variable 'company-backends) '(company-web-html))
+                             (company-mode t))))
 
 (provide 'init-tool-lsp)
 ;;; init-tool-lsp.el ends here

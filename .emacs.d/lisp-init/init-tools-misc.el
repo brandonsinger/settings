@@ -78,6 +78,7 @@
   :commands (vundo))
 
 (use-package goggles
+  :diminish
   :hook ((prog-mode text-mode) . goggles-mode)
   :config
   (setq-default goggles-pulse t)) ;; set to nil to disable pulsing
@@ -92,6 +93,8 @@
   :config
   (su-mode +1))
 
+(use-package daemons
+  :commands (daemons))
 
 (provide 'init-tools-misc)
 ;;; init-tools-misc.el ends here
