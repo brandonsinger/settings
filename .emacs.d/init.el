@@ -59,6 +59,7 @@
   (with-demoted-errors "Error: %S" (require 'init-visuals))
   (with-demoted-errors "Error: %S" (require 'init-window))
   (with-demoted-errors "Error: %S" (require 'init-workspace))
+  (with-demoted-errors "Error: %S" (require 'init-not-tools))
   )
 
 
