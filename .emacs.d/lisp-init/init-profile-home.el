@@ -2,6 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
+(defvar my/ollam-model "qwen2.5-coder:7b")
+
+
+
 ;; not working:
 ;; (setq projectile-mode-line-function '(lambda () (format " Proj[%s]" (projectile-project-name))))
 ;; (setq mode-line-format
@@ -41,8 +45,7 @@
 (use-package mastodon
   :config
   (setq mastodon-instance-url "https://techhub.social"
-        mastodon-active-user "oshecho")
-  )
+        mastodon-active-user "oshecho"))
 
 (use-package denote
   :disabled
@@ -73,13 +76,26 @@
   ("C-c n n" . denote)
   ("C-c n j" . denote-journal-extras-new-or-existing-entry)
   ("C-c n r" . denote-rename-file)
-  ("C-c n R" . denote-rename-file-using-front-matter)
-  )
+  ("C-c n R" . denote-rename-file-using-front-matter))
+
+(use-package magit-gptcommit
+  :disabled
+  :after magit
+  :init
+  (require 'llm-ollama)
+  :bind (:map git-commit-mode-map
+              ("C-c C-g" . magit-gptcommit-generate))
+  :custom
+  (magit-gptcommit-llm-provider (make-llm-ollama :chat-model my/ollam-model)))
 
 (setq echo-install-lsp-servers-list `(html-ls js-ls json-ls css-ls python-ls rs-ls))
 
 (setopt chatgpt-shell-ollama-api-url-base "http://127.0.0.1:11434")
-(setopt chatgpt-shell-model-version "qwen2.5-coder:7b")
+(setopt chatgpt-shell-model-version my/ollam-model)
+
+(setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
+(setopt aidermacs-default-model my/ollam-model)
+
 
 (message "'Home desktop' system changes loaded")
 (provide 'init-profile-home)

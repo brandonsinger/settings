@@ -26,6 +26,11 @@
 ;; - consult has many more feature that I dont use
 ;; - dwim-shell-command
 ;; - maybe https://github.com/progfolio/elpaca/wiki/Automatic-Rebuilding-of-Packages-on-Restart
+;; - maybe habitica ?
+;; - switch to using pretty-hydra?
+;; - replace-from-region?
+;; - sqlformat sounds like a good thing to use
+
 
 ;; - use occur, make note somewhere?
 

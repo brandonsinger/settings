@@ -15,8 +15,9 @@
 (custom-set-variables
  '(safe-local-variable-values '((magit-todos-exclude-globs "htdocs_wp/*"))))
 
-
 (setq echo-install-lsp-servers-list `(ansible-ls html-ls js-ls json-ls css-ls iph))
+
+;; TODO: try out phpunit.el
 
 (message "'Work' system changes loaded")
 

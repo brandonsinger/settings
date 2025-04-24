@@ -18,17 +18,24 @@
   :config
   (add-hook 'elpaca-after-init-hook #'global-flycheck-mode))
 
+;; TODO: might remove this one
+(use-package flycheck-indicator
+  :after (flycheck)
+  :hook (flycheck-mode . flycheck-indicator-mode))
+
+;; TODO: add to the projectile-command-map too
+(use-package flycheck-projectile
+  :commands (flycheck-projectile-list-errors))
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0.5)
-  )
+  (setq which-key-idle-delay 0.5))
 
 (use-package amx
   :config
-  (amx-mode)
-  )
+  (amx-mode))
 
 (use-package clipetty
   :diminish
@@ -36,8 +43,7 @@
 
 (use-package devdocs
   :bind
-  ("C-h D" . devdocs-lookup)
-  )
+  ("C-h D" . devdocs-lookup))
 
 (use-package eww
   :ensure nil
@@ -68,8 +74,7 @@
 
 (use-package eldoc
   :ensure nil
-  :diminish
-  )
+  :diminish)
 
 (use-package git-timemachine
   :commands (git-timemachine))

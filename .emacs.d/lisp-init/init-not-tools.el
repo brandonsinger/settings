@@ -5,4 +5,7 @@
 (use-package fireplace
   :commands (fireplace))
 
+(use-package snow
+  :commands (snow))
+
 ;;; init-not-tools.el ends here

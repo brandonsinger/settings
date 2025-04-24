@@ -39,9 +39,7 @@
 
 (use-package conf-mode
   :ensure nil
-  :mode ("\\.env\\..*\\'" "\\.env\\'")
-  :init
-  (add-to-list 'auto-mode-alist '("\\.env\\'" . conf-mode)))
+  :mode ("\\.env\\..*\\'" . conf-mode))
 
 ;; need 'prettier' package
 (use-package prettier
@@ -61,5 +59,8 @@
 (push '("\\.\\(?:frm\\|\\(?:ba\\|cl\\|vb\\)s\\)\\'" . visual-basic-mode)
       auto-mode-alist)
 
-      (provide 'init-modes)
+(use-package ssh-config-mode
+  :defer t)
+
+(provide 'init-modes)
 ;;; init-modes.el ends here
