@@ -9,12 +9,10 @@
    ("\\.html?\\'" . web-mode)
    ("\\.html.j2\\'" . web-mode))
   :config
-  (setopt web-mode-enable-auto-indentation nil)
-  )
+  (setopt web-mode-enable-auto-indentation nil))
 
 (use-package yaml-mode
-  :mode ("\\.yaml\\'" "\\.yml\\'")
-  )
+  :mode ("\\.yaml\\'" "\\.yml\\'"))
 
 (setq web-mode-engines-alist
       '(
@@ -41,7 +39,7 @@
   :ensure nil
   :mode ("\\.env\\..*\\'" . conf-mode))
 
-;; need 'prettier' package
+(my-need-linux-package "prettier")
 (use-package prettier
   :ensure t
   :hook ((css-mode

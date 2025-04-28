@@ -54,6 +54,7 @@
 
 
 ;;; Need package 'enchant' and ('nuspell' or 'hunspell' or 'aspell')
+(my-need-linux-package "enchant")
 (use-package jinx
   :after (vertico)
   :diminish

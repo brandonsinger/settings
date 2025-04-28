@@ -39,6 +39,12 @@
 
 (add-to-list 'load-path (expand-file-name "lisp-init" user-emacs-directory))
 
+(defvar my-needed-linux-packages '())
+(defun my-need-linux-package (package-name)
+  "Add PACKAGE-NAME to the list `my-needed-linux-packages`."
+  (setq my-needed-linux-packages
+        (append my-needed-linux-packages (list package-name))))
+
 (require 'init-basic)
 (require 'init-path)
 (require 'init-elpaca)
@@ -72,5 +78,8 @@
   (require 'init-profile-work))
 (when (string= (system-name) "echo-bedroom")
   (require 'init-profile-home))
+
+(elpaca-wait)
+(message "Linux packages needed: %S" my-needed-linux-packages)
 
 ;;; init.el ends here
