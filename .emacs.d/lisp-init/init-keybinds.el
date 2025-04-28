@@ -7,6 +7,9 @@
                             (kill-line 0)
                             (indent-according-to-mode)))
 
+(global-set-key (kbd "C-x s") 'save-buffer)
+
+
 (use-package selected
   :diminish
   :bind (:map selected-keymap
