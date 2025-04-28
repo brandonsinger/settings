@@ -1,4 +1,4 @@
-;;; init-tool-lsp.el --- Sets up IDE like tools -*- lexical-binding: t; -*-
+;;; init-tools-ide.el --- Sets up IDE like tools -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;; Use M-x lsp-doctor to validate if your lsp-mode is properly configured.
@@ -64,5 +64,5 @@
                              (set (make-local-variable 'company-backends) '(company-web-html))
                              (company-mode t))))
 
-(provide 'init-tool-lsp)
-;;; init-tool-lsp.el ends here
+(provide 'init-tools-ide)
+;;; init-tools-ide.el ends here

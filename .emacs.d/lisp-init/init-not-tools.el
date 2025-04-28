@@ -8,4 +8,5 @@
 (use-package snow
   :commands (snow))
 
+(provide 'init-not-tools)
 ;;; init-not-tools.el ends here
