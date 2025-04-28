@@ -7,6 +7,7 @@
 
 (use-package magit
   :after (transient)
+  :commands (magit-status)
   :config
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
   (setq magit-repository-directories '(("~/projects" . 1)))
@@ -28,9 +29,9 @@
   )
 
 (use-package magit-todos
+  :after (magit)
   :init
-  (magit-todos-mode)
-  )
+  (magit-todos-mode))
 
 ;;(use-package git-timemachine)
 

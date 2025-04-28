@@ -2,6 +2,8 @@
 
 ;;; Code:
 
+(setopt use-package-compute-statistics t)
+
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
