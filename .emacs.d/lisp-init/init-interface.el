@@ -58,8 +58,6 @@
   :after projectile
   :init
   (recentf-mode 1)
-  (setopt recentf-max-menu-items 25)
-  (setopt recentf-max-saved-items 250)
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :bind
   (
@@ -84,6 +82,9 @@
     (when-let (key (alist-get this-command consult-initial-narrow-config))
       (setq unread-command-events (append unread-command-events (list key 32)))))
   (add-hook 'minibuffer-setup-hook #'consult-initial-narrow)
+  :custom
+  (recentf-max-menu-items 25)
+  (recentf-max-saved-items 250)
   )
 
 (use-package consult-todo
