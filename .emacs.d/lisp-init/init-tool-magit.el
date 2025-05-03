@@ -3,10 +3,7 @@
 ;;;  use ~magit-list-repositories~ to get a status list of all projects
 ;;; Code:
 
-(use-package transient)
-
 (use-package magit
-  :after (transient)
   :commands (magit-status)
   :config
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
@@ -22,16 +19,15 @@
            ((:right-align t)
             (:help-echo "Local changes not in upstream")))
           ("Path"    99 magit-repolist-column-path ())))
-  (setq magit-save-repository-buffers 'dontask)
-  (setq magit-log-margin '(t "%Y-%m-%d" magit-log-margin-width t 18))
   :custom
   (magit-format-file-function #'magit-format-file-nerd-icons)
+  (magit-save-repository-buffers 'dontask)
+  (magit-log-margin '(t "%Y-%m-%d" magit-log-margin-width t 18))
   )
 
 (use-package magit-todos
   :after (magit)
-  :init
-  (magit-todos-mode))
+  :config (magit-todos-mode 1))
 
 ;;(use-package git-timemachine)
 

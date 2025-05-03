@@ -18,6 +18,7 @@
 (setq echo-install-lsp-servers-list `(ansible-ls html-ls js-ls json-ls css-ls iph))
 
 ;; TODO: try out phpunit.el
+;; TODO: use purple-rocketchat to libpurple to BitlBee to IRC (use ERC?)
 
 (message "'Work' system changes loaded")
 
