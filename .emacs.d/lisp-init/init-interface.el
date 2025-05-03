@@ -2,25 +2,52 @@
 ;;; Commentary:
 ;;; Code:
 
+;; for minibuffer completions
 (use-package vertico
   :init
   (vertico-mode 1)
-  (setopt vertico-cycle t)
+  :custom
+  (vertico-cycle t)
   :bind
   (:map vertico-map
         ("<prior>" . vertico-scroll-down)
         ("<next>" . vertico-scroll-up)))
 
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles . (basic partial-completion orderless))))))
+
+;; for in-line completions
+(use-package corfu
+  :hook
+  (elpaca-after-init . global-corfu-mode)
+  :bind
+  (:map corfu-map ("<tab>" . corfu-complete))
+  :config
+  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+
+  ;; Sort by input history (no need to modify `corfu-sort-function').
+  (with-eval-after-load 'savehist
+    (corfu-history-mode 1)
+    (add-to-list 'savehist-additional-variables 'corfu-history))
+  :custom
+  (corfu-cycle t)
+  (tab-always-indent 'complete)
+  (corfu-preview-current nil)
+  (corfu-min-width 20)
+  (corfu-popupinfo-delay '(5 . 1)))
+
+(use-package corfu-terminal
+  :config
+  (unless (display-graphic-p)
+    (corfu-terminal-mode +1)))
+
 (use-package savehist
   :ensure nil
   :init
   (savehist-mode 1))
-
-(use-package orderless
-  :init
-  (setopt completion-styles '(orderless)
-          completion-category-defaults nil
-          completion-category-overrides '((file (styles . (partial-completion))))))
 
 (use-package marginalia
   :after vertico
@@ -41,7 +68,7 @@
    ("M-g M-g" . consult-goto-line)
    ("C-s" . consult-line)
    ("C-f" . consult-imenu))
-  ;; maybe bind consult-project-buffer to something too?
+  ;; TODO: bind consult-outline to something
   :config
   (consult-customize
    consult-theme :preview-key 'any
@@ -62,11 +89,14 @@
 (use-package consult-todo
   :after (consult))
 
+;; TODO: test this out in a rest project? then determine to remove it or not.
 (use-package consult-lsp
   :after (consult))
 
 (use-package consult-flycheck
-  :after (consult))
+  :after (consult)
+  :bind
+  ("C-c E" . consult-flycheck))
 
 (use-package embark
   :bind
@@ -87,45 +117,24 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
-(use-package corfu
-  :hook
-  (elpaca-after-init . global-corfu-mode)
-  :bind
-  (:map corfu-map ("<tab>" . corfu-complete))
-  :config
-  (setopt tab-always-indent 'complete)
-  (setopt corfu-preview-current nil)
-  (setopt corfu-min-width 20)
-
-  (setopt corfu-popupinfo-delay '(5 . 1))
-  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
-
-  ;; Sort by input history (no need to modify `corfu-sort-function').
-  (with-eval-after-load 'savehist
-    (corfu-history-mode 1)
-    (add-to-list 'savehist-additional-variables 'corfu-history))
-  :custom
-  (corfu-cycle t)
-  )
-
-(use-package corfu-terminal
-  :config
-  (unless (display-graphic-p)
-    (corfu-terminal-mode +1))
-  )
-
 (use-package kind-icon
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-;; TODO: switch to registers?
+;; TODO: switch to bookmarks? bookmarks+?
 (use-package bm
   :bind
   ("<C-left>" . bm-toggle)
   ("<C-up>" . bm-previous)
   ("<C-down>" . bm-next)
-  )
+  ;; TODO: try using these instead?
+  ("<f2>" . bm-next)
+  ("S-<f2>" . bm-previous)
+  ("C-<f2>" . bm-toggle)
+  :custom
+  (bm-highlight-style 'bm-highlight-only-fringe)
+  (bm-marker 'bm-marker-right))
 
 (provide 'init-interface)
 ;;; init-interface.el ends here

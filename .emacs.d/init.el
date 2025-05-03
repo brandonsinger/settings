@@ -34,6 +34,8 @@
 
 ;; - use occur, make note somewhere?
 
+;;; Always do:
+;; - Shouldn't be using setopt in use-package macros
 
 ;;; Code:
 
