@@ -15,6 +15,7 @@
    ("C-x C-a C-a" . activities-resume)
    ("C-x C-a C-s" . activities-suspend)
    ("C-x C-a C-k" . activities-kill)
+   ("C-x C-a r" . activities-rename)
    ("C-x C-a RET" . activities-switch)
    ("C-x C-a b" . activities-switch-buffer)
    ("C-x C-a g" . activities-revert)

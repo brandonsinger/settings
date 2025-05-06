@@ -99,6 +99,8 @@
   :config
   (su-mode +1))
 
+;; TODO: add persistant-scratch
+
 (use-package daemons
   :commands (daemons))
 

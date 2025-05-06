@@ -30,6 +30,7 @@
 ;; - switch to using pretty-hydra?
 ;; - replace-from-region?
 ;; - sqlformat sounds like a good thing to use
+;; - use auto-side-windows https://github.com/MArpogaus/auto-side-windows
 
 
 ;; - use occur, make note somewhere?
