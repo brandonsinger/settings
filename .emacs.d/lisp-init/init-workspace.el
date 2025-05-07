@@ -2,13 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
+
+;; TODO: use something else or customize it better
 (use-package activities
   :init
   (activities-mode)
   (activities-tabs-mode)
   ;; Prevent `edebug' default bindings from interfering.
   (setq edebug-inhibit-emacs-lisp-mode-bindings t)
-  (setq activities-bookmark-store t)
   :bind
   (("C-x C-a C-n" . activities-new)
    ("C-x C-a C-d" . activities-define)
