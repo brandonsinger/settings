@@ -3,6 +3,7 @@
 ;;; Code:
 
 (use-package tab-bar
+  :ensure nil
   :bind
   (("C-x t <left>" . tab-bar-switch-to-prev-tab)
    ("C-x t <right>" . tab-bar-switch-to-next-tab)))
