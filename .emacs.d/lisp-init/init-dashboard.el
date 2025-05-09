@@ -55,10 +55,18 @@
   (add-to-list 'dashboard-items '(ls-directories . 5)))
 
 (use-package votd
-  :ensure(:host github :repo "kristjoc/votd")
+  :ensure t
   :after dashboard
   :config
-  (setq dashboard-footer-messages (list (get-votd)))
+  (let ((verse (votd-get-verse)))
+    (setq dashboard-footer-messages (list verse))
+    (setq initial-scratch-message
+          (concat ";;; *scratch* ;;;\n\n"
+                  (string-join
+                   (mapcar (lambda (line) (concat ";;; " line))
+                           (split-string verse "\n"))
+                   "\n")
+                  "\n\n")))
   :custom
   (votd-bible-version "AMP"))
 
