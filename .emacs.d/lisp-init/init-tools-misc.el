@@ -66,12 +66,13 @@
   ("M-$" . jinx-correct)
   ("C-M-$" . jinx-languages)
   :config
-  ;; not quite sure that this multiform thing actually does, but its recommended
-  (setq vertico-multiform-commands
-        '((jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))))
-  (vertico-multiform-mode 1))
+  (vertico-multiform-mode 1)
+  :custom
+  (vertico-multiform-commands
+   '((jinx grid (vertico-grid-annotate . 20) (vertico-count . 4)))))
 
-(use-package free-keys)
+(use-package free-keys
+  :commands (free-keys))
 
 (use-package eldoc
   :ensure nil
