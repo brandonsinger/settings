@@ -135,9 +135,11 @@
   ("<f2>" . bm-next)
   ("S-<f2>" . bm-previous)
   ("C-<f2>" . bm-toggle)
-  :custom
-  (bm-highlight-style 'bm-highlight-only-fringe)
-  (bm-marker 'bm-marker-right))
+  :config
+  (if (display-graphic-p)
+      (progn (setopt bm-highlight-style 'bm-highlight-only-fringe)
+             (setopt bm-marker 'bm-marker-right))
+    (setopt bm-highlight-style 'bm-highlight-only-line)))
 
 (provide 'init-interface)
 ;;; init-interface.el ends here
