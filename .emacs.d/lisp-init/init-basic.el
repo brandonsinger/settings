@@ -73,6 +73,7 @@
 (setopt scroll-step 1)
 (setopt scroll-margin 5)
 
+(setopt vc-follow-symlinks t)
 
 ;; From https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration/
 (defun prot/keyboard-quit-dwim ()

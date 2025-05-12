@@ -1,7 +1,8 @@
-;;; -*- lexical-binding: t; -*-
+;;; init-visuals.el --- Some visual stuff -*- lexical-binding: t; -*-
+;;; Commentary:
 ;;; Code:
 
-(setq visible-bell t)
+(setopt visible-bell t)
 
 (global-display-line-numbers-mode t)
 ;; Disable line numbers for some modes
@@ -30,6 +31,7 @@
   (mode-line ((t (:height 1.1))))
   )
 
+(my-need-linux-package "Roboto Mono")
 (when (member "Roboto Mono" (font-family-list))
   (set-face-attribute 'default nil :font "Roboto Mono" :height 108)
   (set-face-attribute 'fixed-pitch nil :family "Roboto Mono"))
