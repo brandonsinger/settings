@@ -12,6 +12,7 @@
   (vertico-cycle t)
   :bind
   (:map vertico-map
+        ("TAB" . minibuffer-complete)
         ("<prior>" . vertico-scroll-down)
         ("<next>" . vertico-scroll-up)))
 
