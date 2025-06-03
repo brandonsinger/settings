@@ -57,6 +57,8 @@
   :init
   (marginalia-mode 1))
 
+
+;; Remember: "At a command prompt type M-n and typically Consult will insert the symbol or thing at point into the input."
 (use-package consult
   :after projectile
   :init
@@ -68,12 +70,15 @@
    ("C-x C-b" . consult-buffer)
    ("M-g M-g" . consult-goto-line)
    ("C-s" . consult-line)
-   ("C-f" . consult-imenu))
+   ("C-f" . consult-imenu)
+   ("M-s ." . consult-line-thing-at-point))
   ;; TODO: bind consult-outline to something
   :config
+  (defalias 'consult-line-thing-at-point 'consult-line)
   (consult-customize
    consult-theme :preview-key 'any
-   consult-line :prompt "Search: " :preview-key 'any
+   consult-line :prompt "Search: " :preview-key 'any :add-history (seq-some #'thing-at-point '(region symbol))
+   consult-line-thing-at-point :initial (thing-at-point 'symbol)
    consult--source-buffer :hidden t :default nil)
   (setq consult-project-root-function #'projectile-project-root)
 
@@ -87,8 +92,7 @@
   (add-hook 'minibuffer-setup-hook #'consult-initial-narrow)
   :custom
   (recentf-max-menu-items 25)
-  (recentf-max-saved-items 250)
-  )
+  (recentf-max-saved-items 250))
 
 (use-package consult-todo
   :after (consult))
