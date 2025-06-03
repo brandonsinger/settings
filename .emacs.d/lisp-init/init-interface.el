@@ -57,6 +57,19 @@
   :init
   (marginalia-mode 1))
 
+(defvar my-consult-line-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\C-s" #'previous-history-element)
+    map))
+(defun consult-find-file-with-preview (prompt &optional dir default mustmatch initial pred)
+  (interactive)
+  (let ((default-directory (or dir default-directory))
+        (minibuffer-completing-file-name t))
+    (consult--read #'read-file-name-internal :state (consult--file-preview)
+                   :prompt prompt
+                   :initial initial
+                   :require-match mustmatch
+                   :predicate pred)))
 
 ;; Remember: "At a command prompt type M-n and typically Consult will insert the symbol or thing at point into the input."
 (use-package consult
@@ -77,10 +90,11 @@
   (defalias 'consult-line-thing-at-point 'consult-line)
   (consult-customize
    consult-theme :preview-key 'any
-   consult-line :prompt "Search: " :preview-key 'any :add-history (seq-some #'thing-at-point '(region symbol))
+   consult-line :prompt "Search: " :preview-key 'any :add-history (seq-some #'thing-at-point '(region symbol)) :keymap my-consult-line-map
    consult-line-thing-at-point :initial (thing-at-point 'symbol)
    consult--source-buffer :hidden t :default nil)
   (setq consult-project-root-function #'projectile-project-root)
+  (setq read-file-name-function #'consult-find-file-with-preview)
 
   ;; Configure initial narrowing per command
   (defvar consult-initial-narrow-config
