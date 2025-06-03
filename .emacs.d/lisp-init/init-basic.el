@@ -75,6 +75,8 @@
 
 (setopt vc-follow-symlinks t)
 
+(setopt delete-by-moving-to-trash t)
+
 ;; From https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration/
 (defun prot/keyboard-quit-dwim ()
   "Do-What-I-Mean behaviour for a general `keyboard-quit'.
