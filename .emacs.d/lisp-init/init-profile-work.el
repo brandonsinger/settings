@@ -16,8 +16,14 @@
   (prog-mode . ws-butler-mode)
   (text-mode . ws-butler-mode))
 
+
+;; TODO: need a better way, I shouldn't need to do this
 (custom-set-variables
- '(safe-local-variable-values '((magit-todos-exclude-globs "htdocs_wp/*"))))
+ '(safe-local-variable-values '((magit-todos-exclude-globs "htdocs_wp/*" "js/other*" "lib/others/*"
+                                                           "lib/smarty/*" "lib/HTMLPurifier/*"
+                                                           "lib/google-api-php-client/*"))))
+
+
 
 (setq echo-install-lsp-servers-list `(ansible-ls html-ls js-ls json-ls css-ls iph))
 
