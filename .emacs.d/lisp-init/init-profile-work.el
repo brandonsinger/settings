@@ -11,6 +11,10 @@
 ;; eww, works but is too slow
 ;; (setq projectile-indexing-method 'native)
 
+(use-package ws-butler
+  :hook
+  (prog-mode . ws-butler-mode)
+  (text-mode . ws-butler-mode))
 
 (custom-set-variables
  '(safe-local-variable-values '((magit-todos-exclude-globs "htdocs_wp/*"))))
