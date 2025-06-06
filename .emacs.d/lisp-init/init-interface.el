@@ -76,7 +76,8 @@
   :after projectile
   :init
   (recentf-mode 1)
-  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :hook
+  (completion-list-mode . consult-preview-at-point-mode)
   :bind
   (
    ("C-x b" . consult-buffer)
@@ -159,6 +160,12 @@
       (progn (setopt bm-highlight-style 'bm-highlight-only-fringe)
              (setopt bm-marker 'bm-marker-right))
     (setopt bm-highlight-style 'bm-highlight-only-line)))
+
+(use-package smartparens
+  :hook
+  ((prog-mode text-mode) . smartparens-mode)
+  :config
+  (require 'smartparens-config))
 
 (provide 'init-interface)
 ;;; init-interface.el ends here
