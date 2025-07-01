@@ -3,7 +3,23 @@
 ;;; Code:
 
 
+;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./,
 (setq tramp-default-method "ssh")
+(setq remote-file-name-inhibit-locks t
+      tramp-use-scp-direct-remote-copying t
+      remote-file-name-inhibit-auto-save-visited t)
+(setq tramp-copy-size-limit (* 1024 1024) ;; 1MB
+      tramp-verbose 2)
+(connection-local-set-profile-variables
+ 'remote-direct-async-process
+ '((tramp-direct-async-process . t)))
+(connection-local-set-profiles
+ '(:application tramp :machine "server")
+ 'remote-direct-async-process)
+(setq magit-tramp-pipe-stty-settings 'pty)
+(with-eval-after-load 'tramp
+  (with-eval-after-load 'compile
+    (remove-hook 'compilation-mode-hook #'tramp-compile-disable-ssh-controlmaster-options)))
 
 (midnight-mode +1)
 
@@ -44,6 +60,17 @@
 (use-package devdocs
   :bind
   ("C-h D" . devdocs-lookup))
+(use-package devdocs-browser
+  :custom
+  (devdocs-data-dir (expand-file-name  "var/devdocs-browser"  user-emacs-directory))
+  (devdocs-browser-cache-directory (expand-file-name  "var/devdocs-browser/cache"  user-emacs-directory))
+  (devdocs-browser-data-directory (expand-file-name  "var/devdocs-browser/data" user-emacs-directory))
+  :hook
+  (php-ts-mode . (lambda()(setq-local devdocs-browser-active-docs '("php"))))
+  (rust-ts-mode . (lambda()(setq-local devdocs-browser-active-docs '("rust"))))
+  (js-ts-mode . (lambda()(setq-local devdocs-browser-active-docs '("javascript"))))
+  (html-ts-mode . (lambda()(setq-local devdocs-browser-active-docs '("html"))))
+  )
 
 (use-package eww
   :ensure nil
