@@ -24,9 +24,13 @@
                                                            "lib/google-api-php-client/*"))))
 
 (use-package ansible
-  :hook (yaml-mode . ansible))
+  :hook
+  (yaml-mode . ansible)
+  (yaml-ts-mode . ansible))
 (use-package ansible-doc
-  :hook (yaml-mode . ansible-doc-mode))
+  :hook
+  (yaml-mode . ansible-doc-mode)
+  (yaml-ts-mode . ansible-doc-mode))
 
 (setq echo-install-lsp-servers-list `(ansible-ls html-ls js-ls json-ls css-ls iph))
 
