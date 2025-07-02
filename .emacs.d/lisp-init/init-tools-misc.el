@@ -135,7 +135,14 @@
   ("C-h x" . helpful-command)
   ("C-h o" . helpful-at-point))
 
-;; TODO: add persistant-scratch
+(use-package proced
+  :ensure nil
+  :custom
+  (proced-enable-color-flag t)
+  (proced-auto-update-flag 'visible "Update only visible buffers")
+  (proced-tree-flag t))
+
+;; TODO: add persistant-scratch?
 
 (use-package daemons
   :commands (daemons))
