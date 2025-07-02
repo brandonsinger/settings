@@ -23,7 +23,10 @@
                                                            "lib/smarty/*" "lib/HTMLPurifier/*"
                                                            "lib/google-api-php-client/*"))))
 
-
+(use-package ansible
+  :hook (yaml-mode . ansible))
+(use-package ansible-doc
+  :hook (yaml-mode . ansible-doc-mode))
 
 (setq echo-install-lsp-servers-list `(ansible-ls html-ls js-ls json-ls css-ls iph))
 
