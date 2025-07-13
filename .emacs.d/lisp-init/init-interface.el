@@ -125,6 +125,10 @@
   :bind
   (("C-\\" . embark-act)         ;; pick some comfortable binding
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  :init
+  ;; Using embark-prefix-help-command instead of which-key
+  (setq prefix-help-command #'embark-prefix-help-command)
+
   :config
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist

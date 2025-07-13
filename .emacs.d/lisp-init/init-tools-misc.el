@@ -43,12 +43,6 @@
 (use-package flycheck-projectile
   :commands (flycheck-projectile-list-errors))
 
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.5))
-
 (use-package amx
   :config
   (amx-mode))

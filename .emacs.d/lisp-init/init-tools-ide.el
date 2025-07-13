@@ -29,8 +29,7 @@
          (css-mode . lsp)
          (js-mode . lsp)
          (python-mode . lsp)
-         (rust-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
+         (rust-mode . lsp))
   :commands lsp
   :config
   (echo-install-lsp-servers echo-install-lsp-servers-list)
