@@ -45,6 +45,8 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
+;; use elpaca-menus-update, elpaca-menu-melpa to update melpa. TODO: find an automated way?
+
 ;; setup some use-package stuff
 (elpaca elpaca-use-package
   (elpaca-use-package-mode)
