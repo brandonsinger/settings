@@ -101,13 +101,27 @@
 (use-package free-keys
   :commands (free-keys))
 
+;; Most of this from https://github.com/rileyrg/Emacs-Customisations?tab=readme-ov-file#eldoc
 (use-package eldoc
   :ensure nil
-  :diminish)
+  :diminish
+  :bind
+  ("C-." . rgr/eldoc-at-point)
+  :config
+  (global-eldoc-mode)
+  (defun rgr/eldoc-at-point()
+    (interactive)
+    (if eldoc-mode
+        (eldoc-box-help-at-point)
+      (message "eldoc not active"))))
+(use-package eldoc-box
+  :after eldoc)
+
 
 (use-package git-timemachine
   :commands (git-timemachine))
 
+;; TODO: bind to something?
 (use-package vundo
   :commands (vundo))
 
