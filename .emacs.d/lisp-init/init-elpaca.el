@@ -1,4 +1,6 @@
-;;; init-elpaca -*- lexical-binding: t; -*-
+;;; init-elpaca --- Setup Elpaca -*- lexical-binding: t; -*-
+
+;;; Commentary:
 
 ;;; Code:
 
@@ -46,8 +48,7 @@
 ;; setup some use-package stuff
 (elpaca elpaca-use-package
   (elpaca-use-package-mode)
-  (setopt use-package-always-ensure t)
-  )
+  (setopt use-package-always-ensure t))
 (use-package diminish :ensure (:wait t) :demand t)
 (use-package delight :ensure (:wait t) :demand t)
 
