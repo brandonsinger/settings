@@ -5,7 +5,7 @@
 (use-package ef-themes
   :demand t
   :init
-  (setq ef-themes-to-toggle '(ef-bio ef-eagle))
+  (setq ef-themes-to-toggle '(ef-elea-dark ef-eagle))
 
   (setq ef-themes-headings ; read the manual's entry or the doc string
         '((0 . (variable-pitch light 1.9))
@@ -26,8 +26,7 @@
 
   ;; Load the theme of choice:
   :config
-  (load-theme 'ef-bio :no-confirm)
-  (setq scroll-margin 5)
+  (load-theme 'ef-elea-dark :no-confirm)
   :bind
   ("<f5>" . ef-themes-toggle))
 
