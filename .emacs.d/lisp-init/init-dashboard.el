@@ -54,11 +54,11 @@
   :config
   (add-to-list 'dashboard-items '(ls-directories . 5)))
 
-(use-package votd
+(use-package bible-gateway
   :ensure t
   :after dashboard
   :config
-  (let ((verse (votd-get-verse)))
+  (let ((verse (bible-gateway-get-verse)))
     (setq dashboard-footer-messages (list verse))
     (setq initial-scratch-message
           (concat ";;; *scratch* ;;;\n\n"
@@ -68,7 +68,8 @@
                    "\n")
                   "\n\n")))
   :custom
-  (votd-bible-version "AMP"))
+  (bible-gateway-include-ref t)
+  (bible-gateway-bible-version "AMP"))
 
 (provide 'init-dashboard)
 ;;; init-dashboard.el ends here
