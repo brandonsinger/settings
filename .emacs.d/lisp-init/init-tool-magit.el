@@ -31,7 +31,8 @@
   :after (magit)
   :config (magit-todos-mode 1))
 
-;;(use-package git-timemachine)
+(use-package git-timemachine
+  :commands (git-timemachine))
 
 (provide 'init-tool-magit)
 ;;; init-tool-magit.el ends here

@@ -111,10 +111,6 @@
 (use-package eldoc-box
   :after eldoc)
 
-
-(use-package git-timemachine
-  :commands (git-timemachine))
-
 ;; TODO: bind to something?
 (use-package vundo
   :commands (vundo))
