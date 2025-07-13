@@ -68,14 +68,22 @@
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
-;; (use-package nerd-icons-dired
-;;   :if (display-graphic-p)
-;;   :hook
-;;   (dired-mode . nerd-icons-dired-mode))
-(use-package nerd-icons-multimodal
+(use-package nerd-icons-dired
   :if (display-graphic-p)
   :hook
-  ((archive-mode tar-mode dired-mode) . nerd-icons-multimodal-mode))
+  (dired-mode . nerd-icons-dired-mode))
+;; (use-package nerd-icons-multimodal
+;;   :if (display-graphic-p)
+;;   :hook
+;;   ((archive-mode tar-mode dired-mode) . nerd-icons-multimodal-mode))
+;; (use-package nerd-icons-grep
+;;   :if (display-graphic-p)
+;;   :init
+;;   (nerd-icons-grep-mode)
+;;   :custom
+;;   ;; This setting is a pre-requirement, so an icon can be displayed near each
+;;   ;; heading
+;;   (grep-use-headings t))
 
 (use-package rainbow-mode
   :hook
