@@ -72,6 +72,8 @@
 (setopt scroll-step 1)
 (setopt scroll-margin 5)
 
+(setopt truncate-lines t)
+
 (setopt vc-follow-symlinks t)
 
 (setopt delete-by-moving-to-trash t)
