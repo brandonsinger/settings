@@ -31,7 +31,21 @@
 ;; - replace-from-region?
 ;; - sqlformat sounds like a good thing to use
 ;; - use auto-side-windows https://github.com/MArpogaus/auto-side-windows
+;; - use narrow-or-widen-dwim https://github.com/publicimageltd/narrow-or-widen-dwim
+;; - https://github.com/ISouthRain/ewth.el ?
+;; - https://github.com/emacs-tree-sitter/treesit-fold ?
+;; - https://git.sr.ht/~struanr/org-ics-import.el
+;; - https://protesilaos.com/codelog/2025-06-01-emacs-spacious-padding-0-7-0/
+;; - https://ebzzry.com/en/emacs-pairs/
+;; - https://github.com/jamescherti/easysession.el
 
+
+;; https://deniskyashif.com/2023/08/28/task-management-using-emacs-and-org-mode/
+;; https://peregrinator.site/blog/building-a-blogging-flow-using-emacs-and-emacs-only.html
+
+;; https://gist.github.com/9viz/eb7bdb84b4ebf175bf53426baefa2b16
+
+;; https://github.com/jamescherti/dir-config.el
 
 ;; - use occur, make note somewhere?
 

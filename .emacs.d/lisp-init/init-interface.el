@@ -76,8 +76,6 @@
   :after projectile
   :init
   (recentf-mode 1)
-  :hook
-  (completion-list-mode . consult-preview-at-point-mode)
   :bind
   (
    ("C-x b" . consult-buffer)

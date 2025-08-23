@@ -8,10 +8,9 @@
   :hook
   (dired-mode . hl-line-mode)
   :custom
-  (dired-listing-switches "-alh --group-directories-first --time-style=long-iso")
+  (dired-listing-switches "-lah --group-directories-first --time-style=long-iso")
   :init
-  (setopt dired-auto-revert-buffer t)
-  )
+  (setopt dired-auto-revert-buffer t))
 (use-package dired-subtree
   :after dired
   :bind
@@ -30,8 +29,6 @@
                (y-or-n-p (format "Directory `%s' does not exist! Create it?" parent-directory)))
       (make-directory parent-directory t))))
 (add-to-list 'find-file-not-found-functions #'my-create-non-existent-directory)
-
-
 
 (provide 'init-dired)
 ;;; init-dired.el ends here

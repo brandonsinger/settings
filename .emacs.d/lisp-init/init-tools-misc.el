@@ -34,6 +34,18 @@
   :config
   (add-hook 'elpaca-after-init-hook #'global-flycheck-mode))
 
+(use-package flycheck-rust
+  :after flycheck
+  :init
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+;; TODO: configure it more
+(use-package flyover
+  :after flycheck
+  :init
+  ;;(add-hook 'flycheck-mode-hook #'flyover-mode)
+  )
+
 ;; TODO: might remove this one
 (use-package flycheck-indicator
   :after (flycheck)

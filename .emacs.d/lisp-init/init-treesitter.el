@@ -2,6 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
+(my-need-linux-package "tree-sitter-rust")
+(my-need-linux-package "tree-sitter-python")
+(my-need-linux-package "tree-sitter-markdown")
+(my-need-linux-package "tree-sitter-javascript")
+
 (use-package treesit-auto
   :hook (elpaca-after-init . global-treesit-auto-mode)
   :custom
