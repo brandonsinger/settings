@@ -4,6 +4,7 @@
 ;;; Code:
 
 (use-package transient)
+(use-package cond-let)
 
 (use-package magit
   :bind
