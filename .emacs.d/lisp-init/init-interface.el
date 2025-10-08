@@ -177,5 +177,7 @@
   (which-key-idle-delay 3)
   (which-key-use-C-h-commands nil))
 
+(setq mouse-yank-at-point t)
+
 (provide 'init-interface)
 ;;; init-interface.el ends here
