@@ -68,10 +68,11 @@
    ("C-x C-b" . bufferlo-switch-to-buffer)
    ("C-x k" . bufferlo-remove) ;; or bufferlo-bury?
    )
-  :config
-  (setopt bufferlo-bookmarks-auto-save-interval 120)
-  (setq bufferlo-bookmark-frame-save-on-delete 'if-current)
-  (setq bufferlo-bookmark-tab-save-on-close 'if-current))
+  :custom
+  (bufferlo-mode-line nil)
+  (bufferlo-bookmarks-auto-save-interval 120)
+  (bufferlo-bookmark-frame-save-on-delete 'if-current)
+  (bufferlo-bookmark-tab-save-on-close 'if-current))
 
 (provide 'init-workspace)
 ;;; init-workspace.el ends here

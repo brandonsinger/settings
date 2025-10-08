@@ -120,6 +120,7 @@
   (add-hook 'find-file-hook 'meain/set-read-only-if-do-not-edit))
 
 (use-package hideshow
+  :diminish hs-minor-mode
   :hook ((prog-mode . hs-minor-mode))
   :bind
   ("C-<return>" . toggle-fold)

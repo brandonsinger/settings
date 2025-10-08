@@ -3,6 +3,7 @@
 ;;; Code:
 
 (use-package whitespace-cleanup-mode
+  :diminish
   :config
   (global-whitespace-cleanup-mode t))
 
