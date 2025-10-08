@@ -2,12 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;; load a basic theme for now to prevent blinding white
-(load-theme 'modus-vivendi-tinted)
-
-
-
-
 ;; TODO: the following could use some better organization
 
 (setq-default indent-tabs-mode nil)
