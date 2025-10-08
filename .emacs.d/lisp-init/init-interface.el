@@ -169,5 +169,13 @@
   :config
   (require 'smartparens-config))
 
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode)
+  :custom
+  (which-key-idle-delay 3)
+  (which-key-use-C-h-commands nil))
+
 (provide 'init-interface)
 ;;; init-interface.el ends here
