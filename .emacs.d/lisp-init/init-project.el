@@ -3,17 +3,16 @@
 ;;; Code:
 
 (use-package projectile
-  :diminish projectile-mode ;;TODO: might want to change this
-  :config
-  (projectile-mode)
-  :bind
-  ("C-c p" . projectile-command-map)
-  ("C-x p" . projectile-command-map)
-  ("s-p" . projectile-command-map)
+  :diminish projectile-mode
   :init
   (when (file-directory-p "~/projects")
     (setq projectile-project-search-path '("~/projects")))
-  )
+  :config
+  (projectile-mode +1)
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  ("C-x p" . projectile-command-map)
+  ("s-p" . projectile-command-map))
 
 (use-package consult-projectile
   :after (projectile)
