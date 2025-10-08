@@ -4,11 +4,16 @@
 
 (setenv "PAGER" "cat")
 
+;; TODO: move this to a better location?
+(setq password-cache t) ; enable password caching
+(setq password-cache-expiry 3600) ; for one hour (time in secs)
+
+(require 'em-tramp) ; to load eshell’s sudo
+
 (use-package eat
   :init
   (add-hook 'eshell-load-hook #'eat-eshell-mode)
-  (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
-  )
+  (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
 
 (use-package eshell
   :ensure nil
@@ -33,6 +38,8 @@
    eshell-scroll-to-bottom-on-output 'all
    eshell-list-files-after-cd t
    eshell-banner-message ""
+   eshell-prefer-lisp-functions t
+   eshell-prefer-lisp-variables t
    )
   ;; Visual commands
   (setq eshell-visual-commands '("top" "less" "more" "top" "htop" "ssh" "tail"))
@@ -43,6 +50,8 @@
                               (eshell/alias "ff" "find-file $1")
                               (eshell/alias "emacs" "find-file $1")
                               (eshell/alias "ee" "find-file-other-window $1")
+
+                              (eshell/alias "sudo" "eshell/sudo $*")
 
                               (eshell/alias "gd" "magit-diff-unstaged")
                               (eshell/alias "gds" "magit-diff-staged")
