@@ -33,6 +33,14 @@
     (tab-bar-rename-tab (concat "Proj: " project-name)
                         (let ((default-directory project))
                           (switch-to-buffer "*scratch*")))))
+(defun my/tab-bar-move-left ()
+  "Move current tab to the left."
+  (interactive)
+  (tab-bar-move-tab -1))
+(defun my/tab-bar-move-right ()
+  "Move current tab to the right."
+  (interactive)
+  (tab-bar-move-tab 1))
 
 (use-package tab-bar
   :ensure nil
@@ -40,6 +48,8 @@
   (
    ("C-x t <left>" . tab-bar-switch-to-prev-tab)
    ("C-x t <right>" . tab-bar-switch-to-next-tab)
+   ("C-x t C-<left>" . my/tab-bar-move-left)
+   ("C-x t C-<right>" . my/tab-bar-move-right)
    ("C-x t R" . tab-bar-rename-tab)
    ("C-x t K" . my/close-current-tab)
    ("C-x t N" . my/new-tab-with-scratch)
