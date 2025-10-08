@@ -28,8 +28,12 @@
      ("Path"    99 magit-repolist-column-path ())))
   )
 
-;; TODO: test
-;;TODO: test2
+;; TODO: test.
+;;TODO: test2.
+;;; TODO: asdf.
+                                        ; TODO: asdf2.
+;; TODO: Foo bar.
+
 (use-package magit-todos
   :after (magit)
   :config (magit-todos-mode 1))
