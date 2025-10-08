@@ -17,16 +17,16 @@
 (use-package dashboard
   :after nerd-icons
   :config
-  (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
-  (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+  ;; (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+  ;; (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
   (add-to-list 'dashboard-item-generators '(activities . dashboard-insert-activities))
   ;;(add-to-list 'dashboard-heading-icons '(activities . "nf-oct-project"))
-  (dashboard-setup-startup-hook)
+  ;;(dashboard-setup-startup-hook)
   :custom
   (dashboard-banner-logo-title "Welcome to Emacs Dashboard")
   (dashboard-startup-banner 'logo)
   (dashboard-projects-backend 'projectile)
-  (dashboard-items '((activities . 10)
+  (dashboard-items '(
                      (recents   . 5)
                      (projects  . 5)
                      (bookmarks . 1)
