@@ -4,6 +4,7 @@
 
 (use-package projectile
   :diminish projectile-mode
+  :demand
   :init
   (when (file-directory-p "~/projects")
     (setq projectile-project-search-path '("~/projects")))

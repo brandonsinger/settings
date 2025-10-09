@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+;; TODO: maybe use desktop.el instead?
 (use-package easysession
   :diminish easysession-save-mode
   :custom
@@ -66,7 +67,7 @@
   (
    ("C-x b" . bufferlo-switch-to-buffer)
    ("C-x C-b" . bufferlo-switch-to-buffer)
-   ("C-x k" . bufferlo-remove) ;; or bufferlo-bury?
+   ("C-x k" . bufferlo-bury)
    )
   :custom
   (bufferlo-mode-line nil)
