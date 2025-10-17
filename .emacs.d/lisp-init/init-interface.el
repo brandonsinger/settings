@@ -20,7 +20,7 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles . (basic partial-completion orderless))))))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 ;; for in-line completions
 (use-package corfu
@@ -93,7 +93,6 @@
    consult-line-thing-at-point :initial (thing-at-point 'symbol)
    consult--source-buffer :hidden t :default nil)
   (setq consult-project-root-function #'projectile-project-root)
-  (setq read-file-name-function #'consult-find-file-with-preview)
 
   ;; Configure initial narrowing per command
   (defvar consult-initial-narrow-config
