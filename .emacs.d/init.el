@@ -37,7 +37,6 @@
 ;; - https://git.sr.ht/~struanr/org-ics-import.el
 ;; - https://protesilaos.com/codelog/2025-06-01-emacs-spacious-padding-0-7-0/
 ;; - https://ebzzry.com/en/emacs-pairs/
-;; - https://github.com/jamescherti/easysession.el
 
 
 ;; https://deniskyashif.com/2023/08/28/task-management-using-emacs-and-org-mode/

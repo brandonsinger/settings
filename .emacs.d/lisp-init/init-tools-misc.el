@@ -123,9 +123,10 @@
 (use-package eldoc-box
   :after eldoc)
 
-;; TODO: bind to something?
+
 (use-package vundo
-  :commands (vundo))
+  :bind
+  (("C-x u". vundo)))
 
 (use-package goggles
   :diminish

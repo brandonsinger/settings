@@ -22,6 +22,16 @@
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
+;; TODO: might want to add/change bindings?
+(use-package cape
+  :bind
+  ("C-c ." . completion-at-point)
+  :init
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+  (add-hook 'completion-at-point-functions #'cape-keyword))
+
 ;; for in-line completions
 (use-package corfu
   :hook
@@ -37,7 +47,6 @@
     (add-to-list 'savehist-additional-variables 'corfu-history))
   :custom
   (corfu-cycle t)
-  (tab-always-indent 'complete)
   (corfu-preview-current nil)
   (corfu-min-width 20)
   (corfu-popupinfo-delay '(5 . 1)))
@@ -173,7 +182,7 @@
   :config
   (which-key-mode)
   :custom
-  (which-key-idle-delay 3)
+  (which-key-idle-delay 1.5)
   (which-key-use-C-h-commands nil))
 
 (setq mouse-yank-at-point t)
