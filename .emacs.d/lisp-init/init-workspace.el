@@ -2,14 +2,27 @@
 ;;; Commentary:
 ;;; Code:
 
-;; TODO: maybe use desktop.el instead?
-(use-package easysession
-  :diminish easysession-save-mode
-  :custom
-  (easysession-save-interval (* 10 60))
+
+;; TODO: configure/customize some more
+(use-package activities
   :init
-  (add-hook 'elpaca-after-init-hook #'easysession-load-including-geometry 98)
-  (add-hook 'elpaca-after-init-hook #'easysession-save-mode 99))
+  (activities-mode)
+  (activities-tabs-mode)
+  ;; Prevent `edebug' default bindings from interfering.
+  (setq edebug-inhibit-emacs-lisp-mode-bindings t)
+  :bind
+  (("C-x C-a C-n" . activities-new)
+   ("C-x C-a C-d" . activities-define)
+   ("C-x C-a C-a" . activities-resume)
+   ("C-x C-a C-s" . activities-suspend)
+   ("C-x C-a C-k" . activities-kill)
+   ("C-x C-a r" . activities-rename)
+   ("C-x C-a RET" . activities-switch)
+   ("C-x C-a b" . activities-switch-buffer)
+   ("C-x C-a g" . activities-revert)
+   ("C-x C-a l" . activities-list)
+   ("C-X C-a <DELETE>" . activities-discard)
+   ))
 
 (defun my/close-current-tab ()
   "Close the current tab after asking for confirmation."
@@ -57,23 +70,6 @@
    ("C-x t P" . my/projectile-new-tab-scratch)
    ))
 
-;;; TODO: add Filter saved bookmark buffers stuff?
-(use-package bufferlo
-  :init
-  (setq bufferlo-bookmarks-save-at-emacs-exit 'all)
-  (setq bufferlo-bookmarks-load-at-emacs-startup 'all)
-  (bufferlo-mode)
-  :bind
-  (
-   ("C-x b" . bufferlo-switch-to-buffer)
-   ("C-x C-b" . bufferlo-switch-to-buffer)
-   ("C-x k" . bufferlo-bury)
-   )
-  :custom
-  (bufferlo-mode-line nil)
-  (bufferlo-bookmarks-auto-save-interval 120)
-  (bufferlo-bookmark-frame-save-on-delete 'if-current)
-  (bufferlo-bookmark-tab-save-on-close 'if-current))
 
 (provide 'init-workspace)
 ;;; init-workspace.el ends here

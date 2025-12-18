@@ -87,7 +87,7 @@
   (recentf-mode 1)
   :bind
   (
-   ;; ("C-x b" . consult-buffer)
+   ("C-x b" . consult-buffer)
    ;; ("C-x C-b" . consult-buffer)
    ("M-g M-g" . consult-goto-line)
    ("C-s" . consult-line)
