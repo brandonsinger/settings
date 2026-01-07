@@ -9,7 +9,11 @@
    ("\\.html?\\'" . web-mode)
    ("\\.html.j2\\'" . web-mode))
   :config
-  (setopt web-mode-enable-auto-indentation nil))
+  (setopt web-mode-enable-auto-indentation nil)
+  ;; Remove after web-mode loads
+  (setq auto-mode-alist (rassq-delete-all 'mhtml-mode auto-mode-alist))
+  (setq auto-mode-alist (rassq-delete-all 'html-ts-mode auto-mode-alist))
+  )
 
 (use-package yaml-mode
   :mode ("\\.yaml\\'" "\\.yml\\'"))
