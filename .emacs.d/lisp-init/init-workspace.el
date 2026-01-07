@@ -14,14 +14,20 @@
   (("C-x C-a C-n" . activities-new)
    ("C-x C-a C-d" . activities-define)
    ("C-x C-a C-a" . activities-resume)
-   ("C-x C-a C-s" . activities-suspend)
-   ("C-x C-a C-k" . activities-kill)
+   ("C-x C-a C-s" . activities-suspend) ;; saves and removes tab
+   ("C-x C-a C-k" . activities-kill)    ;; just removes tab
    ("C-x C-a r" . activities-rename)
    ("C-x C-a RET" . activities-switch)
-   ("C-x C-a b" . activities-switch-buffer)
    ("C-x C-a g" . activities-revert)
    ("C-x C-a l" . activities-list)
-   ("C-X C-a <DELETE>" . activities-discard)
+   ("C-x C-a <DELETE>" . activities-discard) ;; full remove of activity
+
+   ("C-x b" . activities-switch-buffer)
+
+   ("C-x C-a <left>" . tab-bar-switch-to-prev-tab)
+   ("C-x C-a <right>" . tab-bar-switch-to-next-tab)
+   ("C-x C-a C-<left>" . my/tab-bar-move-left)
+   ("C-x C-a C-<right>" . my/tab-bar-move-right)
    ))
 
 (defun my/close-current-tab ()
