@@ -126,7 +126,9 @@
 
 (use-package vundo
   :bind
-  (("C-x u". vundo)))
+  (("C-x u". vundo))
+  :config
+  (define-key vundo-mode-map (kbd "DEL") #'vundo-backward))
 
 (use-package goggles
   :diminish
