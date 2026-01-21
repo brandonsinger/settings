@@ -70,6 +70,7 @@
   (with-demoted-errors "Error: %S" (require 'init-ai))
   (with-demoted-errors "Error: %S" (require 'init-dashboard))
   (with-demoted-errors "Error: %S" (require 'init-dired))
+  (with-demoted-errors "Error: %S" (require 'init-email))
   (with-demoted-errors "Error: %S" (require 'init-for-terminal))
   (with-demoted-errors "Error: %S" (require 'init-interface))
   (with-demoted-errors "Error: %S" (require 'init-keybinds))
