@@ -27,13 +27,26 @@
 
 (use-package rust-mode
   :init
-  ;;(setq rust-mode-treesitter-derive t)
-  :mode ("\\.rs\\'" . rust-mode))
+  (setq rust-mode-treesitter-derive t))
 (use-package rustic
-  :after (rust-mode)
+  :after (rust-mode,tree-sitter)
   :diminish
+  :mode ("\\.rs\\'" . rustic-mode)
   :config
-  (setq rustic-format-on-save t))
+  (setq rustic-format-on-save t)
+  (setq auto-mode-alist
+        (seq-remove (lambda (entry)
+                      (memq (cdr entry) '(rust-mode rust-ts-mode)))
+                    auto-mode-alist))
+  (add-hook 'elpaca-after-init-hook
+            (lambda ()
+              (setq auto-mode-alist
+                    (seq-remove (lambda (entry)
+                                  (memq (cdr entry) '(rust-mode rust-ts-mode)))
+                                auto-mode-alist))
+              ))
+  :custom
+  (rustic-cargo-use-last-stored-arguments t))
 
 
 (use-package csv-mode

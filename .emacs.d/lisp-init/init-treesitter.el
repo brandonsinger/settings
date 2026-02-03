@@ -14,14 +14,12 @@
   (treesit-auto-install 'prompt)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
+
+  (add-to-list 'treesit-language-source-alist
+               '(systemverilog "https://github.com/gmlarumbe/tree-sitter-systemverilog"))
+  (add-to-list 'treesit-language-source-alist
+               '(verilog "https://github.com/gmlarumbe/tree-sitter-systemverilog"))
+
   (global-treesit-auto-mode))
 
-(use-package tree-sitter
-  :diminish
-  :init
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-  (global-tree-sitter-mode))
-(use-package tree-sitter-langs)
-
-(provide 'init-treesitter)
-;;; init-treesitter.el ends here
+;; (use-package tree-sitter-langs)
