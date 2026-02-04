@@ -2,20 +2,29 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package chatgpt-shell
-  :commands
-  (chatgpt-shell chatgpt-shell-prompt-compose)
+;; TODO: add binding to clear buffer
+(use-package gptel
   :bind
-  ("C-c C-a" . chatgpt-shell-prompt-compose)
+  ("C-c a" . gptel-menu)
+  ("C-c C-a" . gptel)
   :config
-  (chatgpt-shell-ollama-load-models))
-
-(use-package aidermacs
-  :disabled
-  :bind
-  ("C-c a" . aidermacs-transient-menu)
+  (add-hook 'gptel-mode-hook (lambda () (setq truncate-lines nil)))
   :custom
-  (aidermacs-use-architect-mode t))
+  (gptel-default-mode 'org-mode))
+
+(use-package gptel-magit
+  :after (gptel magit)
+  :hook (magit-mode . gptel-magit-install)
+  :config
+  (setq gptel-magit-prompt-template
+        "Write a conventional commit message for these changes.
+Format: <type>: <description>
+Types: feat, fix, docs, style, refactor, perf, test, chore
+Rules: imperative mood, under 72 chars, no period
+Only output the message.
+
+Changes:
+%s"))
 
 (provide 'init-ai)
 ;;; init-ai.el ends here

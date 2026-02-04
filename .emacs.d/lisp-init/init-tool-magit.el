@@ -26,13 +26,13 @@
       ((:right-align t)
        (:help-echo "Local changes not in upstream")))
      ("Path"    99 magit-repolist-column-path ())))
+  (git-commit-major-mode 'git-commit-ts-mode)
   )
 
-;; TODO: test.
-;;TODO: test2.
-;;; TODO: asdf.
-                                        ; TODO: asdf2.
-;; TODO: Foo bar.
+(use-package git-commit-ts-mode
+  ;; :elpaca (git-commit-ts-mode :host github
+  ;;                             :repo "danilshvalov/git-commit-ts-mode")
+  :mode "\\COMMIT_EDITMSG\\'")
 
 (use-package magit-todos
   :after (magit)

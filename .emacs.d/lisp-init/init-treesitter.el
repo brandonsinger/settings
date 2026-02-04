@@ -19,6 +19,8 @@
                '(systemverilog "https://github.com/gmlarumbe/tree-sitter-systemverilog"))
   (add-to-list 'treesit-language-source-alist
                '(verilog "https://github.com/gmlarumbe/tree-sitter-systemverilog"))
+  (add-to-list 'treesit-language-source-alist
+               '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit")))
 
   (global-treesit-auto-mode))
 
