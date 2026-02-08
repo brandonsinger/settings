@@ -86,5 +86,7 @@
 (use-package ssh-config-mode
   :defer t)
 
+(use-package systemd)
+
 (provide 'init-modes)
 ;;; init-modes.el ends here
