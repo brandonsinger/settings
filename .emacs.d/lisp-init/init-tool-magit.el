@@ -26,13 +26,14 @@
       ((:right-align t)
        (:help-echo "Local changes not in upstream")))
      ("Path"    99 magit-repolist-column-path ())))
-  (git-commit-major-mode 'git-commit-ts-mode)
+  ;; (git-commit-major-mode 'git-commit-ts-mode)
   )
 
-(use-package git-commit-ts-mode
-  ;; :elpaca (git-commit-ts-mode :host github
-  ;;                             :repo "danilshvalov/git-commit-ts-mode")
-  :mode "\\COMMIT_EDITMSG\\'")
+;; BUG: breaks showing diff when inspecting change
+;; (use-package git-commit-ts-mode
+;;   ;; :elpaca (git-commit-ts-mode :host github
+;;   ;;                             :repo "danilshvalov/git-commit-ts-mode")
+;;   :mode "\\COMMIT_EDITMSG\\'")
 
 (use-package magit-todos
   :after (magit)
