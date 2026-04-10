@@ -39,6 +39,9 @@
   :after (magit)
   :config (magit-todos-mode 1))
 
+(use-package forge
+  :after magit)
+
 (use-package git-timemachine
   :commands (git-timemachine))
 
