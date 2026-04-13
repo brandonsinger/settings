@@ -21,14 +21,19 @@
    ("C-x C-a g" . activities-revert)
    ("C-x C-a l" . activities-list)
    ("C-x C-a <DELETE>" . activities-discard) ;; full remove of activity
-
-   ("C-x b" . activities-switch-buffer)
-
    ("C-x C-a <left>" . tab-bar-switch-to-prev-tab)
    ("C-x C-a <right>" . tab-bar-switch-to-next-tab)
    ("C-x C-a C-<left>" . my/tab-bar-move-left)
    ("C-x C-a C-<right>" . my/tab-bar-move-right)
-   ))
+   ("C-x b" . activities-switch-buffer)
+   )
+  :config
+  (defvar-keymap activities-repeat-map
+    :repeat t
+    "<left>"    #'tab-bar-switch-to-prev-tab
+    "<right>"   #'tab-bar-switch-to-next-tab
+    "C-<left>"  #'my/tab-bar-move-left
+    "C-<right>" #'my/tab-bar-move-right))
 
 (defun my/close-current-tab ()
   "Close the current tab after asking for confirmation."
@@ -75,7 +80,6 @@
    ("C-x t N" . my/new-tab-with-scratch)
    ("C-x t P" . my/projectile-new-tab-scratch)
    ))
-
 
 (provide 'init-workspace)
 ;;; init-workspace.el ends here
