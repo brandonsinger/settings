@@ -188,5 +188,12 @@
 
 (setq mouse-yank-at-point t)
 
+(use-package super-save
+  :ensure t
+  :config
+  (setq super-save-auto-save-when-idle t)
+  (setq auto-save-default nil)
+  (super-save-mode +1))
+
 (provide 'init-interface)
 ;;; init-interface.el ends here
