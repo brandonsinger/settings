@@ -115,10 +115,11 @@
   (recentf-max-menu-items 25)
   (recentf-max-saved-items 250))
 
+;; TODO: figure out a good keybinding for this
 (use-package consult-todo
   :after (consult))
 
-;; TODO: test this out in a rest project? then determine to remove it or not.
+;; TODO: test this out in a rust project? then determine to remove it or not.
 (use-package consult-lsp
   :after (consult))
 
