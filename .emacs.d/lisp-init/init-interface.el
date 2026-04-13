@@ -100,7 +100,7 @@
    consult-theme :preview-key 'any
    consult-line :prompt "Search: " :preview-key 'any :add-history (seq-some #'thing-at-point '(region symbol)) :keymap my-consult-line-map
    consult-line-thing-at-point :initial (thing-at-point 'symbol)
-   consult--source-buffer :hidden t :default nil)
+   consult-source-buffer :hidden t :default nil)
   (setq consult-project-root-function #'projectile-project-root)
 
   ;; Configure initial narrowing per command
