@@ -56,23 +56,6 @@
   :ensure nil
   :mode ("\\.env\\..*\\'" . conf-mode))
 
-(my-need-linux-package "prettier")
-(use-package prettier
-  :ensure t
-  :hook ((css-mode
-          js2-mode
-          html-mode
-          json-mode
-          typescript-mode) . prettier-mode))
-
-;; TODO: update sql mode to use 4 space 'tabs'
-(my-need-linux-package "pgformatter")
-(use-package sqlformat
-  :config
-  (add-hook 'sql-mode-hook 'sqlformat-on-save-mode)
-  :custom
-  (sqlformat-command 'pgformatter)
-  (sqlformat-args '("-s4" "--no-space-function")))
 
 ;; (use-package python-pytest)
 ;; (global-set-key (kbd "C-x T") 'python-pytest-dispatch)

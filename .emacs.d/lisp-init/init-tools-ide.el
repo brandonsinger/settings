@@ -63,5 +63,12 @@
                              (set (make-local-variable 'company-backends) '(company-web-html))
                              (company-mode t))))
 
+(use-package format-all
+  :commands format-all-mode)
+(add-hook 'sql-mode-hook
+          (lambda ()
+            (setq format-all-formatters
+                  '(("SQL" (sqlformat "-r"))))))
+
 (provide 'init-tools-ide)
 ;;; init-tools-ide.el ends here
