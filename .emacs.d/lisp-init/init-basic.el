@@ -167,5 +167,23 @@
     (end-of-line)
     (hs-toggle-hiding)))
 
+(repeat-mode 1)
+
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+(setq redisplay-skip-fontification-on-input t)
+
+(setq read-process-output-max (* 4 1024 1024)) ; 4MB
+
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+
+(add-hook 'after-save-hook
+          #'executable-make-buffer-file-executable-if-script-p)
+
+(setq help-window-select t)
+
 (provide 'init-basic)
 ;;; init-basic.el ends here
