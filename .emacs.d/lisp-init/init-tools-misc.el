@@ -102,7 +102,8 @@
   (vertico-multiform-mode 1)
   :custom
   (vertico-multiform-commands
-   '((jinx grid (vertico-grid-annotate . 20) (vertico-count . 4)))))
+   '((jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))))
+  (jinx-camel-modes t))
 
 (use-package free-keys
   :commands (free-keys))
