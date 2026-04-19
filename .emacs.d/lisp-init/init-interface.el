@@ -22,6 +22,12 @@
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
+(use-package prescient)
+(use-package corfu-prescient
+  :after (precsient corfu))
+(use-package vertico-prescient
+  :after (prescient vertico))
+
 ;; TODO: might want to add/change bindings?
 (use-package cape
   :bind
