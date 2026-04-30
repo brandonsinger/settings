@@ -70,5 +70,24 @@
             (setq format-all-formatters
                   '(("SQL" (sqlformat "-r"))))))
 
+;; TODO: setup some keybindings
+(use-package dumb-jump
+  :custom
+  (dumb-jump-prefer-searcher 'rg)
+  (xref-show-definitions-function #'consult-xref)
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+(with-eval-after-load 'hydra
+  (defhydra dumb-jump-hydra (:color blue :columns 3)
+    "Dumb Jump"
+    ("j" dumb-jump-go "Go")
+    ("o" dumb-jump-go-other-window "Other window")
+    ("e" dumb-jump-go-prefer-external "Go external")
+    ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
+    ("r" dumb-jump-find-references "References")
+    ("i" dumb-jump-go-prompt "Prompt")
+    ("l" dumb-jump-quick-look "Quick look")
+    ("b" dumb-jump-back "Back")))
+
 (provide 'init-tools-ide)
 ;;; init-tools-ide.el ends here
