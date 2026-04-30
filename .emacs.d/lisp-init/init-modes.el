@@ -71,5 +71,10 @@
 
 (use-package systemd)
 
+(use-package git-modes
+  :config
+  (add-to-list 'auto-mode-alist
+               (cons "/.dockerignore\\'" 'gitignore-mode)))
+
 (provide 'init-modes)
 ;;; init-modes.el ends here
