@@ -30,6 +30,10 @@
          ("<end>" . mwim-end-of-code-or-line))
   )
 
+(use-package comment-dwim-2
+  :bind
+  ("M-;" . comment-dwim-2))
+
 (use-package flycheck
   :config
   (add-hook 'elpaca-after-init-hook #'global-flycheck-mode))
