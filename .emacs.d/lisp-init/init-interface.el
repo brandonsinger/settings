@@ -202,5 +202,22 @@
   (setq auto-save-default nil)
   (super-save-mode +1))
 
+;; treesit-fold setup in other file
+(use-package kirigami
+  :commands (kirigami-open-fold
+             kirigami-open-fold-rec
+             kirigami-close-fold
+             kirigami-toggle-fold
+             kirigami-open-folds
+             kirigami-close-folds-except-current
+             kirigami-close-folds)
+  :bind
+  (("C-c z o" . kirigami-open-fold)          ; Open fold at point
+   ("C-c z O" . kirigami-open-fold-rec)      ; Open fold recursively
+   ("C-c z e" . kirigami-open-folds)         ; Expand all folds
+   ("C-c z c" . kirigami-close-fold)         ; Close fold at point
+   ("C-c z z" . kirigami-close-folds)        ; Close all folds
+   ("C-c z <tab>" . kirigami-toggle-fold)))      ; Toggle fold at point
+
 (provide 'init-interface)
 ;;; init-interface.el ends here
