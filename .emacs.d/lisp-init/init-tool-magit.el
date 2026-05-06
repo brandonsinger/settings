@@ -3,6 +3,7 @@
 ;;;  use ~magit-list-repositories~ to get a status list of all projects
 ;;; Code:
 
+(use-package compat)
 (use-package transient)
 (use-package cond-let)
 
