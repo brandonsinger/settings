@@ -50,6 +50,14 @@
 (elpaca elpaca-use-package
   (elpaca-use-package-mode)
   (setopt use-package-always-ensure t))
+
+
+;; needed by magit
+(use-package compat)
+(use-package transient)
+(use-package cond-let)
+
+
 (use-package diminish :ensure (:wait t) :demand t)
 (use-package delight :ensure (:wait t) :demand t)
 
