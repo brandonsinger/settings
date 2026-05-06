@@ -8,6 +8,7 @@
 (use-package cond-let)
 
 (use-package magit
+  :after (compat transient cond-let)
   :bind
   ("C-x g" . magit-status)
   :custom
