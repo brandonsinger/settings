@@ -70,3 +70,5 @@
 
 
 ;; (use-package tree-sitter-langs)
+(provide 'init-treesitter)
+;;; init-treesitter.el ends here
