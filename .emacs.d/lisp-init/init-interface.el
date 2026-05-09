@@ -28,22 +28,28 @@
 (use-package vertico-prescient
   :after (prescient vertico))
 
-;; TODO: might want to add/change bindings?
 (use-package cape
   :bind
-  ("C-c ." . completion-at-point)
+  ("C-c p" . cape-prefix-map)
   :init
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  ;;(add-hook 'completion-at-point-functions #'cape-abbrev) TODO: use once I start using abbreviations
+  (add-hook 'completion-at-point-functions #'cape-dabbrev) ; Complete word from current buffers.
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
-  (add-hook 'completion-at-point-functions #'cape-keyword))
+  (add-hook 'completion-at-point-functions #'cape-keyword)
+  (add-hook 'completion-at-point-functions #'cape-dict))
+
+;; TODO: move this comment somewhere better?
+;; To get super-tab working in xfce:
+;;  xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Super>Tab" --reset
 
 ;; for in-line completions
 (use-package corfu
   :hook
   (elpaca-after-init . global-corfu-mode)
   :bind
-  (:map corfu-map ("<tab>" . corfu-complete))
+  (:map corfu-map ("C-c <tab>" . corfu-complete))
+  (:map corfu-map ("s-<tab>" . corfu-complete))
   :config
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
@@ -52,15 +58,44 @@
     (corfu-history-mode 1)
     (add-to-list 'savehist-additional-variables 'corfu-history))
   :custom
+  (corfu-auto nil)
   (corfu-cycle t)
   (corfu-preview-current nil)
   (corfu-min-width 20)
-  (corfu-popupinfo-delay '(5 . 1)))
+  (corfu-popupinfo-delay '(2 . .5)))
 
 (use-package corfu-terminal
   :config
   (unless (display-graphic-p)
     (corfu-terminal-mode +1)))
+
+;; TODO: reorganize this chunk?
+;; Enable Completion Preview mode in code buffers
+(add-hook 'prog-mode-hook #'completion-preview-mode)
+;; also in text buffers
+(add-hook 'text-mode-hook #'completion-preview-mode)
+;; and in \\[shell] and friends
+(with-eval-after-load 'comint
+  (add-hook 'comint-mode-hook #'completion-preview-mode))
+
+(with-eval-after-load 'completion-preview
+  ;; Show the preview already after two symbol characters
+  (setq completion-preview-minimum-symbol-length 2)
+
+  ;; Non-standard commands to that should show the preview:
+
+  ;; Org mode has a custom `self-insert-command'
+  (push 'org-self-insert-command completion-preview-commands)
+  ;; Paredit has a custom `delete-backward-char' command
+  (push 'paredit-backward-delete completion-preview-commands)
+
+  ;; Bindings that take effect when the preview is shown:
+
+  ;; Cycle the completion candidate that the preview shows
+  (keymap-set completion-preview-active-mode-map "M-n" #'completion-preview-next-candidate)
+  (keymap-set completion-preview-active-mode-map "M-p" #'completion-preview-prev-candidate)
+  ;; Convenient alternative to C-i after typing one of the above
+  (keymap-set completion-preview-active-mode-map "M-i" #'completion-preview-insert))
 
 (use-package savehist
   :ensure nil
@@ -217,7 +252,7 @@
    ("C-c z e" . kirigami-open-folds)         ; Expand all folds
    ("C-c z c" . kirigami-close-fold)         ; Close fold at point
    ("C-c z z" . kirigami-close-folds)        ; Close all folds
-   ("C-c z <tab>" . kirigami-toggle-fold)))      ; Toggle fold at point
+   ("C-c C-z" . kirigami-toggle-fold)))      ; Toggle fold at point
 
 (provide 'init-interface)
 ;;; init-interface.el ends here
