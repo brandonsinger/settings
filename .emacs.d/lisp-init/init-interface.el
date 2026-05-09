@@ -49,7 +49,7 @@
   (elpaca-after-init . global-corfu-mode)
   :bind
   (:map corfu-map ("C-c <tab>" . corfu-complete))
-  (:map corfu-map ("s-<tab>" . corfu-complete))
+  ;;(:map corfu-map ("s-<tab>" . corfu-complete))
   :config
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 

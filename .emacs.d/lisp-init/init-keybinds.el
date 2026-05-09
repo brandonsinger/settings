@@ -9,6 +9,8 @@
 
 (global-set-key (kbd "C-x s") 'save-buffer)
 
+(global-set-key (kbd "C-x k") #'bury-buffer)
+(global-set-key (kbd "C-x K") #'kill-current-buffer)
 
 (use-package selected
   :diminish
@@ -18,7 +20,7 @@
   :config
   (selected-global-mode 1))
 
-;; TODO: (bind-key "????" dabbrev-completion) what should i use?
+
 
 ;; TODO: something(s) for changing current tab
 
