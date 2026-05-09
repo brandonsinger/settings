@@ -5,8 +5,9 @@
 (use-package ef-themes
   :demand t
   :init
-  ;;(ef-themes-take-over-modus-themes-mode 1)
-  (setq modus-themes-to-toggle '(ef-elea-dark ef-eagle))
+  (defvar my/dark-theme  'ef-bio)
+  (defvar my/light-theme 'ef-eagle)
+  (setq modus-themes-to-toggle (list my/dark-theme my/light-theme))
 
   (setq modus-themes-headings ; read the manual's entry or the doc string
         '((0 . (variable-pitch light 1.9))
@@ -20,7 +21,7 @@
           (t . (variable-pitch 1.1))))
   ;; Load the theme of choice:
   :config
-  (modus-themes-load-theme 'ef-elea-dark)
+  (modus-themes-load-theme my/dark-theme)
   :custom
   (modus-themes-mixed-fonts t)
   (modus-themes-variable-pitch-ui t)
