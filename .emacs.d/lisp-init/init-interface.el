@@ -28,9 +28,14 @@
 (use-package vertico-prescient
   :after (prescient vertico))
 
+;; TODO: move this comment somewhere better?
+;; To get super-tab working in xfce:
+;;  xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Super>Tab" --reset
+
 (use-package cape
   :bind
   ("C-c p" . cape-prefix-map)
+  ("s-<tab>" . completion-at-point)
   :init
   ;;(add-hook 'completion-at-point-functions #'cape-abbrev) TODO: use once I start using abbreviations
   (add-hook 'completion-at-point-functions #'cape-dabbrev) ; Complete word from current buffers.
@@ -39,17 +44,10 @@
   (add-hook 'completion-at-point-functions #'cape-keyword)
   (add-hook 'completion-at-point-functions #'cape-dict))
 
-;; TODO: move this comment somewhere better?
-;; To get super-tab working in xfce:
-;;  xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Super>Tab" --reset
-
 ;; for in-line completions
 (use-package corfu
   :hook
   (elpaca-after-init . global-corfu-mode)
-  :bind
-  (:map corfu-map ("C-c <tab>" . corfu-complete))
-  ;;(:map corfu-map ("s-<tab>" . corfu-complete))
   :config
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
