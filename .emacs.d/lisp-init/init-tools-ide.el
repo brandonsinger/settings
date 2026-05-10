@@ -8,7 +8,6 @@
 
 (defun echo-install-lsp-servers (server-list)
   "Install specified LSP servers using lsp-install-server. SERVER-LIST is a list of server symbols, e.g. '(pyls tsserver gopls)"
-
   (dolist (server server-list)
     (if (fboundp 'lsp-install-server)
         (let ((client (gethash server lsp-clients)))
@@ -24,14 +23,28 @@
   (setq lsp-keymap-prefix "C-c l"
         lsp-file-watch-threshold 5000
         lsp-use-plists t)
-  :hook (
-         (web-mode . lsp)
-         (php-mode . lsp)
-         (css-mode . lsp)
-         (js-mode . lsp)
-         (python-mode . lsp)
-         (rust-mode . lsp))
-  :commands lsp
+  :hook
+  (
+   (css-mode . lsp-deferred)
+   (css-ts-mode . lsp-deferred)
+   (html-mode . lsp-deferred)
+   (html-ts-mode . lsp-deferred)
+   (js-mode . lsp-deferred)
+   (js-ts-mode . lsp-deferred)
+   (json-mode . lsp-deferred)
+   (json-ts-mode . lsp-deferred)
+   (php-mode . lsp-deferred)
+   (php-ts-mode . lsp-deferred)
+   (python-mode . lsp-deferred)
+   (python-ts-mode . lsp-deferred)
+   (rust-mode . lsp-deferred)
+   (rust-ts-mode . lsp-deferred)
+   (yaml-mode . lsp-deferred)
+   (yaml-ts-mode . lsp-deferred)
+   (web-mode . lsp-deferred)
+   )
+  :commands
+  (lsp lsp-deferred)
   :config
   (echo-install-lsp-servers echo-install-lsp-servers-list)
   )
