@@ -26,6 +26,7 @@
         lsp-use-plists t)
   :hook (
          (web-mode . lsp)
+         (php-mode . lsp)
          (css-mode . lsp)
          (js-mode . lsp)
          (python-mode . lsp)
