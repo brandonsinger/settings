@@ -34,5 +34,12 @@
 (use-package treemacs-nerd-icons
   :after (treemacs nerd-icons))
 
+(use-package dir-config
+  :custom
+  (dir-config-file-names '(".dir-config.el"))
+  (dir-config-allowed-directories '("~/projects"))
+  :config
+  (dir-config-mode))
+
 (provide 'init-project)
 ;;; init-project.el ends here
