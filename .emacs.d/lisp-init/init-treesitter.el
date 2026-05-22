@@ -68,6 +68,14 @@
 (add-hook 'json-ts-mode-hook #'treesit-fold-mode)
 (add-hook 'toml-ts-mode-hook #'treesit-fold-mode)
 
+;; TODO: play with this more
+(use-package combobulate
+  :ensure (:host github :repo "mickeynp/combobulate")
+  :custom
+  ;; You can customize Combobulate's key prefix here.
+  ;; Note that you may have to restart Emacs for this to take effect!
+  (combobulate-key-prefix "C-c o")
+  :hook ((prog-mode . combobulate-mode)))
 
 ;; (use-package tree-sitter-langs)
 (provide 'init-treesitter)
