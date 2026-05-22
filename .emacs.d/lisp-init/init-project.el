@@ -35,6 +35,7 @@
   :after (treemacs nerd-icons))
 
 (use-package dir-config
+  :diminish
   :custom
   (dir-config-file-names '(".dir-config.el"))
   (dir-config-allowed-directories '("~/projects"))
