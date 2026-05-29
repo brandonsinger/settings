@@ -18,11 +18,14 @@
       (error "lsp-install-server function not found. Is lsp-mode installed?")))
   (message "Finished installing LSP servers"))
 
+(defun my/lsp-mode-setup-completion ()
+  (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+        '(orderless)))
+
 (use-package lsp-mode
+  :after corfu
   :init
-  (setq lsp-keymap-prefix "C-c l"
-        lsp-file-watch-threshold 5000
-        lsp-use-plists t)
+  (setq lsp-use-plists t)
   :hook
   (
    (css-mode . lsp-deferred)
@@ -42,11 +45,16 @@
    (yaml-mode . lsp-deferred)
    (yaml-ts-mode . lsp-deferred)
    (web-mode . lsp-deferred)
+   (lsp-completion-mode . my/lsp-mode-setup-completion)
    )
   :commands
   (lsp lsp-deferred)
   :config
   (echo-install-lsp-servers echo-install-lsp-servers-list)
+  :custom
+  (lsp-keymap-prefix "C-c l")
+  (lsp-file-watch-threshold 5000)
+  (lsp-completion-provider :none) ;; we use Corfu!
   )
 
 ;; TODO: Play around with this to figure out how I want to customize it.

@@ -22,6 +22,12 @@
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
+(use-package dl-completion
+  :ensure (:host codeberg :repo "Hyudoro/dl-completion")
+  :after orderless
+  :config
+  (setq completion-styles '(orderless basic dl-completion)))
+
 (use-package prescient)
 (use-package corfu-prescient
   :after (precsient corfu))
@@ -36,6 +42,7 @@
   :bind
   ("C-c p" . cape-prefix-map)
   ("s-<tab>" . completion-at-point)
+  ("C-c <tab>" . completions-at-point)
   :init
   ;;(add-hook 'completion-at-point-functions #'cape-abbrev) TODO: use once I start using abbreviations
   (add-hook 'completion-at-point-functions #'cape-dabbrev) ; Complete word from current buffers.
@@ -43,6 +50,20 @@
   (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
   (add-hook 'completion-at-point-functions #'cape-keyword)
   (add-hook 'completion-at-point-functions #'cape-dict))
+
+;; These functions from https://utcc.utoronto.ca/~cks/space/blog/programming/EmacsSwitchingToOnlyCorfu
+(defun corfu-enable-auto ()
+  "Enable corfu auto-completion in this buffer."
+  (interactive)
+  (setq-local corfu-auto t)
+  (corfu-mode -1)
+  (corfu-mode 1))
+(defun corfu-disable-auto ()
+  "Disable corfu auto-completion in this buffer."
+  (interactive)
+  (setq-local corfu-auto nil)
+  (corfu-mode -1)
+  (corfu-mode 1))
 
 ;; for in-line completions
 (use-package corfu
@@ -126,7 +147,6 @@
   :bind
   (
    ("C-x b" . consult-buffer)
-   ;; ("C-x C-b" . consult-buffer)
    ("M-g M-g" . consult-goto-line)
    ("C-s" . consult-line)
    ("C-f" . consult-imenu)
@@ -249,7 +269,9 @@
    ("C-c z e" . kirigami-open-folds)         ; Expand all folds
    ("C-c z c" . kirigami-close-fold)         ; Close fold at point
    ("C-c z z" . kirigami-close-folds)        ; Close all folds
-   ("C-c C-z" . kirigami-toggle-fold)))      ; Toggle fold at point
+   ("C-c C-z" . kirigami-toggle-fold)        ; Toggle fold at point
+   ("s-z" . kirigami-toggle-fold))
+  )
 
 (provide 'init-interface)
 ;;; init-interface.el ends here
