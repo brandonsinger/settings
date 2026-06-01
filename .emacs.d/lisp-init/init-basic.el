@@ -185,5 +185,12 @@
 
 (setq help-window-select t)
 
+(use-package uniquify
+  :ensure nil
+  :custom
+  (uniquify-after-kill-buffer-p t)
+  (uniquify-strip-common-suffix t)
+  (uniquify-buffer-name-style 'post-forward))
+
 (provide 'init-basic)
 ;;; init-basic.el ends here
