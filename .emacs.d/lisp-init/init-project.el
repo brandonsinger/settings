@@ -2,6 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
+(defun my/add-project-tasks-to-agenda ()
+  (let ((tasks-file (concat (projectile-project-root) "tasks.org")))
+    (when (file-exists-p tasks-file)
+      (add-to-list 'org-agenda-files tasks-file))))
+
 (use-package projectile
   :diminish projectile-mode
   :demand
@@ -10,6 +15,8 @@
     (setq projectile-project-search-path '("~/projects")))
   :config
   (projectile-mode +1)
+  (add-hook 'projectile-after-switch-project-hook #'my/set-agenda-to-project)
+
   :bind-keymap
   ("C-c p" . projectile-command-map)
   ("C-x p" . projectile-command-map)
