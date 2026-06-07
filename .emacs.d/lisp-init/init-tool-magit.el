@@ -43,5 +43,13 @@
 (use-package git-timemachine
   :commands (git-timemachine))
 
+(my-need-linux-package  "difftastic")
+(use-package magit-difftastic
+  :doc
+  "Kinda like, but not for default"
+  :ensure (:host github :repo "rschmukler/magit-difftastic")
+  :after magit
+  :commands (magit-difftastic-mode))
+
 (provide 'init-tool-magit)
 ;;; init-tool-magit.el ends here

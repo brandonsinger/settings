@@ -17,12 +17,27 @@
 
 (winner-mode)
 
-(use-package zoom
-  :diminish
-  :init
-  (zoom-mode t)
-  :custom
-  (zoom-size '(0.618 . 0.618)))
+;; (use-package zoom
+;;   :diminish
+;;   :init
+;;   (zoom-mode t)
+;;   :custom
+;;   (zoom-size '(0.618 . 0.618))
+;;   ;; (zoom-ignored-buffer-names '("*undo tree*"))
+;;   ;; (zoom-ignored-buffer-name-regexps '("\*vundo tree\*"))
+
+;;   :config
+;;   (setq zoom-ignored-buffer-name-regexps
+;;         (list
+;;          (rx bos " ") ; ignore hidden buffers
+;;          (rx bos "*helpful")))
+;;   (setq zoom-ignore-predicates ; return non-nil to ignore
+;;         (list
+;;          (lambda () (< (count-lines (point-min) (point-max)) 20)) ; ignore short buffers
+;;          ))
+
+;;   )
+;; (zoom-ignore-predicates '((lambda () (> (count-lines (point-min) (point-max)) 20))))
 
 (use-package buffer-move)
 

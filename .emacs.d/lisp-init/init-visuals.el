@@ -9,15 +9,18 @@
 (dolist (mode '(org-mode-hook
                 term-mode-hook
                 shell-mode-hook
-                eshell-mode-hook)
-              )
+                eshell-mode-hook
+                help-mode-hook
+                helpful-mode-hook
+                ripgrep-search-mode-hook
+                ))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (use-package tab-line
   :ensure nil
   :config
-  (setq tab-bar-close-button-show nil
-        tab-bar-new-button-show nil
+  (setq tab-bar-close-button-show t
+        tab-bar-new-button-show t
         tab-line-right-button (propertize (if (char-displayable-p ?▶) " ▶ " " > ")
                                           'keymap tab-line-right-map
                                           'mouse-face 'tab-line-highlight
@@ -28,8 +31,7 @@
                                          'help-echo "Click to scroll left"))
   :custom-face
   (activities-tabs ((t (:height 1.2))))
-  (mode-line ((t (:height 1.1))))
-  )
+  (mode-line ((t (:height 1.2)))))
 
 (my-need-linux-package "Roboto Mono")
 (when (member "Roboto Mono" (font-family-list))
@@ -48,8 +50,7 @@
 
 
 ;; To make this setup work, the user must type M-x and then call the command nerd-icons-install-fonts.
-(use-package nerd-icons
-  )
+(use-package nerd-icons)
 
 (use-package nerd-icons-completion
   :if (display-graphic-p)
@@ -102,8 +103,7 @@
     (add-hook 'magit-log-wash-summary-hook
               #'hl-todo-search-and-highlight t)
     (add-hook 'magit-revision-wash-message-hook
-              #'hl-todo-search-and-highlight t))
-  )
+              #'hl-todo-search-and-highlight t)))
 
 (provide 'init-visuals)
 ;;; init-visuals.el ends here

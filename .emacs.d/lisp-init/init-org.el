@@ -47,6 +47,10 @@
    ;; Child and parent headings are seperated by a /.
    org-sticky-header-outline-path-separator " / "))
 
+(use-package olivetti
+  :custom
+  (olivetti-body-width 90))
+
 (use-package verb
   :config
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map)

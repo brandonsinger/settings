@@ -159,6 +159,12 @@
   ("C-h x" . helpful-command)
   ("C-h o" . helpful-at-point))
 
+
+(use-package twen-twen-tw
+  :ensure (:host github :repo "benbellick/twen-twen-tw.el")
+  :config
+  (twen-twen-tw-mode 1))
+
 (use-package proced
   :ensure nil
   :custom

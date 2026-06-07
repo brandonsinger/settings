@@ -56,6 +56,8 @@
   :ensure nil
   :mode ("\\.env\\..*\\'" . conf-mode))
 
+(use-package markdown-mode
+  :mode "\\.md\\'")
 
 ;; (use-package python-pytest)
 ;; (global-set-key (kbd "C-x T") 'python-pytest-dispatch)
