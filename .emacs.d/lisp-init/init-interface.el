@@ -1,4 +1,4 @@
-;;; init-interface.el --- ??? -*- lexical-binding: t; -*-
+;;; init-interface.el --- General Interface Things -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 

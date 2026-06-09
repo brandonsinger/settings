@@ -1,9 +1,6 @@
 ;;; init-elpaca --- Setup Elpaca -*- lexical-binding: t; -*-
-
 ;;; Commentary:
-
 ;;; Code:
-
 
 (defvar elpaca-installer-version 0.12)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))

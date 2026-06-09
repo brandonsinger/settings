@@ -4,6 +4,16 @@
 
 (setopt visible-bell t)
 
+(defun my/change-cursor-shape ()
+  "Set cursor shape depending on overwrite mode.
+When `overwrite-mode' is nil (off), set `cursor-type' to box.
+Otherwise, set it to hbar."
+  (interactive)
+  (if (not overwrite-mode)
+      (setq cursor-type 'box)
+    (setq cursor-type 'hbar)))
+(add-hook 'overwrite-mode-hook 'my/change-cursor-shape)
+
 (global-display-line-numbers-mode t)
 ;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
