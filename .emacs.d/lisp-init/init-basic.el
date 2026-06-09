@@ -4,11 +4,13 @@
 
 ;; TODO: the following could use some better organization
 
-(setq-default indent-tabs-mode nil)
 
 (show-paren-mode 1)
 
+(setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
+
+(setq-default fill-column 120)
 
 (column-number-mode)
 

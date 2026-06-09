@@ -52,6 +52,10 @@ Otherwise, set it to hbar."
   (set-face-attribute 'fixed-pitch nil :family "RobotoMono Nerd Font"))
 
 (global-hl-line-mode 1)
+(add-hook 'magit-mode-hook
+          (lambda ()
+            (make-local-variable 'global-hl-line-mode)
+            (setq global-hl-line-mode nil)))
 (use-package lin
   :hook
   (elpaca-after-init . lin-global-mode)
