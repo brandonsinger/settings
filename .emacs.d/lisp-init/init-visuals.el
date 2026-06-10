@@ -119,5 +119,13 @@ Otherwise, set it to hbar."
     (add-hook 'magit-revision-wash-message-hook
               #'hl-todo-search-and-highlight t)))
 
+(use-package dimmer
+  :config
+  (dimmer-configure-hydra)
+  (dimmer-configure-magit)
+  (dimmer-configure-org)
+  (dimmer-configure-posframe)
+  (dimmer-mode t))
+
 (provide 'init-visuals)
 ;;; init-visuals.el ends here
