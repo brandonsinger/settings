@@ -27,8 +27,7 @@
   :bind (("C-a" . mwim-beginning-of-code-or-line)
          ("C-e" . mwim-end-of-code-or-line)
          ("<home>" . mwim-beginning-of-code-or-line)
-         ("<end>" . mwim-end-of-code-or-line))
-  )
+         ("<end>" . mwim-end-of-code-or-line)))
 
 (use-package comment-dwim-2
   :bind
@@ -79,8 +78,7 @@
   (php-ts-mode . (lambda()(setq-local devdocs-browser-active-docs '("php"))))
   (rust-ts-mode . (lambda()(setq-local devdocs-browser-active-docs '("rust"))))
   (js-ts-mode . (lambda()(setq-local devdocs-browser-active-docs '("javascript"))))
-  (html-ts-mode . (lambda()(setq-local devdocs-browser-active-docs '("html"))))
-  )
+  (html-ts-mode . (lambda()(setq-local devdocs-browser-active-docs '("html")))))
 
 (use-package eww
   :ensure nil
@@ -160,10 +158,10 @@
   ("C-h o" . helpful-at-point))
 
 
-(use-package twen-twen-tw
-  :ensure (:host github :repo "benbellick/twen-twen-tw.el")
-  :config
-  (twen-twen-tw-mode 1))
+;; (use-package twen-twen-tw
+;;   :ensure (:host github :repo "benbellick/twen-twen-tw.el")
+;;   :config
+;;   (twen-twen-tw-mode 1))
 
 (use-package proced
   :ensure nil
