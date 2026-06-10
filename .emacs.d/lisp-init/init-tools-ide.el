@@ -45,6 +45,7 @@
    (yaml-mode . lsp-deferred)
    (yaml-ts-mode . lsp-deferred)
    (web-mode . lsp-deferred)
+   (dockerfile-mode . lsp-deferred)
    (lsp-completion-mode . my/lsp-mode-setup-completion)
    )
   :commands
