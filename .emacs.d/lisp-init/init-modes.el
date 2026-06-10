@@ -62,6 +62,29 @@
 ;; (use-package python-pytest)
 ;; (global-set-key (kbd "C-x T") 'python-pytest-dispatch)
 
+(defcustom my/docker-executable 'podman
+  "The executable to be used with docker-mode."
+  :type '(choice
+          (const :tag "docker" docker)
+          (const :tag "podman" podman))
+  :set (lambda (sym val)
+         (set-default sym val)
+         (pcase val
+           ('docker
+            (setq docker-command "docker"
+                  docker-compose-command "docker-compose"
+                  docker-container-tramp-method "docker"
+                  dockerfile-mode-command "docker"))
+           ('podman
+            (setq docker-command "podman"
+                  docker-compose-command "podman-compose"
+                  docker-container-tramp-method "podman"
+                  dockerfile-mode-command "podman"))))
+  :group 'my)
+(use-package docker
+  :bind ("C-c d" . docker))
+(use-package dockerfile-mode
+  :mode ("Dockerfile" . dockerfile-mode))
 
 ;; would be nice to wrap this in a use-package somehow...
 (autoload 'visual-basic-mode "visual-basic-mode" "Visual Basic mode." t)
