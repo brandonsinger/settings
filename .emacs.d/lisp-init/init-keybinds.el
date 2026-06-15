@@ -12,6 +12,8 @@
 (global-set-key (kbd "C-x k") #'bury-buffer)
 (global-set-key (kbd "C-x K") #'kill-current-buffer)
 
+(global-set-key (kbd "C-D") #'duplicate-dwim)
+
 (use-package selected
   :diminish
   :bind (:map selected-keymap
