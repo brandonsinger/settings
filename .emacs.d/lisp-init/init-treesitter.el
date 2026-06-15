@@ -26,6 +26,7 @@
 
 
 (use-package treesit-fold
+  :diminish
   :commands (treesit-fold-close
              treesit-fold-close-all
              treesit-fold-open

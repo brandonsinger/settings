@@ -22,8 +22,6 @@
   :config
   (selected-global-mode 1))
 
-
-
 ;; TODO: something(s) for changing current tab
 
 (provide 'init-keybinds)
