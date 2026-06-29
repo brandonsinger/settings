@@ -78,9 +78,16 @@
           notmuch-hello-insert-recent-searches
           notmuch-hello-insert-alltags))
 
+  (setq shr-use-fonts nil)
+  (setq shr-use-colors nil)
+  (setq shr-width 120)
+  (setq shr-indentation 2)
+
   :custom
   (notmuch-search-oldest-first nil)
   (notmuch-show-relative-dates nil)
+  (notmuch-show-logo nil)
+  (notmuch-hello-thousands-separator ",")
   (notmuch-search-line-faces
    '(("unread" . notmuch-search-unread-face)
      ("flag" . italic)))
