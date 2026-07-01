@@ -29,16 +29,18 @@ Otherwise, set it to hbar."
 (use-package tab-line
   :ensure nil
   :config
-  (setq tab-bar-close-button-show t
-        tab-bar-new-button-show t
-        tab-line-right-button (propertize (if (char-displayable-p ?▶) " ▶ " " > ")
+  ;; TODO: use tab-bar-format instead of tab-bar-new-button-show
+  (setq tab-bar-close-button-show (display-graphic-p)
+        tab-bar-new-button-show (display-graphic-p)
+        tab-line-right-button (propertize " ▶ "
                                           'keymap tab-line-right-map
                                           'mouse-face 'tab-line-highlight
                                           'help-echo "Click to scroll right")
-        tab-line-left-button (propertize (if (char-displayable-p ?◀) " ◀ " " < ")
+        tab-line-left-button (propertize " ◀ "
                                          'keymap tab-line-left-map
                                          'mouse-face 'tab-line-highlight
                                          'help-echo "Click to scroll left"))
+
   :custom-face
   (activities-tabs ((t (:height 1.2))))
   (mode-line ((t (:height 1.2)))))
