@@ -71,20 +71,18 @@
   :init
   (yas-global-mode))
 
-(use-package company
-  :diminish)
 
-(use-package company-ansible
-  :after (company)
-  :config
-  (add-to-list 'company-backends 'company-ansible))
+;; (use-package company-ansible
+;;   :after (company)
+;;   :config
+;;   (add-to-list 'company-backends 'company-ansible))
 
-(use-package company-web
-  :after (company)
-  :config
-  (add-hook 'web-mode-hook (lambda ()
-                             (set (make-local-variable 'company-backends) '(company-web-html))
-                             (company-mode t))))
+;; (use-package company-web
+;;   :after (company)
+;;   :config
+;;   (add-hook 'web-mode-hook (lambda ()
+;;                              (set (make-local-variable 'company-backends) '(company-web-html))
+;;                              (company-mode t))))
 
 (use-package format-all
   :commands format-all-mode)
