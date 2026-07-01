@@ -40,9 +40,9 @@
 
 (use-package cape
   :bind
-  ("C-c p" . cape-prefix-map)
+  ;; ("C-c p" . cape-prefix-map)
   ("s-<tab>" . completion-at-point)
-  ("C-c <tab>" . completions-at-point)
+  ("C-c <tab>" . completion-at-point)
   :init
   ;;(add-hook 'completion-at-point-functions #'cape-abbrev) TODO: use once I start using abbreviations
   (add-hook 'completion-at-point-functions #'cape-dabbrev) ; Complete word from current buffers.
