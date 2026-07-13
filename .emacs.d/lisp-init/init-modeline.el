@@ -1,35 +1,52 @@
-;;; init-modeline.el --- ??? -*- lexical-binding: t; -*-
+;;; init-modeline.el --- Mode line setup -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
-(setopt mode-line-format
-        '("%e"
-          (:propertize
-           ("" mode-line-mule-info mode-line-client mode-line-modified
-            mode-line-remote)
-           display (min-width (5.0)))
-          " "
-          mode-line-buffer-identification
-          " "
-          mode-line-position
-          (vc-mode vc-mode)
-          " "
-          mode-line-modes
-          mode-line-misc-info
-          ))
+(defvar my-mode-line-modified
+  '(:eval (when (buffer-modified-p) " ●")))
+(put 'my-mode-line-modified 'risky-local-variable t)
 
-;;use mode-line-format-right-align, new in 30.1
-(use-package time
-  :ensure nil
-  :config
-  (setopt display-time-interval 60)
-  (setopt display-time-default-load-average nil)
-  (display-time)
-  (setq global-mode-string (remove 'display-time-string global-mode-string))
-  (setq mode-line-end-spaces (list (propertize " "
-                                               'display '(space :align-to (- right 6)))
-                                   'display-time-string))
-  )
+(defvar my-mode-line-readonly
+  '(:eval (when buffer-read-only
+            (concat " " (nerd-icons-faicon "nf-fa-lock" :face 'error) " "))))
+(put 'my-mode-line-readonly 'risky-local-variable t)
+
+(defvar my-mode-line-remote
+  '(:eval (when (and buffer-file-name (file-remote-p buffer-file-name))
+            (concat " " (nerd-icons-mdicon "nf-md-server_network" :face 'warning) " "))))
+(put 'my-mode-line-remote 'risky-local-variable t)
+
+(defvar my-mode-line-buffer-identification
+  '(:eval (propertize "%12b"
+                      'face (if (mode-line-window-selected-p)
+                                'bold
+                              'italic))))
+(put 'my-mode-line-buffer-identification 'risky-local-variable t)
+
+(defvar my-mode-line-position
+  '(:eval
+    (let ((pos (format-mode-line '(-3 "%p"))))
+      (format " %d:%d %s "
+              (line-number-at-pos)
+              (current-column)
+              (if (string-match-p "[0-9]" pos)
+                  (concat (string-trim pos) "%")
+                pos)))))
+(put 'my-mode-line-position 'risky-local-variable t)
+
+(setq-default mode-line-format
+              '("%e"
+                " 𝝺  "
+                my-mode-line-readonly
+                my-mode-line-remote
+                my-mode-line-buffer-identification
+                my-mode-line-modified
+                " "
+                my-mode-line-position
+                " "
+                mode-line-modes
+                mode-line-misc-info
+                ))
 
 (provide 'init-modeline)
 ;;; init-modeline.el ends here
