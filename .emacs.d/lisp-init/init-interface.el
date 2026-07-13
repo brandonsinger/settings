@@ -40,9 +40,11 @@
 
 (use-package cape
   :bind
-  ;; ("C-c p" . cape-prefix-map)
+  ;; ("?" . cape-prefix-map)
   ("s-<tab>" . completion-at-point)
+  ("s-TAB" . completion-at-point)
   ("C-c <tab>" . completion-at-point)
+  ("C-c TAB" . completion-at-point)
   :init
   ;;(add-hook 'completion-at-point-functions #'cape-abbrev) TODO: use once I start using abbreviations
   (add-hook 'completion-at-point-functions #'cape-dabbrev) ; Complete word from current buffers.
@@ -51,25 +53,25 @@
   (add-hook 'completion-at-point-functions #'cape-keyword)
   (add-hook 'completion-at-point-functions #'cape-dict))
 
-;; These functions from https://utcc.utoronto.ca/~cks/space/blog/programming/EmacsSwitchingToOnlyCorfu
-(defun corfu-enable-auto ()
-  "Enable corfu auto-completion in this buffer."
-  (interactive)
-  (setq-local corfu-auto t)
-  (corfu-mode -1)
-  (corfu-mode 1))
-(defun corfu-disable-auto ()
-  "Disable corfu auto-completion in this buffer."
-  (interactive)
-  (setq-local corfu-auto nil)
-  (corfu-mode -1)
-  (corfu-mode 1))
-
 ;; for in-line completions
 (use-package corfu
   :hook
   (elpaca-after-init . global-corfu-mode)
+  :bind
+  (:map corfu-map
+        ("C-n" . corfu-next)
+        ("C-p" . corfu-previous)
+        ("C-j" . corfu-insert)
+        ("C-i" . corfu-complete)
+        )
   :config
+  (keymap-unset corfu-map "<up>" t)
+  (keymap-unset corfu-map "<down>" t)
+  (keymap-unset corfu-map "<remap> <next-line>" t)
+  (keymap-unset corfu-map "<remap> <previous-line>" t)
+  ;; (keymap-unset corfu-map "TAB" t)
+  ;; (keymap-unset corfu-map "<tab>" t)
+  ;; (keymap-unset corfu-map "RET" t)
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
   ;; Sort by input history (no need to modify `corfu-sort-function').
@@ -77,7 +79,7 @@
     (corfu-history-mode 1)
     (add-to-list 'savehist-additional-variables 'corfu-history))
   :custom
-  (corfu-auto nil)
+  (corfu-auto t)
   (corfu-cycle t)
   (corfu-preview-current nil)
   (corfu-min-width 20)
@@ -87,33 +89,6 @@
   :config
   (unless (display-graphic-p)
     (corfu-terminal-mode +1)))
-
-;; TODO: reorganize this chunk?
-
-(add-hook 'prog-mode-hook #'completion-preview-mode)
-(add-hook 'text-mode-hook #'completion-preview-mode)
-(add-hook 'conf-mode-hook #'completion-preview-mode)
-(with-eval-after-load 'comint
-  (add-hook 'comint-mode-hook #'completion-preview-mode))
-
-(with-eval-after-load 'completion-preview
-  ;; Show the preview already after two symbol characters
-  (setq completion-preview-minimum-symbol-length 2)
-
-  ;; Non-standard commands to that should show the preview:
-
-  ;; Org mode has a custom `self-insert-command'
-  (push 'org-self-insert-command completion-preview-commands)
-  ;; Paredit has a custom `delete-backward-char' command
-  (push 'paredit-backward-delete completion-preview-commands)
-
-  ;; Bindings that take effect when the preview is shown:
-
-  ;; Cycle the completion candidate that the preview shows
-  (keymap-set completion-preview-active-mode-map "M-n" #'completion-preview-next-candidate)
-  (keymap-set completion-preview-active-mode-map "M-p" #'completion-preview-prev-candidate)
-  ;; Convenient alternative to C-i after typing one of the above
-  (keymap-set completion-preview-active-mode-map "M-i" #'completion-preview-insert))
 
 (use-package savehist
   :ensure nil
