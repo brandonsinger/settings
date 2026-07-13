@@ -7,7 +7,7 @@
 ;;; Code:
 
 (defun echo-install-lsp-servers (server-list)
-  "Install specified LSP servers using lsp-install-server. SERVER-LIST is a list of server symbols, e.g. '(pyls tsserver gopls)"
+  "Install specified LSP servers using lsp-install-server. SERVER-LIST is a list of server symbols, e.g. '(pyls tsserver gopls)."
   (dolist (server server-list)
     (if (fboundp 'lsp-install-server)
         (let ((client (gethash server lsp-clients)))
@@ -15,7 +15,7 @@
             (unless (lsp--server-binary-present? client)
               (lsp-install-server nil server)
               (message "Installed LSP server: %s" server))))
-      (error "lsp-install-server function not found. Is lsp-mode installed?")))
+      (error "Is lsp-mode installed? lsp-install-server function not found")))
   (message "Finished installing LSP servers"))
 
 (defun my/lsp-mode-setup-completion ()
