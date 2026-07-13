@@ -129,5 +129,63 @@ Otherwise, set it to hbar."
   (dimmer-configure-posframe)
   (dimmer-mode t))
 
+(use-package svg-margin
+  :ensure (:host github :repo "chiply/svg-margin")
+  :config
+  (setq svg-margin-disable-fringe 'left)
+  (setq svg-margin-renderer (if (display-graphic-p) 'svg 'text))
+  ;; (svg-margin-register-provider 'vc
+  ;;                               (lambda (_buffer)
+  ;;                                 (list (list :line 10 :shape 'bar :color "#8fb39a" :help "added")))
+  ;;                               :side 'left :priority 9)
+
+  (svg-margin-register-provider 'flycheck
+                                (lambda (buffer)
+                                  (with-current-buffer buffer
+                                    (when (bound-and-true-p flycheck-mode)
+                                      (cl-loop for err in flycheck-current-errors
+                                               collect (list :line (flycheck-error-line err)
+                                                             :text (nerd-icons-codicon "nf-cod-bug") :font "Symbols Nerd Font Mono"
+                                                             :scale .7
+                                                             :side 'left
+                                                             :color (pcase (flycheck-error-level err)
+                                                                      ('error "#cc3333")
+                                                                      ('warning "#cc9933")
+                                                                      (_ "#3333cc"))
+                                                             :help (flycheck-error-message err))))))
+                                :side 'left)
+
+  (svg-margin-register-provider 'jinx
+                                (lambda (buffer)
+                                  (with-current-buffer buffer
+                                    (when (bound-and-true-p jinx-mode)
+                                      (cl-loop for ov in (jinx--get-overlays (point-min) (point-max))
+                                               collect (list :line (line-number-at-pos (overlay-start ov))
+                                                             :shape 'circle
+                                                             :side 'left
+                                                             :color "#cc9933"
+                                                             :help "Spelling error")))))
+                                :side 'left)
+
+  ;; (svg-margin-register-provider 'todo
+  ;;                               (lambda (_buffer)
+  ;;                                 (list (list :line 10 :shape 'dot  :color "#cc3333")
+  ;;                                       (list :line 10 :shape 'bar  :color "#3333cc" :column 1)
+  ;;                                       (list :line 25 :text "!"    :side 'left :face 'warning))))
+  (setq svg-margin-arrangement 'fixed
+        svg-margin-provider-columns '((flycheck  . 0)    ; 0 = nearest the text
+                                      (jinx  . 1)
+                                      ))
+  (global-svg-margin-mode)
+  (svg-margin-hover-mode 1)
+  (with-eval-after-load 'flycheck
+    (add-hook 'flycheck-after-syntax-check-hook
+              (lambda () (svg-margin-refresh (current-buffer)))))
+  (with-eval-after-load 'jinx
+    (dolist (hook jinx--reschedule-hooks)
+      (add-hook hook (lambda (&rest _) (svg-margin-refresh (current-buffer))))))
+  
+  )
+
 (provide 'init-visuals)
 ;;; init-visuals.el ends here
