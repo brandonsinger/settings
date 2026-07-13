@@ -225,8 +225,10 @@
   :ensure t
   :diminish
   :config
+
   (setq super-save-auto-save-when-idle t)
   (setq auto-save-default nil)
+  (add-to-list 'super-save-triggers 'switch-window)
   (super-save-mode +1))
 
 ;; treesit-fold setup in other file
