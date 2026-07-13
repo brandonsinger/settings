@@ -72,6 +72,34 @@
   (yas-global-mode))
 
 
+(use-package flycheck
+  :config
+  (add-hook 'elpaca-after-init-hook #'global-flycheck-mode)
+  :custom
+  (flycheck-indication-mode nil))
+
+(use-package flycheck-rust
+  :after flycheck
+  :init
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+;; TODO: configure it more
+(use-package flyover
+  :after flycheck
+  :init
+  ;;(add-hook 'flycheck-mode-hook #'flyover-mode)
+  )
+
+;; ;; TODO: might remove this one
+;; (use-package flycheck-indicator
+;;   :after (flycheck)
+;;   :hook (flycheck-mode . flycheck-indicator-mode))
+
+;; TODO: add to the projectile-command-map too
+(use-package flycheck-projectile
+  :commands (flycheck-projectile-list-errors))
+
+
 ;; (use-package company-ansible
 ;;   :after (company)
 ;;   :config

@@ -33,31 +33,6 @@
   :bind
   ("M-;" . comment-dwim-2))
 
-(use-package flycheck
-  :config
-  (add-hook 'elpaca-after-init-hook #'global-flycheck-mode))
-
-(use-package flycheck-rust
-  :after flycheck
-  :init
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
-;; TODO: configure it more
-(use-package flyover
-  :after flycheck
-  :init
-  ;;(add-hook 'flycheck-mode-hook #'flyover-mode)
-  )
-
-;; TODO: might remove this one
-(use-package flycheck-indicator
-  :after (flycheck)
-  :hook (flycheck-mode . flycheck-indicator-mode))
-
-;; TODO: add to the projectile-command-map too
-(use-package flycheck-projectile
-  :commands (flycheck-projectile-list-errors))
-
 (use-package amx
   :config
   (amx-mode))
