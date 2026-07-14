@@ -23,30 +23,35 @@
                               'italic))))
 (put 'my-mode-line-buffer-identification 'risky-local-variable t)
 
-(defvar my-mode-line-position
-  '(:eval
-    (let ((pos (format-mode-line '(-3 "%p"))))
-      (format " %d:%d %s "
-              (line-number-at-pos)
-              (current-column)
-              (if (string-match-p "[0-9]" pos)
-                  (concat (string-trim pos) "%")
-                pos)))))
-(put 'my-mode-line-position 'risky-local-variable t)
 
-(setq-default mode-line-format
-              '("%e"
-                " 𝝺  "
-                my-mode-line-readonly
-                my-mode-line-remote
-                my-mode-line-buffer-identification
-                my-mode-line-modified
-                " "
-                my-mode-line-position
-                " "
-                mode-line-modes
-                mode-line-misc-info
-                ))
+;; Taken from Emacs source. Changed ordering and removed options
+(setq mode-line-position
+      '((line-number-mode
+         (column-number-mode
+          (column-number-indicator-zero-based
+           (10 (:propertize mode-line-position-column-line-format))
+           (10 (:propertize (:eval (string-replace "%c" "%C" (car mode-line-position-column-line-format))))))
+          (6 (:propertize mode-line-position-line-format)))
+         (column-number-mode
+          (column-number-indicator-zero-based
+           (6 (:propertize mode-line-position-column-format))
+           (6 (:propertize (:eval (string-replace "%c" "%C" (car mode-line-position-column-format))))))))
+        (:propertize (" " mode-line-percent-position) display (min-width (5.0)))
+        ))
+
+(setq mode-line-format
+      '("%e"
+        " 𝝺  "
+        my-mode-line-readonly
+        my-mode-line-remote
+        my-mode-line-buffer-identification
+        my-mode-line-modified
+        " "
+        mode-line-position
+        " "
+        mode-line-modes
+        mode-line-misc-info
+        ))
 
 (provide 'init-modeline)
 ;;; init-modeline.el ends here
