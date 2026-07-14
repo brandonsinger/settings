@@ -39,19 +39,19 @@
         (:propertize (" " mode-line-percent-position) display (min-width (5.0)))
         ))
 
-(setq mode-line-format
-      '("%e"
-        " 𝝺  "
-        my-mode-line-readonly
-        my-mode-line-remote
-        my-mode-line-buffer-identification
-        my-mode-line-modified
-        " "
-        mode-line-position
-        " "
-        mode-line-modes
-        mode-line-misc-info
-        ))
+(setq-default mode-line-format
+              '("%e"
+                " 𝝺  "
+                my-mode-line-readonly
+                my-mode-line-remote
+                my-mode-line-buffer-identification
+                my-mode-line-modified
+                " "
+                mode-line-position
+                " "
+                mode-line-modes
+                mode-line-misc-info
+                ))
 
 (provide 'init-modeline)
 ;;; init-modeline.el ends here
