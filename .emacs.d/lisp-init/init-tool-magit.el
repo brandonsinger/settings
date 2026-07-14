@@ -25,6 +25,8 @@
        (:help-echo "Local changes not in upstream")))
      ("Path"    99 magit-repolist-column-path ())))
   ;; (git-commit-major-mode 'git-commit-ts-mode)
+  (git-commit-summary-max-length 120)
+  (git-commit-fill-column 120)
   )
 
 ;; BUG: breaks showing diff when inspecting change

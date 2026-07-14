@@ -11,6 +11,7 @@
 (setq-default tab-width 4)
 
 (setq-default fill-column 120)
+(setq-default display-fill-column-indicator-column 120)
 
 (column-number-mode)
 
